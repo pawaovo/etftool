@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETF投资数据 - MoshiCoCo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="plan-data.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="https://via.placeholder.com/40" alt="Logo" class="logo">
+                <h1>MoshiCoCo</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="javascript:void(0);">ETF投资数据 <i class="fas fa-caret-down"></i></a></li>
+                    <li><a href="javascript:void(0);">其他 <i class="fas fa-caret-down"></i></a></li>
+                    <li><a href="javascript:void(0);">关于我 <i class="fas fa-caret-down"></i></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="plan-container">
+       
+        
+        <!-- 计划选择器 -->
+        <div class="plan-selector">
+            <div class="plan-tabs">
+                <button class="plan-tab active" data-plan="150">150 计划</button>
+                <button class="plan-tab" data-plan="S">S 计划</button>
+            </div>
+        </div>
+        
+        <!-- 主要内容区域 -->
+        <div class="plan-data-container">
+            <!-- 左侧 - 大类资产占比排名 -->
+            <div class="asset-ranking">
+                <div class="asset-ranking-header">
+                    <h3><i class="fas fa-list-ol"></i> 大类资产排名</h3>
+                    
+                    <!-- 当前资金状况 - 简化版 -->
+                    <div class="fund-status-simple">现投入/现金 xx/xx 75.43%</div>
+                    
+                    <div class="sort-controls">
+                        <span class="sort-btn" data-sort="shares">份数(占比)</span>
+                        <span class="sort-btn active" data-sort="profit">累计收益率</span>
+                    </div>
+                </div>
+                <div class="asset-list">
+                    <div class="asset-item" data-asset-type="cash">
+                        <span class="asset-icon cash"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">现金(未投入部分)</span>
+                            <span class="asset-shares">32份 (24.57%)</span>
+                        </div>
+                        <span class="asset-profit positive">+31.40%</span>
+                    </div>
+                    <div class="asset-item active" data-asset-type="a-stock">
+                        <span class="asset-icon a-stock"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">A股</span>
+                            <span class="asset-shares">85份 (51.72%)</span>
+                        </div>
+                        <span class="asset-profit positive">+34.38%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="hk-stock">
+                        <span class="asset-icon hk-stock"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">海外新兴市场股票</span>
+                            <span class="asset-shares">20份 (13.72%)</span>
+                        </div>
+                        <span class="asset-profit positive">+25.69%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="cn-bond">
+                        <span class="asset-icon cn-bond"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">境内债券</span>
+                            <span class="asset-shares">8份 (5.79%)</span>
+                        </div>
+                        <span class="asset-profit positive">+34.95%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="global-bond">
+                        <span class="asset-icon global-bond"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">海外债券</span>
+                            <span class="asset-shares">3份 (2.35%)</span>
+                        </div>
+                        <span class="asset-profit positive">+7.06%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="global-market">
+                        <span class="asset-icon global-market"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">海外成熟市场股票</span>
+                            <span class="asset-shares">2份 (1.85%)</span>
+                        </div>
+                        <span class="asset-profit positive">+51.23%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="oil">
+                        <span class="asset-icon oil"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">原油</span>
+                            <span class="asset-shares">已清仓</span>
+                        </div>
+                        <span class="asset-profit positive">+25.91%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="gold">
+                        <span class="asset-icon gold"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">黄金</span>
+                            <span class="asset-shares">已清仓</span>
+                        </div>
+                        <span class="asset-profit positive">+38.66%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中间 - 大类资产详情 -->
+            <div class="asset-details">
+                <div class="asset-details-header">
+                    <h3><i class="fas fa-info-circle"></i> 大类资产详情</h3>
+                </div>
+                <div class="fund-cards-container">
+                    <!-- A股资产组 -->
+                    <div class="asset-group">
+                        <div class="asset-group-header">
+                            <div class="title-section">
+                                <span class="asset-icon a-stock"></span>
+                                <h4>A股 <span class="detail-shares">85份 (51.72%)</span></h4>
+                            </div>
+                            <div class="detail-info">
+                                <span class="detail-profit">累计收益率 +34.38%</span>
+                                <span class="detail-date">2024-03-07</span>
+                            </div>
+                        </div>
+                        <div class="fund-cards">
+                            <!-- A股基金卡片 -->
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">中证红利-富国中证红利指数增强 A</div>
+                                        <div class="fund-code">100032</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>卖出</span>
+                                        <span class="operation-date">2024-03-07</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">13份/8.13%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+46.88%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">0.6071</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">0.9070</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+49.40%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">建信500-建信中证500指数增强 A</div>
+                                        <div class="fund-code">000478</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>卖出</span>
+                                        <span class="operation-date">2023-02-01</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">10份/5.36%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+8.61%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">2.3545</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">2.3936</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+1.66%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">富国300-富国沪深300指数增强 A</div>
+                                        <div class="fund-code">100038</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2019-01-31</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">7份/4.56%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+22.94%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">1.1713</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">1.4400</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+22.94%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 海外新兴市场股票资产组 -->
+                    <div class="asset-group">
+                        <div class="asset-group-header">
+                            <div class="title-section">
+                                <span class="asset-icon oversea-stock-emerging"></span>
+                                <h4>海外新兴市场股票 <span class="detail-shares">21份 (13.67%)</span></h4>
+                            </div>
+                            <div class="detail-info">
+                                <span class="detail-profit">累计收益率 +15.25%</span>
+                                <span class="detail-date">2025-04-07</span>
+                            </div>
+                        </div>
+                        <div class="fund-cards">
+                            <!-- 海外新兴市场股票基金卡片 -->
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">恒生指数-华夏恒生ETF联接A</div>
+                                        <div class="fund-code">000071</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>卖出</span>
+                                        <span class="operation-date">2025-02-21</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">10份/6.22%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+20.94%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">1.1937</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">1.2337</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+3.35%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">恒生科技-天弘恒生科技指数(QDII)A</div>
+                                        <div class="fund-code">012348</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2025-04-07</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">4份/3.06%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+6.22%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">0.6940</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">0.6541</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value negative">-5.75%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 境内债券资产组 -->
+                    <div class="asset-group">
+                        <div class="asset-group-header">
+                            <div class="title-section">
+                                <span class="asset-icon china-bond"></span>
+                                <h4>境内债券 <span class="detail-shares">8份 (5.98%)</span></h4>
+                            </div>
+                            <div class="detail-info">
+                                <span class="detail-profit">累计收益率 +33.35%</span>
+                                <span class="detail-date">2025-01-15</span>
+                            </div>
+                        </div>
+                        <div class="fund-cards">
+                            <!-- 境内债券基金卡片 -->
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">兴全转债-兴全可转债混合</div>
+                                        <div class="fund-code">340001</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2024-10-20</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">4份/3.03%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+46.90%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">0.7257</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">1.0335</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+42.41%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">易方达安心回报债-易方达安心债券A</div>
+                                        <div class="fund-code">110027</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2024-08-15</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">3份/2.10%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+33.41%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">1.4859</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">2.0080</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+35.14%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 海外债券资产组 -->
+                    <div class="asset-group">
+                        <div class="asset-group-header">
+                            <div class="title-section">
+                                <span class="asset-icon oversea-bond"></span>
+                                <h4>海外债券 <span class="detail-shares">3份 (2.52%)</span></h4>
+                            </div>
+                            <div class="detail-info">
+                                <span class="detail-profit">累计收益率 +7.51%</span>
+                                <span class="detail-date">2024-11-26</span>
+                            </div>
+                        </div>
+                        <div class="fund-cards">
+                            <!-- 海外债券基金卡片 -->
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">汇添富美元债-汇添富美元债债券人民币A</div>
+                                        <div class="fund-code">004419</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2024-09-18</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">1份/0.84%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+1.10%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">1.0548</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">1.0664</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+1.10%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">富国全球债C-富国全球债券(QDII)人民币C</div>
+                                        <div class="fund-code">019518</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2024-12-03</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">1份/0.84%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+4.04%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">1.2463</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">1.2967</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+4.04%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 海外成熟市场股票资产组 -->
+                    <div class="asset-group">
+                        <div class="asset-group-header">
+                            <div class="title-section">
+                                <span class="asset-icon oversea-stock-mature"></span>
+                                <h4>海外成熟市场股票 <span class="detail-shares">2份 (1.90%)</span></h4>
+                            </div>
+                            <div class="detail-info">
+                                <span class="detail-profit">累计收益率 +50.23%</span>
+                                <span class="detail-date">2024-05-18</span>
+                            </div>
+                        </div>
+                        <div class="fund-cards">
+                            <!-- 海外成熟市场股票基金卡片 -->
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">标普500-博时标普500ETF联接A</div>
+                                        <div class="fund-code">050025</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2023-09-12</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">1份/1.06%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+40.23%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">3.1127</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">4.1999</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+34.93%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="fund-card">
+                                <div class="fund-header positive">
+                                    <div class="fund-title-group">
+                                        <div class="fund-title">全球医疗保健-广发全球医疗保健(QDII)(人民币)A</div>
+                                        <div class="fund-code">000369</div>
+                                    </div>
+                                    <div class="last-operation">
+                                        <span>买入</span>
+                                        <span class="operation-date">2023-11-09</span>
+                                    </div>
+                                </div>
+                                <div class="fund-data">
+                                    <div class="fund-row">
+                                        <div class="fund-label">份数/占比</div>
+                                        <div class="fund-value">1份/0.84%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">累计收益率</div>
+                                        <div class="fund-value positive">+5.49%</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">平均持仓价</div>
+                                        <div class="fund-value">2.2419</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">最新净值</div>
+                                        <div class="fund-value">2.3650</div>
+                                    </div>
+                                    <div class="fund-row">
+                                        <div class="fund-label">当前/平均</div>
+                                        <div class="fund-value positive">+5.49%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧 - 资产占比趋势 -->
+            <div class="trend-chart">
+                <div class="chart-header">
+                    <h3><i class="fas fa-chart-area"></i> 资产占比趋势</h3>
+                </div>
+                <div class="chart-container">
+                    <!-- 趋势图提示框 -->
+                    <div class="chart-tooltip">
+                        <div class="tooltip-date">2023-04-06</div>
+                        <div class="tooltip-item">
+                            <div class="tooltip-label"><span class="tooltip-color" style="background-color: #e74c3c;"></span>A股</div>
+                            <div class="tooltip-value">45.81%</div>
+                        </div>
+                        <div class="tooltip-item">
+                            <div class="tooltip-label"><span class="tooltip-color" style="background-color: #f1c40f;"></span>债券</div>
+                            <div class="tooltip-value">22.13%</div>
+                        </div>
+                        <div class="tooltip-item">
+                            <div class="tooltip-label"><span class="tooltip-color" style="background-color: #3498db;"></span>全球股票</div>
+                            <div class="tooltip-value">5.42%</div>
+                        </div>
+                        <div class="tooltip-item">
+                            <div class="tooltip-label"><span class="tooltip-color" style="background-color: #2ecc71;"></span>港股</div>
+                            <div class="tooltip-value">6.75%</div>
+                        </div>
+                        <div class="tooltip-item">
+                            <div class="tooltip-label"><span class="tooltip-color" style="background-color: #9b59b6;"></span>现金</div>
+                            <div class="tooltip-value">19.89%</div>
+                        </div>
+                    </div>
+                    
+                    <svg width="100%" height="240" viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 坐标轴 -->
+                        <line x1="50" y1="210" x2="750" y2="210" stroke="#ccc" stroke-width="1" />
+                        <line x1="50" y1="30" x2="50" y2="210" stroke="#ccc" stroke-width="1" />
+                        
+                        <!-- 横轴日期标签 -->
+                        <text x="50" y="230" text-anchor="middle" font-size="10">2023-01-06</text>
+                        <text x="400" y="230" text-anchor="middle" font-size="10">2023-02-15</text>
+                        <text x="750" y="230" text-anchor="middle" font-size="10">2023-04-06</text>
+                        
+                        <!-- 纵轴标签 -->
+                        <text x="30" y="210" text-anchor="end" font-size="10">0%</text>
+                        <text x="30" y="165" text-anchor="end" font-size="10">10%</text>
+                        <text x="30" y="120" text-anchor="end" font-size="10">20%</text>
+                        <text x="30" y="75" text-anchor="end" font-size="10">30%</text>
+                        <text x="30" y="30" text-anchor="end" font-size="10">40%</text>
+                        
+                        <!-- 网格线 -->
+                        <line x1="50" y1="165" x2="750" y2="165" stroke="#eee" stroke-width="1" stroke-dasharray="5,5" />
+                        <line x1="50" y1="120" x2="750" y2="120" stroke="#eee" stroke-width="1" stroke-dasharray="5,5" />
+                        <line x1="50" y1="75" x2="750" y2="75" stroke="#eee" stroke-width="1" stroke-dasharray="5,5" />
+                        <line x1="50" y1="30" x2="750" y2="30" stroke="#eee" stroke-width="1" stroke-dasharray="5,5" />
+                        
+                        <!-- 垂直网格线 -->
+                        <line x1="400" y1="30" x2="400" y2="210" stroke="#eee" stroke-width="1" stroke-dasharray="5,5" />
+                        
+                        <!-- 日期垂直标记线 (默认隐藏，鼠标移动时显示) -->
+                        <line id="date-marker" x1="0" y1="30" x2="0" y2="210" stroke="#999" stroke-width="1" stroke-dasharray="3,3" style="display:none;" />
+                        
+                        <!-- A股占比趋势线 -->
+                        <path d="M50,120 L85,115 L120,110 L155,105 L190,100 L225,95 L260,90 L295,80 L330,70 L365,60 L400,55 L435,50 L470,45 L505,40 L540,38 L575,35 L610,33 L645,32 L680,31 L715,30 L750,30" fill="none" stroke="#e74c3c" stroke-width="2" class="asset-line" data-asset="a-stock" />
+                        
+                        <!-- 债券占比趋势 -->
+                        <path d="M50,140 L85,138 L120,136 L155,135 L190,136 L225,138 L260,140 L295,138 L330,136 L365,135 L400,134 L435,133 L470,132 L505,131 L540,130 L575,128 L610,126 L645,125 L680,123 L715,122 L750,120" fill="none" stroke="#f1c40f" stroke-width="2" class="asset-line" data-asset="cn-bond" />
+                        
+                        <!-- 全球股票占比趋势 -->
+                        <path d="M50,174 L85,173 L120,172 L155,171 L190,170 L225,169 L260,168 L295,167 L330,166 L365,165 L400,164 L435,163 L470,164 L505,165 L540,166 L575,167 L610,168 L645,169 L680,170 L715,171 L750,172" fill="none" stroke="#3498db" stroke-width="2" class="asset-line" data-asset="global-market" />
+                        
+                        <!-- 港股占比趋势 -->
+                        <path d="M50,170 L85,169 L120,168 L155,167 L190,166 L225,165 L260,164 L295,163 L330,163 L365,164 L400,165 L435,166 L470,167 L505,168 L540,169 L575,170 L610,170 L645,169 L680,168 L715,167 L750,166" fill="none" stroke="#2ecc71" stroke-width="2" class="asset-line" data-asset="hk-stock" />
+                        
+                        <!-- 现金占比趋势 -->
+                        <path d="M50,90 L85,95 L120,100 L155,105 L190,110 L225,115 L260,120 L295,125 L330,130 L365,135 L400,140 L435,145 L470,150 L505,155 L540,160 L575,165 L610,170 L645,175 L680,180 L715,185 L750,190" fill="none" stroke="#9b59b6" stroke-width="2" class="asset-line" data-asset="cash" />
+                        
+                        <!-- 互动区域（透明矩形用于捕获鼠标事件） -->
+                        <rect id="interaction-area" x="50" y="30" width="700" height="180" fill="transparent" style="cursor:pointer;" />
+                    </svg>
+                </div>
+                
+                <!-- 扇形图 -->
+                <div class="pie-chart-container">
+                    <div class="pie-chart-title">资产占比分布 (点击上方趋势图选择日期)</div>
+                    <div class="pie-chart">
+                        <svg width="160" height="160" viewBox="0 0 160 160" xmlns="http://www.w3.org/2000/svg">
+                            <!-- 饼图：默认显示最新日期数据 -->
+                            <g transform="translate(80, 80)">
+                                <!-- A股 (45.81%) - 起始角度0度，扫过164.916度 -->
+                                <path d="M 0 0 L 70 0 A 70 70 0 0 1 21.66 66.64 Z" fill="#e74c3c" stroke="white" stroke-width="1" />
+                                
+                                <!-- 债券 (22.13%) - 起始角度164.916度，扫过79.668度 -->
+                                <path d="M 0 0 L 21.66 66.64 A 70 70 0 0 1 -48.56 50.36 Z" fill="#f1c40f" stroke="white" stroke-width="1" />
+                                
+                                <!-- 全球股票 (5.42%) - 起始角度244.584度，扫过19.512度 -->
+                                <path d="M 0 0 L -48.56 50.36 A 70 70 0 0 1 -59.39 37.12 Z" fill="#3498db" stroke="white" stroke-width="1" />
+                                
+                                <!-- 港股 (6.75%) - 起始角度264.096度，扫过24.3度 -->
+                                <path d="M 0 0 L -59.39 37.12 A 70 70 0 0 1 -68.13 15.67 Z" fill="#2ecc71" stroke="white" stroke-width="1" />
+                                
+                                <!-- 现金 (19.89%) - 起始角度288.396度，扫过71.604度 -->
+                                <path d="M 0 0 L -68.13 15.67 A 70 70 0 0 1 -23.52 -65.82 Z" fill="#9b59b6" stroke="white" stroke-width="1" />
+                            </g>
+                            
+                            <!-- 中心白色圆圈，形成环形图效果 -->
+                            <circle cx="80" cy="80" r="38" fill="white" />
+                            
+                            <!-- 中心显示日期 -->
+                            <text x="80" y="77" text-anchor="middle" font-size="10" font-weight="500">2023-04-06</text>
+                            <text x="80" y="90" text-anchor="middle" font-size="9">资产分布</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #e74c3c;"></span>
+                        <span class="legend-label">A股 (45.81%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #f1c40f;"></span>
+                        <span class="legend-label">债券 (22.13%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #3498db;"></span>
+                        <span class="legend-label">全球股票 (5.42%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #2ecc71;"></span>
+                        <span class="legend-label">港股 (6.75%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color" style="background-color: #9b59b6;"></span>
+                        <span class="legend-label">现金 (19.89%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="plan-data.js"></script>
+</body>
+</html> 

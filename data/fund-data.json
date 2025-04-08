@@ -1,0 +1,90 @@
+{
+  "lastUpdate": "2023-11-15",
+  "fundStatus": {
+    "invested": 88000,
+    "cash": 32000,
+    "ratio": 75.43
+  },
+  "assets": [
+    {
+      "type": "a-stock",
+      "name": "A股",
+      "shares": 85,
+      "ratio": 51.72,
+      "profit": 34.38,
+      "icon": "a-stock",
+      "funds": [
+        {
+          "code": "000071",
+          "name": "华宝证券ETF联接",
+          "inMarketCode": "159920",
+          "avgPrice": 1.1328,
+          "shares": 14,
+          "ratio": 9.23,
+          "estValue": 1.116,
+          "priceDiff": 1.51,
+          "updateTime": "2023-11-15"
+        },
+        {
+          "code": "161211",
+          "name": "国投沪深300金融地产ETF联接",
+          "inMarketCode": "159941",
+          "avgPrice": 1.3452,
+          "shares": 12,
+          "ratio": 8.45,
+          "estValue": 1.372,
+          "priceDiff": 2.17,
+          "updateTime": "2023-11-15"
+        }
+      ]
+    },
+    {
+      "type": "cn-bond",
+      "name": "境内债券",
+      "shares": 8,
+      "ratio": 15.26,
+      "profit": -0.70,
+      "icon": "cn-bond",
+      "funds": [
+        {
+          "code": "000341",
+          "name": "南方中债1-3年国开行债券指数",
+          "inMarketCode": "",
+          "avgPrice": 1.1725,
+          "shares": 8,
+          "ratio": 15.26,
+          "estValue": 1.164,
+          "priceDiff": -0.70,
+          "updateTime": "2023-11-15"
+        }
+      ]
+    },
+    {
+      "type": "global-market",
+      "name": "海外成熟市场股票",
+      "shares": 2,
+      "ratio": 8.47,
+      "profit": -3.44,
+      "icon": "global-market",
+      "funds": [
+        {
+          "code": "000624",
+          "name": "博时标普500ETF联接A",
+          "inMarketCode": "513500",
+          "avgPrice": 1.3526,
+          "shares": 2,
+          "ratio": 8.47,
+          "estValue": 1.399,
+          "priceDiff": -3.44,
+          "updateTime": "2023-11-15"
+        }
+      ]
+    }
+  ],
+  "fundCodes": [
+    "000071",
+    "161211", 
+    "000341", 
+    "000624"
+  ]
+} 
