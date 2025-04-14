@@ -1,0 +1,16 @@
+{
+  "name": "etftool",
+  "version": "1.0.0",
+  "description": "ETF数据处理工具",
+  "main": "index.js",
+  "scripts": {
+    "build": "node process-data.js",
+    "start": "python -m http.server 8080"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {}
+}

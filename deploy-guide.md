@@ -57,13 +57,15 @@ git push origin main
 - 项目名称：使用默认名称或自定义
 - 框架预设：选择"Other"
 - 根目录：默认为"/"
-- 构建命令：留空
-- 输出目录：留空
+- 构建命令：`npm run build` 或 `node process-data.js`
+- 输出目录：留空 (或设置为 `.`) 
+- 安装命令：可以留空 (如果未来有外部依赖，应为 `npm install`)
 
 #### 2.4 部署项目
 1. 点击"Deploy"按钮
-2. 等待部署完成（通常只需几秒钟）
-3. 部署成功后，Vercel会显示一个预览链接，点击查看你的网站
+2. Vercel 将运行构建命令 (`node process-data.js`) 来生成最新的 `processed-data.js` 文件。
+3. 等待部署完成
+4. 部署成功后，Vercel会显示一个预览链接，点击查看你的网站
 
 #### 2.5 自定义域名（可选）
 1. 在项目页面，点击"Settings" > "Domains"
@@ -73,105 +75,109 @@ git push origin main
 
 ## 二、数据更新方法
 
-本项目提供了两种数据更新方法：
+要更新网站上显示的ETF数据，你需要更新源数据文件并重新部署。
 
-### 1. 通过网页界面更新（简单）
+### 更新流程
 
-我们已经在页面右下角添加了一个"更新基金数据"按钮：
+1.  **修改源数据文件**:
+    *   在你的本地项目副本中，编辑 `etf.json` 和/或 `adjust.json` 文件，更新所需的数据。
 
-1. 访问你部署的网站
-2. 点击右下角的"更新基金数据"按钮
-3. 系统会自动从天天基金网获取最新数据
-4. 数据更新成功后会自动刷新页面
+2.  **运行数据预处理脚本** (本地):
+    *   打开终端或命令行，导航到项目目录。
+    *   运行以下命令生成最新的 `processed-data.js` 文件：
+        ```bash
+        node process-data.js
+        ```
+    *   **(重要)** 确认 `processed-data.js` 文件已被更新。
 
-注意事项：
-- 这种方法使用浏览器的localStorage存储更新后的数据
-- 数据只保存在当前浏览器中，不会同步到其他设备
-- 如果清除浏览器缓存，更新的数据会丢失
+3.  **提交并推送更改到GitHub**:
+    *   将修改后的 `etf.json`, `adjust.json` (如果已修改) 以及 **更新后的 `processed-data.js`** 文件添加到 Git。
+    *   提交这些更改：
+        ```bash
+        git add etf.json adjust.json processed-data.js
+        git commit -m "更新ETF数据"
+        ```
+    *   将更改推送到你的 GitHub 仓库的主分支：
+        ```bash
+        git push origin main  # 或者你的主分支名称
+        ```
 
-### 2. 通过修改数据文件更新（永久）
+4.  **Vercel 自动重新部署**:
+    *   Vercel 会自动检测到你的 GitHub 仓库主分支的更新。
+    *   它将自动拉取最新的代码（包含更新后的 `processed-data.js`）。
+    *   Vercel 会重新部署你的项目。
+    *   通常在几分钟内，你的 Vercel 网站就会显示最新的数据。
 
-如果你希望更新对所有访问者都生效，需要修改GitHub仓库中的数据文件：
+### 不再推荐的方式 (网页更新按钮 / 直接修改GitHub文件)
 
-1. 登录GitHub，进入你的etftool仓库
-2. 找到并点击"data/fund-data.json"文件
-3. 点击右上角的铅笔图标（Edit this file）
-4. 修改文件内容，更新基金数据
-5. 完成修改后，点击"Commit changes"保存
+-   **网页更新按钮**: `deploy-guide.md` 之前可能提到过通过网页按钮更新数据。这种方式通常只将数据存储在用户的浏览器本地存储 (localStorage) 中，是临时的，并非永久更新，且对其他用户无效。如果此按钮仍然存在，其功能可能与当前的数据处理流程不符，应考虑移除或修改。
+-   **直接修改 GitHub 上的 `data/fund-data.json`**: `deploy-guide.md` 之前可能提到直接在 GitHub 网页上编辑 `data/fund-data.json`。根据我们对 `process-data.js` 的分析，项目的核心数据源是 `etf.json` 和 `adjust.json`，并通过 `process-data.js` 生成 `processed-data.js`。因此，直接修改 `data/fund-data.json` (如果该文件还存在且被使用的话) 可能不是正确的数据更新路径。正确流程是修改源文件并运行预处理脚本。
 
-Vercel会自动检测到GitHub仓库的变更，并自动重新部署你的网站。通常在1-2分钟内，所有访问者都能看到更新后的数据。
+### 自动更新脚本（高级）
 
-### 3. 自动更新脚本（高级，需要服务器）
+如果你希望完全自动化数据更新，可以考虑设置一个服务器脚本：
 
-如果你有自己的服务器，可以设置自动更新脚本：
+1.  创建一个脚本 (例如，使用 Node.js、Python) 来自动从数据源获取最新的 ETF 数据。
+2.  脚本需要能更新本地的 `etf.json` 和 `adjust.json` 文件。
+3.  脚本接着需要执行 `node process-data.js` 来生成 `processed-data.js`。
+4.  最后，脚本需要使用 Git 命令将更新后的 `etf.json`, `adjust.json`, 和 `processed-data.js` 推送到 GitHub 仓库。
+5.  设置定时任务 (如 cron job) 定期运行此脚本。
 
-1. 创建一个Node.js脚本，使用axios和cheerio爬取基金数据
-2. 使用GitHub API自动更新仓库中的数据文件
-3. 设置定时任务，如每天下午收盘后自动运行
+*注意：实现自动更新脚本需要一定的开发和服务器运维知识。*
 
-参考脚本示例：
 ```javascript
-const axios = require('axios');
-const { Octokit } = require('@octokit/rest');
+// 脚本示例 (概念性，需要根据实际情况调整)
+const { execSync } = require('child_process');
+const fs = require('fs');
+// ... (添加获取最新数据的逻辑, 更新 etf.json, adjust.json)
 
-// 初始化GitHub API客户端
-const octokit = new Octokit({
-  auth: 'your-github-token'  // 需要生成个人访问令牌
-});
+try {
+  console.log('获取最新数据并更新源文件...');
+  // ... (更新 etf.json 和 adjust.json 的代码)
 
-async function updateFundData() {
-  // 获取最新基金数据的代码，类似于data-updater.js中的逻辑
-  // ...
-  
-  // 更新GitHub仓库中的数据文件
-  const content = Buffer.from(JSON.stringify(updatedData, null, 2)).toString('base64');
-  
-  // 获取当前文件的SHA
-  const { data: fileData } = await octokit.repos.getContent({
-    owner: 'your-username',
-    repo: 'etftool',
-    path: 'data/fund-data.json'
-  });
-  
-  // 更新文件
-  await octokit.repos.createOrUpdateFileContents({
-    owner: 'your-username',
-    repo: 'etftool',
-    path: 'data/fund-data.json',
-    message: `更新基金数据 ${new Date().toISOString().split('T')[0]}`,
-    content: content,
-    sha: fileData.sha
-  });
-  
-  console.log('数据更新成功！');
+  console.log('运行数据预处理脚本...');
+  execSync('node process-data.js', { stdio: 'inherit' });
+
+  console.log('提交并推送更新到 GitHub...');
+  execSync('git add etf.json adjust.json processed-data.js', { stdio: 'inherit' });
+  // 检查是否有更改需要提交
+  const status = execSync('git status --porcelain').toString();
+  if (status) {
+      execSync(`git commit -m "自动更新ETF数据 ${new Date().toISOString()}"`, { stdio: 'inherit' });
+      execSync('git push origin main', { stdio: 'inherit' });
+      console.log('数据成功更新并推送到 GitHub');
+  } else {
+      console.log('数据无变化，无需推送');
+  }
+
+} catch (error) {
+  console.error('自动更新脚本执行失败:', error);
 }
-
-// 运行更新函数
-updateFundData();
 ```
 
 ## 三、常见问题解答
 
 ### Q1: 更新按钮点击后显示错误
-可能是天天基金API发生变化或限制了访问。您可以：
-- 检查浏览器控制台的错误信息（按F12打开开发者工具）
-- 修改data-updater.js文件，尝试使用不同的API端点
+如果页面上还存在旧的"更新数据"按钮，它可能不再有效或与当前数据流程冲突。推荐移除该按钮，并遵循本文档描述的通过修改源文件、运行预处理脚本和推送GitHub的更新流程。
 
 ### Q2: Vercel部署失败
-- 确保仓库中包含了所有必要的文件
-- 检查Vercel构建日志，查看具体错误原因
-- 确保index.html文件存在于根目录
+- 确保 GitHub 仓库中包含了所有必要的文件，特别是 `etf.json`, `adjust.json` 和 **最新生成的 `processed-data.js`**。
+- 检查 Vercel 构建日志，确认 `node process-data.js` 命令是否成功执行。
+- 确保 `package.json` 文件正确配置了 `build` 脚本。
+- 确保项目根目录有可访问的 HTML 文件 (如 `150plan.html`)。
 
 ### Q3: 数据不显示或显示异常
-- 检查data/fund-data.json文件格式是否正确
-- 确保HTML中正确引入了所有JavaScript文件
-- 查看浏览器控制台是否有JavaScript错误
+- 确认 `processed-data.js` 文件已通过运行 `node process-data.js` 正确生成。
+- 检查 `etf.json` 和 `adjust.json` 的格式是否正确。
+- 检查浏览器控制台是否有 JavaScript 错误，特别是关于 `processedData` 对象的错误。
+- 确认 HTML 文件中正确引入了 `processed-data.js` 和 `plan-data.js`。
 
 ### Q4: 如何添加新的基金
-1. 编辑data/fund-data.json文件
-2. 在相应的资产类别中添加新的基金信息
-3. 在fundCodes数组中添加新基金的代码
-4. 提交更改并等待Vercel重新部署
+1.  编辑本地的 `etf.json` 文件，在 `composition` 数组的相应资产类别下的 `compList` 中添加新的基金对象信息。
+2.  如果新基金有调整记录，相应地更新 `adjust.json` 文件。
+3.  **运行 `node process-data.js`** 生成包含新基金数据的 `processed-data.js`。
+4.  将修改后的 `etf.json`, `adjust.json` (如果修改) 和 **更新后的 `processed-data.js`** 提交并推送到 GitHub。
+5.  Vercel 将自动重新部署。
 
 ## 四、资源和链接
 

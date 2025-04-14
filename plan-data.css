@@ -325,6 +325,7 @@ body {
 .asset-icon.a-stock { background-color: #e74c3c; }
 .asset-icon.hk-stock { background-color: #3498db; }
 .asset-icon.cn-bond { background-color: #1abc9c; }
+.asset-icon.domestic-bond { background-color: #1abc9c; }
 .asset-icon.global-bond { background-color: #f1c40f; }
 .asset-icon.global-market { background-color: #2ecc71; }
 .asset-icon.oil { background-color: #e67e22; }
@@ -368,75 +369,78 @@ body {
     color: #4a89dc;
 }
 
+.asset-group {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    width: 100%;
+}
+
+.asset-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
 .asset-group-header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 15px;
-    background-color: #f8f9fa;
+    padding: 12px 16px;
+    background-color: #f5f5f5;
     border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    width: 100%;
 }
 
 .asset-group-header .title-section {
     display: flex;
     align-items: center;
-}
-
-.asset-group-header .asset-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
-}
-
-.asset-group-header .asset-title {
-    font-weight: 600;
-    color: #333;
-    font-size: 16px;
-}
-
-.asset-group-header .asset-share {
-    font-size: 13px;
-    color: #666;
-    margin-left: 8px;
+    gap: 8px;
 }
 
 .asset-group-header .detail-info {
     display: flex;
     align-items: center;
+    gap: 16px;
+}
+
+.asset-group-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.asset-group-header .detail-shares {
+    color: #666;
+    font-size: 14px;
+    font-weight: normal;
 }
 
 .asset-group-header .detail-profit {
-    font-size: 13px;
-    color: #e74c3c;
-    font-weight: 500;
-    margin-right: 10px;
+    color: #666;
+    font-size: 14px;
 }
 
 .asset-group-header .detail-date {
-    font-size: 13px;
-    color: #666;
-    font-weight: normal;
+    color: #999;
+    font-size: 14px;
 }
 
 .fund-cards-container {
     overflow-y: auto;
-    max-height: 70vh;
-    padding-right: 10px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+    max-height: 600px;
+    padding-right: 5px;
 }
 
 .fund-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 15px;
-    padding: 15px;
-    overflow-y: visible;
-    scrollbar-width: thin;
-    scrollbar-color: #ccc #f5f5f5;
+    width: 100%;
 }
 
 .fund-cards::-webkit-scrollbar {
@@ -462,9 +466,9 @@ body {
     background: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 0;
+    padding: 12px;
     margin-bottom: 16px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
 }
 
 .fund-card:hover {
@@ -474,51 +478,25 @@ body {
 
 .fund-header {
     padding: 12px 15px;
-    border-radius: 6px 6px 0 0;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     background: #f8f9fa;
     border-bottom: 1px solid #eee;
-}
-
-.fund-title-group {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: calc(100% - 80px);
 }
 
 .fund-title {
     font-weight: 500;
     font-size: 14px;
     color: #333;
-    margin-bottom: 2px;
-    width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    flex: 1;
 }
 
 .fund-code {
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-    margin-top: 2px;
-}
-
-.last-operation {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    font-size: 12px;
+    font-size: 13px;
     color: #666;
-}
-
-.operation-date {
-    margin-top: 3px;
-    font-size: 11px;
-    color: #888;
+    font-weight: normal;
+    margin-left: 10px;
 }
 
 .fund-header.positive {
@@ -535,14 +513,14 @@ body {
     padding: 12px 15px;
 }
 
-.fund-row {
+.fund-data-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 8px;
     font-size: 13px;
 }
 
-.fund-row:last-child {
+.fund-data-row:last-child {
     margin-bottom: 0;
 }
 
@@ -601,22 +579,70 @@ body {
     position: relative;
 }
 
-.chart-container svg {
+/* 垂直趋势图样式 */
+#vertical-trend-chart {
     width: 100%;
-    height: 240px;
+    height: 600px;
+    position: relative;
+    margin-bottom: 0;
+    border: 1px solid #eee;
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+#vertical-trend-chart svg {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+}
+
+/* 交互元素样式 */
+#vertical-trend-chart .interaction-area {
+    cursor: crosshair;
+}
+
+#vertical-trend-chart text {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-size: 10px;
+}
+
+/* 图表区域样式 */
+#vertical-trend-chart path {
+    transition: opacity 0.2s ease;
+}
+
+#vertical-trend-chart path:hover {
+    opacity: 0.9;
+    stroke-width: 1px;
+}
+
+/* 图表错误消息样式 */
+.chart-error {
+    padding: 20px;
+    color: #e74c3c;
+    text-align: center;
+    font-weight: bold;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
 }
 
 /* 趋势图tooltip提示框样式 */
 .chart-tooltip {
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.9);
+    position: fixed; /* 改为fixed以避免滚动问题 */
+    background-color: rgba(255, 255, 255, 0.95);
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     pointer-events: none;
-    z-index: 100;
+    z-index: 1000; /* 确保在最上层 */
     display: none;
+    max-width: 250px;
+    overflow-y: auto;
 }
 
 .tooltip-date {
@@ -625,6 +651,13 @@ body {
     color: #333;
     text-align: center;
     font-size: 0.85rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.tooltip-content {
+    max-height: 250px;
+    overflow-y: auto;
 }
 
 .tooltip-item {
@@ -652,68 +685,63 @@ body {
     font-weight: 500;
 }
 
-/* 扇形图样式 */
-.pie-chart-container {
-    margin-top: 30px;
-    text-align: center;
-}
-
-.pie-chart-title {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.pie-chart {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.pie-chart svg {
-    width: 100%;
-    height: 150px;
-}
-
-.chart-date-label {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: 0.85rem;
-    color: #777;
-}
-
+/* 图例样式 */
 .chart-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 6px;
+    margin: -70px auto 15px; /* 进一步上移，减少与趋势图底部的空白 */
+    padding: 8px 12px;
+    background-color: #fff;
     justify-content: center;
-    margin-top: 10px;
+    align-items: center;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    position: relative;
+    z-index: 2;
+    width: 95%;
+    max-width: 900px;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
-    margin-right: 10px;
+    margin: 3px 4px;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background-color: #fafafa;
+    border: 1px solid #f0f0f0;
     font-size: 13px;
-    color: #555;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    white-space: nowrap;
+}
+
+.legend-item:hover {
+    background-color: #f5f5f5;
+    border-color: #e8e8e8;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 }
 
 .legend-color {
     display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 3px;
-    margin-right: 5px;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    border-radius: 2px;
+    transition: opacity 0.2s ease;
 }
 
-.legend-label {
-    font-size: 0.8rem;
-    color: #666;
+.legend-item.hidden .legend-color {
+    opacity: 0.3;
+}
+
+.legend-item.hidden {
+    opacity: 0.7;
+    background-color: #f5f5f5;
 }
 
 /* 底部附加信息 */
@@ -734,10 +762,6 @@ body {
     
     .plan-data-container {
         grid-template-columns: 0.8fr 3fr 1fr;
-    }
-    
-    .fund-cards {
-        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -781,14 +805,6 @@ body {
         height: auto;
         min-height: 600px;
     }
-    
-    .fund-cards {
-        grid-template-columns: repeat(1, 1fr);
-    }
-    
-    .fund-cards-container {
-        max-height: 80vh;
-    }
 }
 
 @media (max-width: 768px) {
@@ -823,10 +839,9 @@ body {
         max-height: none;
         overflow: visible;
     }
-    
+
     .fund-cards {
         grid-template-columns: 1fr;
-        gap: 10px;
     }
     
     .plan-tab {
@@ -868,11 +883,6 @@ body {
     .chart-container svg {
         height: 200px;
     }
-    
-    .pie-chart svg {
-        width: 140px;
-        height: 140px;
-    }
 }
 
 @media (max-height: 600px) {
@@ -902,28 +912,11 @@ header {
     margin: 0 auto;
 }
 
-.asset-group {
-    margin-bottom: 25px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-}
-
-.asset-group:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
 .fund-title-group {
     display: flex;
     align-items: center;
     gap: 8px;
     width: 100%;
-}
-
-.fund-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
 }
 
 .fund-cash-info {
@@ -1013,4 +1006,10 @@ header {
 
 .fund-card.cleared .fund-value.positive {
     color: #5a9178;
-} 
+}
+
+.fund-card.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    filter: grayscale(100%);
+}
