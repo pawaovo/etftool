@@ -1,0 +1,12 @@
+{
+  "routes": [
+    { "src": "/", "dest": "/150plan.html" },
+    { "src": "/simple", "dest": "/150plan-simple.html" },
+    { "src": "/local", "dest": "/150plan-local.html" },
+    { "src": "/s", "dest": "/splan.html" }
+  ],
+  "outputDirectory": "public",
+  "github": {
+    "silent": true
+  }
+} 

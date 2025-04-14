@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E大150计划</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="plan-data.css">
+    <link rel="stylesheet" href="styles/etf-cards.css">
+    <style>
+      /* 大类资产分类栏样式 */
+      .asset-group-header {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #f5f5f5;
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+      }
+
+      .asset-group-header .title-section {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex: 0 0 auto;
+      }
+
+      .asset-group-header .detail-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex: 0 0 auto;
+      }
+
+      .asset-group-header h4 {
+        margin: 0;
+        font-size: 16px;
+        white-space: nowrap;
+      }
+
+      .asset-group-header .detail-shares {
+        font-size: 14px;
+        color: #666;
+        white-space: nowrap;
+      }
+
+      .asset-group-header .detail-profit,
+      .asset-group-header .detail-date {
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      /* 双行资金状况样式 */
+      .fund-status-double {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        text-align: right;
+        font-size: 14px;
+        margin-right: 15px;
+        margin-top: -5px; /* 向上移动整体位置 */
+      }
+      
+      .fund-status-row {
+        white-space: nowrap;
+      }
+      
+      .fund-status-row.position {
+        color: #3498db; /* 蓝色 */
+      }
+      
+      .fund-status-row.position span {
+        font-weight: 500;
+        color: #3498db; /* 让数字也使用蓝色 */
+      }
+      
+      .fund-status-row.cash {
+        color: #9b59b6; /* 紫色 */
+      }
+      
+      .fund-status-row.cash span {
+        font-weight: 500;
+        color: #9b59b6; /* 让数字也使用紫色 */
+      }
+
+      /* 累计收益率红色样式 */
+      .asset-group-header .detail-profit {
+        color: #e74c3c !important;
+        font-weight: 500;
+      }
+
+      /* 基金卡片容器样式 */
+      .fund-cards-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .fund-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        width: 100%;
+      }
+
+      .fund-card {
+        flex: 0 0 calc(33.33% - 11px);
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        box-sizing: border-box;
+      }
+
+      .fund-card.disabled {
+        opacity: 0.7;
+        background-color: #f8f8f8;
+      }
+
+      @media (max-width: 1200px) {
+        .fund-card {
+          flex: 0 0 calc(50% - 8px);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .fund-card {
+          flex: 0 0 100%;
+        }
+        
+        .asset-group-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 8px;
+        }
+      }
+
+      /* 调整排名标题区域布局 */
+      .asset-ranking-header {
+        padding: 15px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .asset-ranking-header h3 {
+        margin: 0 0 5px 0;
+      }
+
+      .fund-status-single {
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+        align-self: stretch;
+        margin-top: 3px;
+      }
+      
+      .fund-status-single .position {
+        font-weight: 500;
+        color: #3498db; /* 蓝色 */
+      }
+      
+      .fund-status-single .cash {
+        font-weight: 500;
+        color: #9b59b6; /* 紫色 */
+      }
+      
+      .fund-status-single .position-group {
+        color: #3498db; /* 蓝色 */
+        font-weight: 500;
+      }
+      
+      .fund-status-single .cash-group {
+        color: #9b59b6; /* 紫色 */
+        font-weight: 500;
+      }
+
+      .asset-ranking-header .sort-controls {
+        align-self: stretch; /* 让按钮组占据整个宽度 */
+        margin-top: 8px;
+      }
+      
+      /* 排序按钮样式 */
+      .sort-controls {
+        display: flex;
+        width: 100%;
+        border: 1px solid #dddddd;
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      
+      .sort-btn {
+        flex: 1;
+        text-align: center;
+        padding: 8px 12px;
+        cursor: pointer;
+        background-color: #f5f5f5;
+        transition: all 0.2s ease;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+      
+      .sort-btn.active {
+        background-color: #4a89dc;
+        color: white;
+      }
+      
+      .sort-btn:hover:not(.active) {
+        background-color: #e9e9e9;
+      }
+    </style>
+</head>
+<body>
+    <main class="plan-container">
+       
+        
+        <!-- 计划选择器 -->
+        <div class="plan-selector">
+            <div class="plan-tabs">
+                <button class="plan-tab active" data-plan="150">150 计划</button>
+                <button class="plan-tab" data-plan="S">S 计划</button>
+            </div>
+        </div>
+        
+        <!-- 主要内容区域 -->
+        <div class="plan-data-container">
+            <!-- 左侧 - 大类资产占比排名 -->
+            <div class="asset-ranking">
+                <div class="asset-ranking-header">
+                    <h3><i class="fas fa-list-ol"></i> 大类资产排名</h3>
+                    
+                    <!-- 当前资金状况 - 动态单行版 -->
+                    <div class="fund-status-single">
+                        <span class="position-group">持仓 <span id="total-position-units">xx</span>份 <span id="total-position-percent">xx%</span></span>    
+                        <span class="cash-group">现金 <span id="total-cash-units">xx</span>份 <span id="total-cash-percent">xx%</span></span>
+                    </div>
+                    
+                    <div class="sort-controls">
+                        <span class="sort-btn" data-sort="shares">份数(占比)</span>
+                        <span class="sort-btn active" data-sort="profit">累计收益率</span>
+                    </div>
+                </div>
+                <div class="asset-list">
+                    <div class="asset-item" data-asset-type="cash">
+                        <span class="asset-icon cash"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">现金(未投入部分)</span>
+                            <span class="asset-shares">31份 (25.21%)</span>
+                        </div>
+                        <span class="asset-profit positive">+31.43%</span>
+                    </div>
+                    <div class="asset-item active" data-asset-type="a-stock">
+                        <span class="asset-icon a-stock"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">A股</span>
+                            <span class="asset-shares">85份 (50.72%)</span>
+                        </div>
+                        <span class="asset-profit positive">+27.58%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="hk-stock">
+                        <span class="asset-icon hk-stock"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">海外新兴市场股票</span>
+                            <span class="asset-shares">21份 (13.67%)</span>
+                        </div>
+                        <span class="asset-profit positive">+15.25%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="cn-bond">
+                        <span class="asset-icon cn-bond"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">境内债券</span>
+                            <span class="asset-shares">8份 (5.93%)</span>
+                        </div>
+                        <span class="asset-profit positive">+34.19%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="global-bond">
+                        <span class="asset-icon global-bond"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">海外债券</span>
+                            <span class="asset-shares">3份 (2.52%)</span>
+                        </div>
+                        <span class="asset-profit positive">+7.51%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="global-market">
+                        <span class="asset-icon global-market"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">海外成熟市场股票</span>
+                            <span class="asset-shares">2份 (1.90%)</span>
+                        </div>
+                        <span class="asset-profit positive">+50.23%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="oil">
+                        <span class="asset-icon oil"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">原油</span>
+                            <span class="asset-shares">0份 (0.00%)</span>
+                        </div>
+                        <span class="asset-profit positive">+25.91%</span>
+                    </div>
+                    <div class="asset-item" data-asset-type="gold">
+                        <span class="asset-icon gold"></span>
+                        <div class="asset-info">
+                            <span class="asset-name">黄金</span>
+                            <span class="asset-shares">0份 (0.00%)</span>
+                        </div>
+                        <span class="asset-profit positive">+38.66%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 中间 - 大类资产详情 -->
+            <div class="asset-details">
+                <div class="asset-details-header">
+                    <h3><i class="fas fa-info-circle"></i> 大类资产详情</h3>
+                </div>
+                <!-- 基金卡片容器：内容将完全由JavaScript动态生成 -->
+                <div class="fund-cards-container">
+                    <!-- 动态生成的资产组将在这里显示 -->
+                </div>
+            </div>
+            
+            <!-- 右侧 - 资产占比趋势 -->
+            <div class="trend-chart">
+                <div class="card">
+                    <div class="card-content">
+                        <h3 class="card-header-title">
+                            大类资产占比
+                        </h3>
+                        <div id="vertical-trend-chart" class="chart-container"></div>
+                        <div class="chart-legend"></div>
+                        <!-- 用于显示数据点详情的工具提示 -->
+                        <div class="chart-tooltip" style="display:none; position:absolute; background:white; border:1px solid #ddd; border-radius:4px; padding:8px; box-shadow:0 2px 8px rgba(0,0,0,0.15); z-index:1000;">
+                            <div class="tooltip-date" style="font-weight:bold; margin-bottom:5px;"></div>
+                            <div class="tooltip-content"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 图表弹窗容器 -->
+    <div id="chartModal" class="chart-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color:rgba(0,0,0,0.5); z-index:1000;">
+        <div class="chart-modal-container" style="position:relative; width:90%; max-width:1200px; max-height:90%; background:white; margin:30px auto; border-radius:6px; box-shadow:0 0 20px rgba(0,0,0,0.2); display:flex; flex-direction:column; overflow:hidden;">
+            <div class="chart-modal-header" style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; font-size:18px; font-weight:bold;">大类资产占比趋势</h3>
+                <button class="close-modal-btn" style="background:none; border:none; font-size:24px; cursor:pointer; padding:0; line-height:1;">&times;</button>
+            </div>
+            <div class="chart-modal-content" style="padding:15px; position:relative; flex:1; overflow:auto;">
+                <div id="horizontal-trend-chart" style="width:100%; height:550px; position:relative;"></div>
+                <div class="modal-legend" style="margin-top:10px; display:flex; flex-wrap:wrap; justify-content:center; padding:8px 12px; border-top:1px solid #f0f0f0;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="processed-data.js"></script>
+    <script src="plan-data.js"></script>
+    <script src="dateUtils.js"></script>
+    <script src="asset-distribution-data.js"></script>
+    <script src="asset-distribution-chart.js"></script>
+    
+    <!-- 添加FontAwesome图标支持 -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+    // 添加弹窗功能
+    document.addEventListener('DOMContentLoaded', function() {
+        const expandBtn = document.getElementById('expandChartBtn');
+        const modal = document.getElementById('chartModal');
+        const closeBtn = document.querySelector('.close-modal-btn');
+        
+        if (expandBtn) {
+            expandBtn.addEventListener('click', function() {
+                if (typeof showExpandedChartModal === 'function') {
+                    showExpandedChartModal();
+                } else {
+                    modal.style.display = 'flex';
+                }
+            });
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 点击弹窗背景关闭弹窗
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        });
+    });
+    </script>
+</body>
+</html> 

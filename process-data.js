@@ -85,8 +85,14 @@ const outputContent = `/**
 const processedData = ${JSON.stringify(processedData, null, 2)};
 `;
 
-fs.writeFileSync('processed-data.js', outputContent, 'utf8');
-console.log('数据处理完成，已生成 processed-data.js');
+// 确保public目录存在
+if (!fs.existsSync('public')) {
+  fs.mkdirSync('public');
+  console.log('创建public目录');
+}
+
+fs.writeFileSync('public/processed-data.js', outputContent, 'utf8');
+console.log('数据处理完成，已生成 public/processed-data.js');
 
 /**
  * 确保package.json文件存在

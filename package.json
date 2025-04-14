@@ -4,7 +4,7 @@
   "description": "ETF数据处理工具",
   "main": "index.js",
   "scripts": {
-    "build": "node process-data.js",
+    "build": "node process-data.js && node copy-to-public.js",
     "start": "python -m http.server 8080"
   },
   "engines": {
