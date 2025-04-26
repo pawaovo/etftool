@@ -1,0 +1,43 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# ETF投资工具规则
+
+ETF投资工具是一个基于Web的应用程序，用于展示和分析ETF基金数据。
+
+## 核心文件结构
+- 数据源文件: [adjust.json](mdc:adjust.json)和[etf.json](mdc:etf.json)
+- 数据处理: [process-data.js](mdc:process-data.js)生成[processed-data.js](mdc:processed-data.js)
+- 主HTML页面: [150plan.html](mdc:150plan.html)、[150plan-simple.html](mdc:150plan-simple.html)、[splan.html](mdc:splan.html)
+- 核心样式: [plan-data.css](mdc:plan-data.css)和[styles.css](mdc:styles.css)
+- 核心脚本: [plan-data.js](mdc:plan-data.js)、[dateUtils.js](mdc:dateUtils.js)、[asset-distribution-chart.js](mdc:asset-distribution-chart.js)
+
+## 构建流程
+1. 修改[adjust.json](mdc:adjust.json)或[etf.json](mdc:etf.json)更新基金数据
+2. 运行`npm run build`命令触发[process-data.js](mdc:process-data.js)处理数据，并通过[copy-to-public.js](mdc:copy-to-public.js)将所有文件复制到public目录
+3. 构建脚本在[package.json](mdc:package.json)中定义
+4. 部署配置在[vercel.json](mdc:vercel.json)中定义
+
+## 部署流程
+1. 提交更改到GitHub仓库
+2. Vercel自动检测更改并部署
+3. 输出目录为`public`，通过[vercel.json](mdc:vercel.json)中的路由配置访问页面
+
+## 数据结构
+- ETF基金数据存储在[etf.json](mdc:etf.json)中，包含基金分类、持仓和收益率信息
+- 调仓记录保存在[adjust.json](mdc:adjust.json)中，记录买入卖出操作和调仓评论
+- 数据处理逻辑在[process-data.js](mdc:process-data.js)中，生成前端需要的格式化数据
+
+## 数据更新流程
+1. 更新[adjust.json](mdc:adjust.json)添加新的调仓记录
+2. 更新[etf.json](mdc:etf.json)修改基金信息或增加新基金
+3. 构建处理后的数据文件
+4. 推送到GitHub触发部署
+
+## 常见问题排查
+- HTML加载资源错误：检查[public](mdc:public)目录中的文件引用路径
+- 数据不显示：确认[processed-data.js](mdc:processed-data.js)是否正确生成
+- 部署失败：检查[vercel.json](mdc:vercel.json)配置和构建日志
+

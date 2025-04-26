@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格策略 - MoshiCoCo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="plan-data.css">
+    <link rel="stylesheet" href="styles/etf-cards.css">
+    <style>
+        /* 为网格策略页面特别定制的样式 */
+        .plan-data-container {
+            grid-template-columns: 1fr !important; /* 只有中间一�?*/
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .asset-details {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <main class="plan-container">
+        <!-- 计划选择�?-->
+        <div class="plan-selector">
+            <div class="plan-tabs">
+                <button class="plan-tab" data-plan="150">150 计划</button>
+                <button class="plan-tab" data-plan="S">S 计划</button>
+                <button class="plan-tab active" data-plan="grid">网格策略</button>
+            </div>
+        </div>
+        
+        <!-- 主要内容区域 -->
+        <div class="plan-data-container">
+            <!-- 中间 - 大类资产详情 (只保留这部分) -->
+            <div class="asset-details">
+                <div class="asset-details-header">
+                    <h3><i class="fas fa-info-circle"></i> 大类资产详情</h3>
+                </div>
+                <!-- 基金卡片容器：内容将完全由JavaScript动态生�?-->
+                <div class="fund-cards-container">
+                    <!-- 动态生成的资产组将在这里显�?-->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 图表弹窗容器 -->
+    <div id="chart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="chart-container">
+                <canvas id="historyChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="plan-data.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置当前页面为网格策�?
+            window.currentPlan = 'grid';
+            
+            // 初始化页�?
+            initPlanPage();
+        });
+    </script>
+</body>
+</html> 

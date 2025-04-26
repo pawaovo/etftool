@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格策略详情</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./plan-data.css">
+    <link rel="stylesheet" href="./styles/etf-cards.css">
+</head>
+<body>
+    <!-- 主容器 -->
+    <div class="grid-detail-container">
+        <!-- 返回按钮 -->
+        <div class="back-button-container">
+            <a href="grid.html" class="back-button">&larr; 返回</a>
+        </div>
+
+        <!-- 顶部信息栏 -->
+        <section class="grid-detail-header">
+            <div class="info-bar">
+                <div class="info-item">
+                    <span class="info-label">ETF代码与名称:</span>
+                    <span class="info-value" id="etf-name-code">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">执行次数:</span>
+                    <span class="info-value" id="execution-count">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">累计收益率:</span>
+                    <span class="info-value" id="cumulative-yield-rate">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">当前档位/买入价:</span>
+                    <span class="info-value" id="current-level-buy-price">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">步长:</span>
+                    <span class="info-value" id="step-size">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">最新净值:</span>
+                    <span class="info-value" id="latest-net-value">--</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">净值变化:</span>
+                    <span class="info-value" id="net-value-change-rate">--</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 图表容器 -->
+        <section class="grid-chart-container">
+            <div class="chart-area">
+                <div id="grid-trend-chart"></div>
+            </div>
+        </section>
+
+        <!-- 表格切换按钮 -->
+        <div class="table-toggle-buttons">
+            <button class="toggle-btn active" data-target="trade-details">交易明细</button>
+            <button class="toggle-btn" data-target="grid-strategy">网格策略</button>
+        </div>
+
+        <!-- 交易明细表格容器 -->
+        <section class="table-section" id="trade-details-section">
+            <div class="table-container">
+                <table class="trade-details-table">
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>交易日期</th>
+                            <th>交易金额</th>
+                            <th>交易价格</th>
+                            <th>交易股数</th>
+                            <th>收益</th>
+                            <th>收益率</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trade-details-body">
+                        <!-- 表格内容将在JS中动态生成 -->
+                    </tbody>
+                    <tfoot id="trade-details-footer">
+                        <tr>
+                            <td colspan="5">累计</td>
+                            <td id="total-profit">--</td>
+                            <td id="total-profit-rate">--</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </section>
+
+        <!-- 网格策略表格容器 -->
+        <section class="table-section" id="grid-strategy-section" style="display: none;">
+            <!-- 参数区 -->
+            <div class="strategy-params-container">
+                <h4>网格策略参数</h4>
+                <div class="params-grid" id="strategy-params-grid">
+                    <div class="param-item">
+                        <span class="param-label">标的类型:</span>
+                        <span class="param-value" id="target-type">中国场内基金</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">最小报价单位:</span>
+                        <span class="param-value" id="min-quote-unit">0.001</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">最小交易单位:</span>
+                        <span class="param-value" id="min-trade-unit">100股</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">基准价:</span>
+                        <span class="param-value" id="base-price">--</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">每份金额:</span>
+                        <span class="param-value" id="amount-per-unit">--</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">最低价:</span>
+                        <span class="param-value" id="min-price">--</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">小网步长:</span>
+                        <span class="param-value" id="small-grid-step">--</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">中网步长:</span>
+                        <span class="param-value" id="medium-grid-step">15%</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">大网步长:</span>
+                        <span class="param-value" id="large-grid-step">30%</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">档位加码系数:</span>
+                        <span class="param-value" id="level-boost-factor">1.0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">金额加码系数:</span>
+                        <span class="param-value" id="amount-boost-factor">1.0</span>
+                    </div>
+                    <div class="param-item">
+                        <span class="param-label">保留利润系数:</span>
+                        <span class="param-value" id="profit-retention-factor">1.0</span>
+                    </div>
+                </div>
+                <div class="params-controls">
+                    <button id="modify-params-btn">修改</button>
+                </div>
+            </div>
+
+            <!-- 档位详情表区 -->
+            <div class="grid-levels-container">
+                <h4>网格档位详情</h4>
+                <div class="table-container">
+                    <table class="grid-levels-table">
+                        <thead>
+                            <tr>
+                                <th>网格种类</th>
+                                <th>档位</th>
+                                <th>买入触发价</th>
+                                <th>买入价</th>
+                                <th>买入金额</th>
+                                <th>买入股数</th>
+                                <th>当前持仓</th>
+                                <th>卖出触发价</th>
+                                <th>卖出价</th>
+                                <th>卖出股数</th>
+                                <th>卖出金额</th>
+                                <th>状态</th>
+                                <th>收益</th>
+                                <th>收益率</th>
+                            </tr>
+                        </thead>
+                        <tbody id="grid-levels-body">
+                            <!-- 表格内容将在JS中动态生成 -->
+                        </tbody>
+                        <tfoot id="grid-levels-footer">
+                            <tr>
+                                <td colspan="4">合计</td>
+                                <td id="total-planned-amount">--</td>
+                                <td>--</td>
+                                <td id="total-holding-shares">--</td>
+                                <td colspan="3">--</td>
+                                <td>--</td>
+                                <td>--</td>
+                                <td id="total-grid-profit">--</td>
+                                <td id="total-grid-profit-rate">--</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 引入JS文件 -->
+    <script src="js/grid-detail.js"></script>
+</body>
+</html> 

@@ -37,6 +37,7 @@
             <div class="plan-tabs">
                 <button class="plan-tab" data-plan="150">150 计划</button>
                 <button class="plan-tab active" data-plan="S">S 计划</button>
+                <button class="plan-tab" data-plan="grid">网格策略</button>
             </div>
         </div>
         
@@ -568,6 +569,60 @@
         </div>
     </main>
 
+    <!-- 加载脚本 -->
+    <script src="processed-data.js"></script>
     <script src="plan-data.js"></script>
+    <script src="dateUtils.js"></script>
+    <script src="asset-distribution-data.js"></script>
+    <script src="asset-distribution-chart.js"></script>
+    
+    <!-- 添加FontAwesome图标支持 -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+    // 设置当前页面为S计划
+    window.currentPlan = 'S';
+    
+    // 添加弹窗功能
+    document.addEventListener('DOMContentLoaded', function() {
+        // 初始化页面
+        if (typeof initPlanPage === 'function') {
+            initPlanPage();
+        }
+        
+        const expandBtn = document.getElementById('expandChartBtn');
+        const modal = document.getElementById('chartModal');
+        const closeBtn = document.querySelector('.close-modal-btn');
+        
+        if (expandBtn) {
+            expandBtn.addEventListener('click', function() {
+                if (typeof showExpandedChartModal === 'function') {
+                    showExpandedChartModal();
+                } else {
+                    modal.style.display = 'flex';
+                }
+            });
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+        }
+        
+        // 点击弹窗背景关闭弹窗
+        modal.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // ESC键关闭弹窗
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        });
+    });
+    </script>
 </body>
 </html> 

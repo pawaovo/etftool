@@ -4,13 +4,20 @@
   "description": "ETF数据处理工具",
   "main": "index.js",
   "scripts": {
-    "build": "node process-data.js && node copy-to-public.js",
-    "start": "python -m http.server 8080"
+    "clean": "rimraf dist/*",
+    "prebuild": "npm run clean",
+    "build": "node scripts/process-data.js && node scripts/copy-to-dist.js",
+    "start": "node scripts/serve.js",
+    "dev": "npm run build && npm run start"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "@modelcontextprotocol/server-github": "^2025.4.8",
+    "rimraf": "^3.0.2"
+  }
 }

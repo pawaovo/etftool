@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网格策略</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./plan-data.css">
+    <link rel="stylesheet" href="./styles/etf-cards.css">
+</head>
+<body>
+    <!-- 顶部导航按钮区 -->
+    <header class="app-header">
+        <div class="nav-container">
+            <div class="nav-buttons">
+                <a href="150plan.html" class="nav-btn">150定投计划</a>
+                <a href="splan.html" class="nav-btn">S计划</a>
+                <a href="grid.html" class="nav-btn active">网格策略</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 总体信息概览区 -->
+    <section class="grid-summary">
+        <div class="summary-container">
+            <div class="summary-item">
+                <div class="summary-label">执行次数</div>
+                <div class="summary-value" id="total-execution-count">--</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">买入/卖出金额</div>
+                <div class="summary-value" id="total-buy-sell-amount">--/--</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">买入/卖出/剩余股数</div>
+                <div class="summary-value" id="total-shares-info">--/--/--</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">收益/收益率</div>
+                <div class="summary-value" id="total-profit-info">--/--</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 卡片列表容器区 -->
+    <main class="grid-content">
+        <!-- 运行中网格策略 -->
+        <section class="grid-section running">
+            <div class="section-header">
+                <h3>运行中的网格策略</h3>
+                <div class="sort-controls">
+                    <button class="sort-btn" data-sort="executionCount">按执行次数</button>
+                    <button class="sort-btn" data-sort="cumulativeYieldRate">按累计收益率</button>
+                    <button class="sort-btn active" data-sort="netValueChangeRate">按净值变化</button>
+                </div>
+            </div>
+            <div class="grid-cards-container">
+                <div class="grid-cards" id="running-grid-cards">
+                    <!-- 卡片将在JS中动态生成 -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 已暂停网格策略 -->
+        <section class="grid-section paused">
+            <div class="section-header">
+                <h3>已暂停的网格策略</h3>
+            </div>
+            <div class="grid-cards-container">
+                <div class="grid-cards" id="paused-grid-cards">
+                    <!-- 卡片将在JS中动态生成 -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 引入JS文件 -->
+    <script src="js/grid-data.js"></script>
+</body>
+</html> 

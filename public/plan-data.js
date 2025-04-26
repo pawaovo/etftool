@@ -92,87 +92,52 @@ function loadDateUtilsScript() {
 function initPlanPage() {
     console.log('初始化计划页面');
     
+    // 检查当前页面类型
+    const isGridPlan = window.currentPlan === 'grid';
+    console.log('当前页面类型:', window.currentPlan);
+    
     // 检查是否有预处理数据
     if (typeof processedData !== 'undefined') {
         console.log('找到预处理数据，将使用它来更新UI');
         
         // 设置一个短暂的延迟，确保DOM已完全加载
         setTimeout(() => {
-            // 更新资金状况双行显示
-            updateFundStatusDouble(processedData);
-            
-            // 生成资产组HTML结构
-            generateAssetGroupsHTML(processedData.originalData);
-            
-            // 处理资产排名列表更新
-            if (processedData.assetRankings) {
-                console.log('使用预处理的资产排名数据');
+            // 网格策略页面不需要更新资金状况和资产排名等内容
+            if (!isGridPlan) {
+                // 更新资金状况双行显示
+                updateFundStatusDouble(processedData);
                 
-                // 默认使用份数排序
-                const sortType = getSortParam() || 'shares';
-                sortAssets(sortType);
-                
-                // 根据URL参数选择排序方式
-                const sortBtns = document.querySelectorAll('.sort-btn');
-                sortBtns.forEach(btn => {
-                    if (btn.getAttribute('data-sort') === sortType) {
-                        btn.classList.add('active');
-                    } else {
-                        btn.classList.remove('active');
-                    }
-                });
-                
-                // 如果没有URL参数，更新资产排名列表
-                if (!getSelectedAssetType()) {
-                    // 使用第一个资产作为默认选择
-                    let sortedAssets;
-                    if (sortType === 'shares') {
-                        sortedAssets = processedData.assetRankings.byUnit;
-                    } else {
-                        sortedAssets = processedData.assetRankings.byProfit;
-                    }
+                // 如果有预处理好的资产排名数据，使用它来更新UI
+                if (processedData.assetRankings && processedData.assetRankings.byUnit) {
+                    // 更新每个资产项的数据
+                    processedData.assetRankings.byUnit.forEach(asset => {
+                        // 更新资产项
+                        updateAssetRankingItem(
+                            asset.className,
+                            asset.unit,
+                            asset.percent * 100, // 转换为百分比
+                            asset.accProfitRate * 100 // 转换为百分比
+                        );
+                    });
+                } else {
+                    // 如果没有assetRankings，fallback到原来的方法
+                    console.log('未找到预处理的资产排名数据，使用assetDistribution');
+                    const assetDistribution = processedData.summary.assetDistribution;
                     
-                    if (sortedAssets && sortedAssets.length > 0) {
-                        const firstAsset = sortedAssets[0];
-                        const firstAssetType = getAssetTypeFromClassName(firstAsset.className);
-                        
-                        // 触发第一个资产项的点击
-                        const firstAssetItem = document.querySelector(`.asset-item[data-asset-type="${firstAssetType}"]`);
-                        if (firstAssetItem) {
-                            firstAssetItem.classList.add('active');
-                            showAssetDetails(firstAssetType);
-                        }
+                    // 遍历所有大类资产，更新资产排名列表
+                    for (const className in assetDistribution) {
+                        const assetData = assetDistribution[className];
+                        updateAssetRankingItem(
+                            className, 
+                            assetData.unit, 
+                            assetData.percent * 100, 
+                            assetData.accProfitRate * 100
+                        );
                     }
-                }
-                
-                // 更新每个资产项的数据
-                processedData.assetRankings.byUnit.forEach(asset => {
-                    // 更新资产项
-                    updateAssetRankingItem(
-                        asset.className,
-                        asset.unit,
-                        asset.percent * 100, // 转换为百分比
-                        asset.accProfitRate * 100 // 转换为百分比
-                    );
-                });
-            } else {
-                // 如果没有assetRankings，fallback到原来的方法
-                console.log('未找到预处理的资产排名数据，使用assetDistribution');
-                const assetDistribution = processedData.summary.assetDistribution;
-                
-                // 遍历所有大类资产，更新资产排名列表
-                for (const className in assetDistribution) {
-                    const assetData = assetDistribution[className];
-                    updateAssetRankingItem(
-                        className, 
-                        assetData.unit, 
-                        assetData.percent * 100, 
-                        assetData.accProfitRate * 100
-                    );
                 }
             }
             
-            // 加载ETF卡片数据
+            // 所有页面都需要加载ETF卡片数据
             loadEtfCardData();
             
             // 设置基金卡片颜色
@@ -185,11 +150,14 @@ function initPlanPage() {
     // 设置计划标签切换
     setupPlanTabs();
     
-    // 设置排序控件
-    setupSortControls();
-    
-    // 设置资产项点击
-    setupAssetItems();
+    // 只有非网格策略页面需要设置排序控件和资产项点击
+    if (!isGridPlan) {
+        // 设置排序控件
+        setupSortControls();
+        
+        // 设置资产项点击
+        setupAssetItems();
+    }
     
     // 加载初始数据
     loadPlanData();
@@ -218,6 +186,8 @@ function setupPlanTabs() {
                 window.location.href = '150plan.html';
             } else if (planType === 'S') {
                 window.location.href = 'splan.html';
+            } else if (planType === 'grid') {
+                window.location.href = 'gridplan.html';
             }
         });
     });

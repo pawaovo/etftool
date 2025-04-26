@@ -1,0 +1,409 @@
+[
+    {
+        "adjustmentId": 457,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/16963",
+        "adjustCreateTime": 1744175770000,
+        "adjustTxnDate": 1744128000000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "270042",
+                    "fundName": "广发纳指100ETF联接人民币(QDII)A",
+                    "fundInvestType": "1",
+                    "isQdii": true,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "5.7643",
+                    "navDate": "2025-04-09",
+                    "personalHighestBuyAmount": "2000.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 1,
+                "variety": "纳指100",
+                "largeClass": "海外成熟市场股票",
+                "classCode": "OVERSEA_STOCK_MATURE",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1744128000000,
+                "buyAdjustmentId": null,
+                "nav": 5.7643,
+                "navDate": 1744128000000
+            }
+        ],
+        "comment": "买入1份纳指100"
+    },
+    {
+        "adjustmentId": 451,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/16927 ",
+        "adjustCreateTime": 1744003038000,
+        "adjustTxnDate": 1743955200000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "012348",
+                    "fundName": "天弘恒生科技指数(QDII)A",
+                    "fundInvestType": "1",
+                    "isQdii": true,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "0.7125",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": "20000.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 3,
+                "variety": "恒生科技",
+                "largeClass": "海外新兴市场股票",
+                "classCode": "OVERSEA_STOCK_EMERGING",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1743955200000,
+                "buyAdjustmentId": null,
+                "nav": 0.6541,
+                "navDate": 1743955200000
+            }
+        ],
+        "comment": "买入1份恒生科技"
+    },
+    {
+        "adjustmentId": 445,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/16207 ",
+        "adjustCreateTime": 1741324529000,
+        "adjustTxnDate": 1741276800000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "000071",
+                    "fundName": "华夏恒生ETF联接A",
+                    "fundInvestType": "1",
+                    "isQdii": true,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "1.2887",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": null
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 8,
+                "variety": "恒生指数",
+                "largeClass": "海外新兴市场股票",
+                "classCode": "OVERSEA_STOCK_EMERGING",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1741276800000,
+                "buyAdjustmentId": null,
+                "nav": 1.3875,
+                "navDate": 1741276800000
+            }
+        ],
+        "comment": "买入1份恒生指数"
+    },
+    {
+        "adjustmentId": 439,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/15943  ",
+        "adjustCreateTime": 1740028529000,
+        "adjustTxnDate": 1739980800000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "110027",
+                    "fundName": "易方达安心债券A",
+                    "fundInvestType": "2",
+                    "isQdii": false,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "2.0211",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": null
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 4,
+                "variety": "易方达安心回报债",
+                "largeClass": "境内债券",
+                "classCode": "CHINA_BOND",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1739980800000,
+                "buyAdjustmentId": null,
+                "nav": 2.0081,
+                "navDate": 1739980800000
+            }
+        ],
+        "comment": "买入1份易方达安心债券A"
+    },
+    {
+        "adjustmentId": 433,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/14815 ",
+        "adjustCreateTime": 1733807833000,
+        "adjustTxnDate": 1733760000000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "100038",
+                    "fundName": "富国沪深300指数增强A",
+                    "fundInvestType": "1",
+                    "isQdii": false,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "1.4870",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": null
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 5,
+                "variety": "富国300",
+                "largeClass": "A股",
+                "classCode": "CHINA_STOCK",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1733760000000,
+                "buyAdjustmentId": null,
+                "nav": 1.4125,
+                "navDate": 1733760000000
+            },
+            {
+                "fund": {
+                    "fundCode": "340001",
+                    "fundName": "兴全可转债混合",
+                    "fundInvestType": "3",
+                    "isQdii": false,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "1.0555",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": "1000000.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 6,
+                "variety": "兴全转债",
+                "largeClass": "境内债券",
+                "classCode": "CHINA_BOND",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1733760000000,
+                "buyAdjustmentId": null,
+                "nav": 1.0422,
+                "navDate": 1733760000000
+            }
+        ],
+        "comment": "买入1份富国沪深300指数增强A、1份兴全可转债混合"
+    },
+    {
+        "adjustmentId": 427,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/14645",
+        "adjustCreateTime": 1732166430000,
+        "adjustTxnDate": 1732118400000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "000478",
+                    "fundName": "建信中证500指数增强A",
+                    "fundInvestType": "1",
+                    "isQdii": false,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "2.4893",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": null
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 8,
+                "variety": "建信500",
+                "largeClass": "A股",
+                "classCode": "CHINA_STOCK",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1732118400000,
+                "buyAdjustmentId": null,
+                "nav": 2.4312,
+                "navDate": 1732118400000
+            }
+        ],
+        "comment": "买入1份建信中证500指数增强A"
+    },
+    {
+        "adjustmentId": 421,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/14595",
+        "adjustCreateTime": 1731388529000,
+        "adjustTxnDate": 1731340800000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "004419",
+                    "fundName": "汇添富美元债债券人民币A",
+                    "fundInvestType": "2",
+                    "isQdii": true,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "1.0451",
+                    "navDate": "2025-04-09",
+                    "personalHighestBuyAmount": "10000.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 1,
+                "variety": "汇添富美元债",
+                "largeClass": "海外债券",
+                "classCode": "OVERSEA_BOND",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1731340800000,
+                "buyAdjustmentId": null,
+                "nav": 1.0536,
+                "navDate": 1731340800000
+            }
+        ],
+        "comment": "买入1份汇添富美元债债券人民币A"
+    },
+    {
+        "adjustmentId": 415,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/14425",
+        "adjustCreateTime": 1730178729000,
+        "adjustTxnDate": 1730131200000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "050025",
+                    "fundName": "博时标普500ETF联接A",
+                    "fundInvestType": "1",
+                    "isQdii": true,
+                    "canBuy": false,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "4.2589",
+                    "navDate": "2025-04-09",
+                    "personalHighestBuyAmount": "100.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 2,
+                "variety": "标普500",
+                "largeClass": "海外成熟市场股票",
+                "classCode": "OVERSEA_STOCK_MATURE",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1730131200000,
+                "buyAdjustmentId": null,
+                "nav": 4.2123,
+                "navDate": 1730131200000
+            }
+        ],
+        "comment": "买入1份博时标普500ETF联接A"
+    },
+    {
+        "adjustmentId": 409,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/14265",
+        "adjustCreateTime": 1729227629000,
+        "adjustTxnDate": 1729180800000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "001052",
+                    "fundName": "华夏中证500ETF联接A",
+                    "fundInvestType": "1",
+                    "isQdii": false,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "0.6633",
+                    "navDate": "2025-04-10",
+                    "personalHighestBuyAmount": "125000000.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 5,
+                "variety": "中证500",
+                "largeClass": "A股",
+                "classCode": "CHINA_STOCK",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1729180800000,
+                "buyAdjustmentId": null,
+                "nav": 0.6387,
+                "navDate": 1729180800000
+            }
+        ],
+        "comment": "买入1份华夏中证500ETF联接A"
+    },
+    {
+        "adjustmentId": 403,
+        "description": "--",
+        "url": "https://content.qieman.com/n/items/13972",
+        "adjustCreateTime": 1727327629000,
+        "adjustTxnDate": 1727280000000,
+        "investType": "E",
+        "orders": [
+            {
+                "fund": {
+                    "fundCode": "100050",
+                    "fundName": "富国全球债券(QDII)人民币A",
+                    "fundInvestType": "2",
+                    "isQdii": true,
+                    "canBuy": true,
+                    "canRedeem": true,
+                    "onSale": true,
+                    "nav": "1.2862",
+                    "navDate": "2025-04-09",
+                    "personalHighestBuyAmount": "100.00"
+                },
+                "orderCode": "022",
+                "tradeUnit": 1,
+                "tradeRatio": null,
+                "postPlanUnit": 1,
+                "variety": "富国全球债A",
+                "largeClass": "海外债券",
+                "classCode": "OVERSEA_BOND",
+                "strategyType": "LONG",
+                "gridDetail": null,
+                "adjustTxnDate": 1727280000000,
+                "buyAdjustmentId": null,
+                "nav": 1.2794,
+                "navDate": 1727280000000
+            }
+        ],
+        "comment": "买入1份富国全球债券(QDII)人民币A"
+    }
+] 
