@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETF工具 - S计划</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../plan-data.css">
+    <link rel="stylesheet" href="../styles/etf-cards.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <main class="plan-container">
+        <!-- 计划选择器 -->
+        <div class="plan-selector">
+            <div class="plan-tabs">
+                <button class="plan-tab" data-plan="150">150 计划</button>
+                <button class="plan-tab active" data-plan="S">S 计划</button>
+                <button class="plan-tab" data-plan="grid">网格策略</button>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="plan-data-container">
+            <!-- 信息导航栏 -->
+            <div class="info-nav-bar">
+                <div class="info-item">
+                    <div class="info-label">运行中/执行次数</div>
+                    <div class="info-value green-value">
+                        <span class="value-number">6/102</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">买入/卖出金额</div>
+                    <div class="info-value green-value">
+                        <span class="value-number">12309/14509</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">买入/卖出/剩余股数</div>
+                    <div class="info-value green-value">
+                        <span class="value-number">23465/22465/2265</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">收益/收益率</div>
+                    <div class="info-value">
+                        <div class="value-inline positive">
+                            <span class="value-number">1020</span>/<span class="value-percent">+40.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片排序控件 -->
+            <div class="card-sort-controls">
+                <div class="sort-buttons">
+                    <button class="sort-btn" data-sort-by="executionCount">按执行次数</button>
+                    <button class="sort-btn" data-sort-by="cumulativeYieldRate">按收益率</button>
+                    <button class="sort-btn active" data-sort-by="netValueChangeRate">按净值变化</button>
+                </div>
+            </div>
+
+            <!-- ETF基金卡片 -->
+            <div class="fund-cards-container">
+                <div class="fund-cards">
+                    <!-- Card 1 - Green -->
+                    <div class="fund-card">
+                        <div class="fund-card-header positive">
+                            <div class="fund-title">159920（恒生ETF）</div>
+                        </div>
+                        <div class="fund-card-content">
+                            <div class="fund-data-row">
+                                <span class="data-label">执行次数</span>
+                                <span class="data-value execution-count">20次</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">累计收益率</span>
+                                <span class="data-value profit positive">+20.76%</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">当前档位/买入价</span>
+                                <span class="data-value">
+                                    0.90 <span class="level-type">(小档)</span> /0.927
+                                </span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">步长</span>
+                                <span class="data-value">5/15/30</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">最新净值</span>
+                                <span class="data-value nav">1.1557</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">净值对比买入价变化</span>
+                                <span class="data-value nav-change positive">+2.11%</span>
+                            </div>
+                        </div>
+                        <div class="fund-card-footer positive">
+                            <button class="detail-btn">查看详情</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 - Green -->
+                    <div class="fund-card">
+                        <div class="fund-card-header positive">
+                            <div class="fund-title">159938（医药）</div>
+                        </div>
+                        <div class="fund-card-content">
+                            <div class="fund-data-row">
+                                <span class="data-label">执行次数</span>
+                                <span class="data-value execution-count">22次</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">累计收益率</span>
+                                <span class="data-value profit positive">+50.11%</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">当前档位/买入价</span>
+                                <span class="data-value">
+                                    0.95 <span class="level-type">(小档)</span> /0.927
+                                </span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">步长</span>
+                                <span class="data-value">5/15/30</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">最新净值</span>
+                                <span class="data-value nav">1.1900</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">净值对比买入价变化</span>
+                                <span class="data-value nav-change positive">+15.96%</span>
+                            </div>
+                        </div>
+                        <div class="fund-card-footer positive">
+                            <button class="detail-btn">查看详情</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 - Green -->
+                    <div class="fund-card">
+                        <div class="fund-card-header positive">
+                            <div class="fund-title">512880（证券）</div>
+                        </div>
+                        <div class="fund-card-content">
+                            <div class="fund-data-row">
+                                <span class="data-label">执行次数</span>
+                                <span class="data-value execution-count">12次</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">累计收益率</span>
+                                <span class="data-value profit positive">+17.69%</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">当前档位/买入价</span>
+                                <span class="data-value">
+                                    0.70 <span class="level-type">(大档)</span> /0.727
+                                </span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">步长</span>
+                                <span class="data-value">5/15/30</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">最新净值</span>
+                                <span class="data-value nav">0.6633</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">净值对比买入价变化</span>
+                                <span class="data-value nav-change positive">+10.22%</span>
+                            </div>
+                        </div>
+                        <div class="fund-card-footer positive">
+                            <button class="detail-btn">查看详情</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 4 - Red -->
+                    <div class="fund-card">
+                        <div class="fund-card-header negative">
+                            <div class="fund-title">512980（传媒）</div>
+                        </div>
+                        <div class="fund-card-content">
+                            <div class="fund-data-row">
+                                <span class="data-label">执行次数</span>
+                                <span class="data-value execution-count">13次</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">累计收益率</span>
+                                <span class="data-value profit positive">+1.07%</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">当前档位/买入价</span>
+                                <span class="data-value">
+                                    0.95 <span class="level-type">(小档)</span> /0.947
+                                </span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">步长</span>
+                                <span class="data-value">5/15/30</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">最新净值</span>
+                                <span class="data-value nav">2.2330</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">净值对比买入价变化</span>
+                                <span class="data-value nav-change negative">-1.01%</span>
+                            </div>
+                        </div>
+                        <div class="fund-card-footer negative">
+                            <button class="detail-btn">查看详情</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 5 - Red -->
+                    <div class="fund-card">
+                        <div class="fund-card-header negative">
+                            <div class="fund-title">513050（中概互联）</div>
+                        </div>
+                        <div class="fund-card-content">
+                            <div class="fund-data-row">
+                                <span class="data-label">执行次数</span>
+                                <span class="data-value execution-count">10次</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">累计收益率</span>
+                                <span class="data-value profit positive">+1.33%</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">当前档位/买入价</span>
+                                <span class="data-value">
+                                    0.85 <span class="level-type">(中档)</span> /0.627
+                                </span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">步长</span>
+                                <span class="data-value">5/15/30</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">最新净值</span>
+                                <span class="data-value nav">2.1770</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">净值对比买入价变化</span>
+                                <span class="data-value nav-change negative">-4.40%</span>
+                            </div>
+                        </div>
+                        <div class="fund-card-footer negative">
+                            <button class="detail-btn">查看详情</button>
+                        </div>
+                    </div>
+
+                    <!-- Card 6 - Red -->
+                    <div class="fund-card">
+                        <div class="fund-card-header negative">
+                            <div class="fund-title">513180（恒生科技）</div>
+                        </div>
+                        <div class="fund-card-content">
+                            <div class="fund-data-row">
+                                <span class="data-label">执行次数</span>
+                                <span class="data-value execution-count">2次</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">累计收益率</span>
+                                <span class="data-value profit positive">+10.33%</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">当前档位/买入价</span>
+                                <span class="data-value">
+                                    0.95 <span class="level-type">(小档)</span> /0.937
+                                </span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">步长</span>
+                                <span class="data-value">5/15/30</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">最新净值</span>
+                                <span class="data-value nav">0.5475</span>
+                            </div>
+                            <div class="fund-data-row">
+                                <span class="data-label">净值对比买入价变化</span>
+                                <span class="data-value nav-change negative">-20.01%</span>
+                            </div>
+                        </div>
+                        <div class="fund-card-footer negative">
+                            <button class="detail-btn">查看详情</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/script.js"></script>
+    <script src="../js/grid-data.js"></script>
+</body>
+</html> 

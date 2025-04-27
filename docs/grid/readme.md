@@ -8,7 +8,7 @@
 
 用户可以在概览页了解整体情况，点击卡片导航到详情页进行深入分析和参数模拟。
 
-**重要：** UI风格、布局和交互应与 `150plan.html` 保持一致。
+**重要：** `grid.html` 的前端实现位于 `reference-html/index.html`，`grid-detail.html` 的前端实现位于 `reference1-html/grid-trading-calculator.html`。请确保其 UI 风格、布局和交互与项目整体保持一致。
 
 ### 2. 相关文档
 

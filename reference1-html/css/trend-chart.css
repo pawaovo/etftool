@@ -1,0 +1,64 @@
+/* 趋势图样式 */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-tooltip {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+  font-size: 14px;
+  pointer-events: none;
+  max-width: 250px;
+  transform: translateY(-50%);
+}
+
+/* 提示框标题 */
+.tooltip-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+}
+
+/* 提示框内容 */
+.tooltip-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 提示框行项目 */
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.tooltip-label {
+  color: #64748b;
+}
+
+.tooltip-value {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.tooltip-value-profit {
+  font-weight: 500;
+  color: #10b981;
+}
+
+/* Canvas样式 */
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+} 

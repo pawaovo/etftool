@@ -5,8 +5,8 @@
 - **页面文件**：
   - `grid.html`：主页面，展示网格策略**概览信息**和**卡片列表**，并提供到 `grid-detail.html` 的查看详情按钮**导航**。
   - `grid-detail.html`: **（新增）** 网格策略详细信息页面，展示单个ETF的趋势图、交易明细和网格设置。
-  - `styles/plan-data.css`：页面主要样式（复用 `150plan`）。
-  - `styles/etf-cards.css`：卡片样式（复用 `150plan`）。
+  - `styles/plan-data.css`：页面主要样式（通用样式）。
+  - `styles/etf-cards.css`：卡片样式（通用样式）。
   - `js/grid-data.js`：处理 `grid.html` 页面的数据加载、解析、转换、**概览计算**和**卡片渲染**的脚本。**可能也包含部分 `grid-detail.html` 的共享逻辑或数据传递准备。**
   - `js/grid-detail.js`: **（新增/可选）** 处理 `grid-detail.html` 页面的数据加载（或接收）、图表渲染、表格渲染和交互的脚本。*如果逻辑简单，也可合并到 `grid-data.js` 中。*
   - `js/vendors/`：可能引入的第三方库，如图表库（例如 Chart.js, ECharts）。
@@ -30,7 +30,6 @@
     - `prd.md`: 产品需求文档。
     - `erd.md`: 本文档。
     - `todolist.md`: 开发任务清单。
-  - `docs/grid/1.png`, `docs/grid/2.png`: 页面原型图参考。
 
 - **项目根目录**：
   - `index.html`: (项目入口页)。

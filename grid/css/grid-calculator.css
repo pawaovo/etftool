@@ -1,0 +1,195 @@
+/* 网格交易计算器样式 */
+body {
+  font-family: 'Noto Sans SC', sans-serif;
+  background-color: #f8fafc;
+  color: #334155;
+}
+
+/* Tab选项卡样式 */
+.tab-trigger {
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-trigger.active {
+  background-color: #2563eb;
+  color: white;
+}
+
+.tab-trigger:hover:not(.active) {
+  background-color: #e2e8f0;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* 表格样式优化 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+thead tr {
+  background-color: #f1f5f9;
+}
+
+tbody tr {
+  border-top: 1px solid #e2e8f0;
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+tbody tr:hover {
+  background-color: #e2e8f0;
+}
+
+/* 表格排序图标 */
+th[data-sort] {
+  cursor: pointer;
+}
+
+th[data-sort]:hover {
+  background-color: #e2e8f0;
+}
+
+/* 表格脚注样式 */
+tfoot tr {
+  font-weight: 500;
+}
+
+/* Badge样式 */
+.inline-flex {
+  display: inline-flex;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.border {
+  border-width: 1px;
+}
+
+.px-2\.5 {
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+}
+
+.py-0\.5 {
+  padding-top: 0.125rem;
+  padding-bottom: 0.125rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.bg-emerald-50 {
+  background-color: #ecfdf5;
+}
+
+.text-emerald-700 {
+  color: #047857;
+}
+
+.border-emerald-200 {
+  border-color: #a7f3d0;
+}
+
+.bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+.text-blue-700 {
+  color: #1d4ed8;
+}
+
+.border-blue-200 {
+  border-color: #bfdbfe;
+}
+
+.text-emerald-600 {
+  color: #059669;
+}
+
+.text-slate-400 {
+  color: #94a3b8;
+}
+
+/* 输入框和选择器样式 */
+input, select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+/* 按钮样式 */
+button {
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* 工具提示样式 */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #334155;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  z-index: 10;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .w-\[400px\] {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid-cols-4, .grid-cols-2 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+} 

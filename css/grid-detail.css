@@ -1,0 +1,237 @@
+/* ETF详情页面特定样式 */
+
+/* 返回按钮 */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #2d8cf0;
+    text-decoration: none;
+}
+
+.back-link i {
+    margin-right: 5px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* 页面头部信息 */
+.detail-header {
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.etf-detail-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.etf-detail-title h2 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.etf-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 15px;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+}
+
+.meta-item i {
+    margin-right: 8px;
+    color: #808695;
+}
+
+.meta-label {
+    color: #808695;
+    margin-right: 5px;
+}
+
+.meta-value {
+    font-weight: bold;
+    color: #17233d;
+}
+
+/* 详情主体区域 */
+.detail-section {
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.detail-section-title {
+    font-size: 18px;
+    margin: 0 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e8eaec;
+}
+
+/* 概要统计卡片 */
+.stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+}
+
+.stat-card-value {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #17233d;
+}
+
+.stat-card-label {
+    font-size: 14px;
+    color: #808695;
+}
+
+.stat-positive {
+    color: #19be6b;
+}
+
+.stat-negative {
+    color: #ed4014;
+}
+
+/* 持仓数据表格 */
+.holdings-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.holdings-table th, 
+.holdings-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e8eaec;
+}
+
+.holdings-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #515a6e;
+}
+
+.holdings-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.sector-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 6px;
+}
+
+/* 图表容器 */
+.chart-container {
+    height: 400px;
+    margin-bottom: 30px;
+}
+
+.chart-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.chart-col {
+    flex: 1 1 calc(50% - 10px);
+    min-width: 300px;
+}
+
+/* 代码块/日志显示 */
+.code-block {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 15px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* 操作按钮组 */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* 切换选项卡 */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #dcdee2;
+    margin-bottom: 20px;
+}
+
+.tab {
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-right: 5px;
+    border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+    color: #2d8cf0;
+}
+
+.tab.active {
+    color: #2d8cf0;
+    border-bottom-color: #2d8cf0;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 响应式设计调整 */
+@media (max-width: 768px) {
+    .chart-col {
+        flex: 1 1 100%;
+    }
+    
+    .etf-meta {
+        gap: 15px;
+    }
+    
+    .meta-item {
+        flex: 1 1 calc(50% - 10px);
+    }
+} 

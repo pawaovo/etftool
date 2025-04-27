@@ -1,0 +1,200 @@
+﻿/**
+ * 处理所有ETF数据
+ * @param {function} progressCallback 进度回调函数
+ * @returns {Promise<Array>} 处理后的ETF数据数组
+ */
+async function processAllEtfData(progressCallback = null) {
+    try {
+        // 1. 获取所有ETF JSON文件列表
+        const etfFiles = await getEtfJsonFileList();
+        const total = etfFiles.length;
+        let processed = 0;
+        
+        // 2. 获取所有ETF最新净值
+        const etfNetValues = await fetchLatestNetValues();
+        
+        // 3. 并行处理所有ETF数据
+        const etfDataPromises = etfFiles.map(async (filename) => {
+            try {
+                // 读取ETF JSON数据
+                const etfJsonData = await fetchJsonData(filename);
+                
+                // 从文件名提取ETF代码
+                const etfCode = extractEtfCodeFromFilename(filename);
+                
+                // 获取该ETF的最新净值
+                const latestNetValue = etfNetValues[etfCode] || 0;
+                
+                // 将sourceFile添加到JSON数据中
+                if (etfJsonData && typeof etfJsonData === 'object') {
+                    etfJsonData.sourceFile = filename;
+                }
+                
+                // 使用calculateEtfData函数计算ETF数据
+                const result = calculateEtfData(etfJsonData, latestNetValue);
+                
+                // 更新进度
+                processed++;
+                if (progressCallback) {
+                    progressCallback(processed / total);
+                }
+                
+                return result;
+            } catch (error) {
+                console.error(`处理ETF数据失败 (${filename}):`, error);
+                
+                // 更新进度，即使处理失败
+                processed++;
+                if (progressCallback) {
+                    progressCallback(processed / total);
+                }
+                
+                // 返回一个错误状态的ETF对象
+                return {
+                    etfName: `加载失败: ${filename}`,
+                    etfCode: extractEtfCodeFromFilename(filename),
+                    category: '未知',
+                    isRunning: false,
+                    executionCount: 0,
+                    cumulativeYieldRate: '0.00%',
+                    currentLevelBuyPrice: '0.0000',
+                    stepSize: '未知',
+                    latestNetValue: 0,
+                    netValueChangeRate: '0.00%',
+                    headerColor: 'gray',
+                    sourceFile: filename,
+                    hasError: true
+                };
+            }
+        });
+        
+        // 等待所有ETF数据处理完成
+        const etfData = await Promise.all(etfDataPromises);
+        
+        // 4. 按类别分组并排序结果
+        const sortedData = sortEtfDataByCategory(etfData);
+        
+        return sortedData;
+    } catch (error) {
+        console.error('处理所有ETF数据失败:', error);
+        throw error;
+    }
+}
+
+/**
+ * 计算所有ETF的总体概览信息
+ * @param {Array<Object>} etfDataArray - 所有ETF的计算后数据
+ * @returns {Object} 总体概览信息
+ */
+function calculateOverallSummary(etfDataArray) {
+    if (!etfDataArray || etfDataArray.length === 0) {
+        return {
+            totalEtfCount: 0,
+            totalExecutionCount: 0,
+            totalBuyAmount: '0.00',
+            totalSellAmount: '0.00',
+            totalBuyShares: 0,
+            totalSellShares: 0,
+            totalRemainingShares: 0,
+            totalProfit: '0.00',
+            overallProfitRate: '0.00%',
+            avgProfit: '0.00',
+            avgExecutionCount: '0.0'
+        };
+    }
+    
+    let totalExecutionCount = 0;
+    let totalBuyAmount = 0;
+    let totalSellAmount = 0;
+    let totalBuyShares = 0;
+    let totalSellShares = 0;
+    let totalProfit = 0;
+    
+    // 遍历所有ETF数据
+    etfDataArray.forEach(etfData => {
+        // 累加执行次数
+        totalExecutionCount += etfData.executionCount || 0;
+        
+        // 处理交易记录，计算买卖金额和股数
+        if (etfData.executions && Array.isArray(etfData.executions)) {
+            etfData.executions.forEach(execution => {
+                const amount = parseFloat(execution.amount || 0);
+                const shares = parseFloat(execution.shares || 0);
+                
+                if (execution.type === 'BUY') {
+                    // 买入交易，累加买入金额和股数
+                    totalBuyAmount += Math.abs(amount);
+                    totalBuyShares += Math.abs(shares);
+                } else if (execution.type === 'SELL') {
+                    // 卖出交易，累加卖出金额和股数，以及收益
+                    totalSellAmount += Math.abs(amount);
+                    totalSellShares += Math.abs(shares);
+                    totalProfit += parseFloat(execution.profit || 0);
+                }
+            });
+        }
+    });
+    
+    // 计算剩余股数
+    const totalRemainingShares = totalBuyShares - totalSellShares;
+    
+    // 计算整体收益率
+    const overallProfitRate = totalBuyAmount > 0 ? (totalProfit / totalBuyAmount * 100) : 0;
+    
+    // 计算平均收益和平均执行次数
+    const avgProfit = etfDataArray.length > 0 ? (totalProfit / etfDataArray.length) : 0;
+    const avgExecutionCount = etfDataArray.length > 0 ? (totalExecutionCount / etfDataArray.length) : 0;
+    
+    return {
+        totalEtfCount: etfDataArray.length,
+        totalExecutionCount,
+        totalBuyAmount: totalBuyAmount.toFixed(2),
+        totalSellAmount: totalSellAmount.toFixed(2),
+        totalBuyShares,
+        totalSellShares,
+        totalRemainingShares,
+        totalProfit: totalProfit.toFixed(2),
+        overallProfitRate: overallProfitRate.toFixed(2) + '%',
+        avgProfit: avgProfit.toFixed(2),
+        avgExecutionCount: avgExecutionCount.toFixed(1)
+    };
+}
+
+/**
+ * 将ETF数据按类别分组并排序
+ * @param {Array<Object>} etfDataArray - ETF数据数组
+ * @returns {Array<Object>} 排序后的ETF数据数组
+ */
+function sortEtfDataByCategory(etfDataArray) {
+    if (!etfDataArray || etfDataArray.length === 0) {
+        return [];
+    }
+    
+    // 首先按照类别(category)进行排序
+    const sortedByCategory = [...etfDataArray].sort((a, b) => {
+        // 首先按类别排序
+        const categoryComparison = (a.category || '').localeCompare(b.category || '');
+        if (categoryComparison !== 0) return categoryComparison;
+        
+        // 如果类别相同，则按ETF名称排序
+        return (a.etfName || '').localeCompare(b.etfName || '');
+    });
+    
+    return sortedByCategory;
+}
+
+// 初始化函数，在页面加载完成后调用
+document.addEventListener('DOMContentLoaded', async function() {
+    // 加载数据并初始化页面
+    console.log('网格策略数据加载模块已初始化');
+    
+    // 加载所有数据
+    const allData = await loadAllData();
+    
+    // 检查数据加载状态
+    const jsonDataCount = Object.keys(allData.jsonData).length;
+    const netValuesCount = Object.keys(allData.netValues).length;
+    
+    console.log(`成功加载 ${jsonDataCount} 个ETF JSON文件和 ${netValuesCount} 个ETF的最新净值`);
+    
+    // 处理所有ETF数据

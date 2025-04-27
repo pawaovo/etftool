@@ -1,0 +1,500 @@
+﻿// 网格策略概览页面数据处理脚本
+
+/**
+ * 网格策略数据处理模块
+ * 用于加载、计算和渲染网格策略相关数据
+ */
+
+// 存储所有ETF数据的全局变量
+let allEtfData = [];
+
+// 存储最新净值数据的全局变量
+let latestNetValues = {};
+
+// 存储所有ETF的原始JSON数据
+let allEtfJsonData = {};
+
+/**
+ * 获取public/data/grid/目录下所有ETF JSON文件名列表
+ * @returns {Array<string>} JSON文件名列表
+ */
+function getEtfJsonFileList() {
+    // 由于浏览器环境中JS无法直接读取服务器目录，我们在这里硬编码文件列表
+    // 实际项目中，这可以通过服务器端脚本生成一个索引文件，或通过API获取
+    return [
+        '159920(恒生ETF).json',
+        '159938(医药).json',
+        '512880(证券).json',
+        '512980(传媒).json',
+        '513050(中概互联).json',
+        '513180(恒生科技).json',
+        '513500(标普500).json',
+        '513520(日经225).json',
+        '515180(100红利).json'
+    ];
+}
+
+/**
+ * 从文件名中提取ETF代码
+ * @param {string} filename - ETF JSON文件名，格式为：code(category).json
+ * @returns {string} ETF代码
+ */
+function extractEtfCodeFromFilename(filename) {
+    if (!filename) return null;
+    
+    // 提取基本文件名（不含路径）
+    const baseName = filename.split('/').pop().split('\\').pop();
+    
+    // 尝试匹配6位数字代码
+    const match = baseName.match(/(\d{6})/);
+    return match ? match[1] : null;
+}
+
+/**
+ * 从文件名中提取ETF名称（类别）
+ * @param {string} filename - ETF JSON文件名，格式为：code(category).json
+ * @returns {string} ETF名称
+ */
+function extractEtfCategoryFromFilename(filename) {
+    // 使用正则表达式提取括号内的类别部分
+    const match = filename.match(/\(([^)]+)\)/);
+    if (match && match[1]) {
+        return match[1];
+    }
+    return null;
+}
+
+/**
+ * 异步加载单个JSON文件
+ * @param {string} filename - 要加载的JSON文件名
+ * @returns {Promise<Object>} 包含JSON数据的Promise
+ */
+async function fetchJsonData(filename) {
+    try {
+        // 构建完整的文件路径
+        const filePath = `/public/data/grid/${filename}`;
+        
+        // 使用fetch API获取JSON文件
+        const response = await fetch(filePath);
+        
+        // 检查响应状态
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        // 解析JSON数据
+        const jsonData = await response.json();
+        
+        console.log(`成功加载 ${filename}`);
+        return jsonData;
+    } catch (error) {
+        console.error(`加载 ${filename} 失败:`, error);
+        // 尝试使用相对路径
+        try {
+            const relativePath = `../public/data/grid/${filename}`;
+            console.log(`尝试使用相对路径: ${relativePath}`);
+            const response = await fetch(relativePath);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            
+            const jsonData = await response.json();
+            console.log(`成功使用相对路径加载 ${filename}`);
+            return jsonData;
+        } catch (relativeError) {
+            console.error(`使用相对路径加载 ${filename} 失败:`, relativeError);
+            // 返回一个带有错误标记的对象
+            return { 
+                error: true, 
+                message: error.message,
+                filename: filename
+            };
+        }
+    }
+}
+
+/**
+ * 获取ETF的最新净值
+ * @param {string} etfCode - ETF代码
+ * @returns {Promise<number|null>} 最新净值
+ */
+async function fetchSingleEtfNetValue(etfCode) {
+    try {
+        const apiUrl = `https://tiantian-fund-api.vercel.app/api/action?action_name=fundSearch&m=1&key=${etfCode}`;
+        
+        // 使用fetch API调用接口
+        const response = await fetch(apiUrl);
+        
+        // 检查响应状态
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        // 解析JSON数据
+        const data = await response.json();
+        
+        // 从数据中提取最新净值
+        if (data.ErrCode === 0 && data.Datas && data.Datas.length > 0 && data.Datas[0].FundBaseInfo) {
+            const netValue = parseFloat(data.Datas[0].FundBaseInfo.DWJZ);
+            console.log(`代码 ${etfCode} 的最新净值: ${netValue}`);
+            return netValue;
+        } else {
+            console.error(`未找到代码 ${etfCode} 的最新净值数据:`, data);
+            return null;
+        }
+    } catch (error) {
+        console.error(`获取代码 ${etfCode} 的最新净值失败:`, error);
+        return null;
+    }
+}
+
+/**
+ * 获取所有ETF的最新净值
+ * @returns {Promise<Object>} 包含所有ETF最新净值的对象：{code: netValue, ...}
+ */
+async function fetchLatestNetValues() {
+    try {
+        // 尝试先从本地文件加载最新净值数据
+        try {
+            const localNetValuesData = await fetchJsonData('latest_netvalues.json');
+            if (!localNetValuesData.error) {
+                console.log('成功从本地文件加载最新净值数据');
+                return localNetValuesData;
+            }
+        } catch (err) {
+            console.log('本地最新净值数据不可用，将从API获取');
+        }
+        
+        // 如果本地数据不可用，则从API获取
+        const fileList = getEtfJsonFileList();
+        const netValues = {};
+        
+        // 提取所有ETF代码
+        const etfCodes = fileList.map(filename => extractEtfCodeFromFilename(filename)).filter(code => code);
+        
+        // 并行获取所有ETF的最新净值
+        const netValuePromises = etfCodes.map(code => fetchSingleEtfNetValue(code));
+        const netValueResults = await Promise.all(netValuePromises);
+        
+        // 组合结果
+        etfCodes.forEach((code, index) => {
+            if (netValueResults[index] !== null) {
+                netValues[code] = netValueResults[index];
+            }
+        });
+        
+        console.log('成功获取所有ETF的最新净值:', netValues);
+        
+        // 在实际环境中，这里应该调用一个API将netValues写入latest_netvalues.json文件
+        // 由于浏览器环境限制，我们只能在内存中保存这些数据
+        
+        return netValues;
+    } catch (error) {
+        console.error('获取最新净值失败:', error);
+        return {};
+    }
+}
+
+/**
+ * 加载所有ETF的JSON数据
+ * @returns {Promise<Object>} 包含所有ETF数据的对象：{filename: jsonData, ...}
+ */
+async function loadAllEtfJsonData() {
+    try {
+        const fileList = getEtfJsonFileList();
+        const jsonDataMap = {};
+        
+        // 并行加载所有ETF的JSON数据
+        const jsonDataPromises = fileList.map(filename => fetchJsonData(filename));
+        const jsonDataResults = await Promise.all(jsonDataPromises);
+        
+        // 组合结果
+        fileList.forEach((filename, index) => {
+            if (!jsonDataResults[index].error) {
+                jsonDataMap[filename] = jsonDataResults[index];
+            }
+        });
+        
+        console.log('成功加载所有ETF的JSON数据');
+        return jsonDataMap;
+    } catch (error) {
+        console.error('加载所有ETF的JSON数据失败:', error);
+        return {};
+    }
+}
+
+/**
+ * 加载所有数据（ETF JSON数据和最新净值）
+ * @returns {Promise<{jsonData: Object, netValues: Object}>} 包含所有数据的对象
+ */
+async function loadAllData() {
+    try {
+        console.log('开始加载所有数据...');
+        
+        // 并行加载ETF JSON数据和最新净值
+        const [jsonData, netValues] = await Promise.all([
+            loadAllEtfJsonData(),
+            fetchLatestNetValues()
+        ]);
+        
+        // 更新全局变量
+        allEtfJsonData = jsonData;
+        latestNetValues = netValues;
+        
+        console.log('所有数据加载完成');
+        
+        // 返回加载的数据
+        return {
+            jsonData,
+            netValues
+        };
+    } catch (error) {
+        console.error('加载所有数据失败:', error);
+        return {
+            jsonData: {},
+            netValues: {}
+        };
+    }
+}
+
+/**
+ * 测试异步加载功能
+ * @param {string} filename - 要测试加载的文件名
+ */
+async function testJsonLoading(filename) {
+    console.log(`开始加载 ${filename}...`);
+    const data = await fetchJsonData(filename);
+    if (data.error) {
+        console.error(`测试加载失败: ${data.message}`);
+    } else {
+        console.log(`测试加载成功:`, data);
+    }
+}
+
+/**
+ * 测试获取最新净值功能
+ */
+async function testFetchNetValues() {
+    console.log('开始获取最新净值...');
+    const netValues = await fetchLatestNetValues();
+    console.log('最新净值获取结果:', netValues);
+    latestNetValues = netValues; // 更新全局变量
+}
+
+/**
+ * 计算单个ETF的卡片显示数据
+ * @param {Object} jsonData ETF的JSON数据
+ * @param {number} latestNetValue 最新净值
+ * @returns {Object} 格式化后的ETF数据对象
+ */
+function calculateEtfData(jsonData, latestNetValue) {
+    try {
+        // 检查JSON数据是否有效
+        if (!jsonData || typeof jsonData !== 'object') {
+            throw new Error('无效的ETF JSON数据');
+        }
+        
+        // 适配实际的JSON结构
+        // 从"网格交易示例表"字段提取ETF代码和名称
+        let etfName = '未知ETF';
+        let etfCode = '';
+        if (jsonData["网格交易示例表"]) {
+            const match = jsonData["网格交易示例表"].match(/(\d{6})\(([^)]+)\)/);
+            if (match) {
+                etfCode = match[1];
+                etfName = match[2];
+            } else {
+                etfCode = extractEtfCodeFromFilename(jsonData.sourceFile || '');
+                etfName = jsonData["网格交易示例表"];
+            }
+        } else {
+            etfCode = extractEtfCodeFromFilename(jsonData.sourceFile || '');
+        }
+        
+        // 提取ETF基本信息
+        const category = etfName || '其他';
+        const isRunning = jsonData["网格交易数据"] && jsonData["网格交易数据"].length > 0;
+        
+        // 计算步长
+        let stepSize = '未知';
+        if (jsonData["网格交易数据"] && jsonData["网格交易数据"].length >= 2) {
+            try {
+                const level1 = jsonData["网格交易数据"][0]["档位"];
+                const level2 = jsonData["网格交易数据"][1]["档位"];
+                if (level1 && level2) {
+                    const smallStep = Math.abs((level1 - level2) * 100);
+                    const mediumStep = smallStep * 3;
+                    const largeStep = smallStep * 6;
+                    stepSize = `${smallStep}/${mediumStep}/${largeStep}`;
+                }
+            } catch (error) {
+                console.error('计算步长失败:', error);
+            }
+        }
+        
+        // 提取网格配置 - 转换为代码期望的格式
+        const gridLevels = [];
+        if (jsonData["网格交易数据"] && Array.isArray(jsonData["网格交易数据"])) {
+            jsonData["网格交易数据"].forEach(grid => {
+                try {
+                    // 计算平均买入价
+                    let buyPrice = 0;
+                    if (Array.isArray(grid["买入价"]) && grid["买入价"].length > 0) {
+                        const validPrices = grid["买入价"].map(p => parseFloat(p)).filter(p => !isNaN(p));
+                        if (validPrices.length > 0) {
+                            buyPrice = validPrices.reduce((sum, price) => sum + price, 0) / validPrices.length;
+                        }
+                    }
+                    
+                    // 添加到网格档位列表
+                    gridLevels.push({
+                        level: grid["档位"],
+                        price: buyPrice,
+                        type: grid["网格种类"],
+                    });
+                } catch (error) {
+                    console.error('处理网格档位数据失败:', error);
+                }
+            });
+        }
+        
+        // 提取执行记录 - 转换为代码期望的格式
+        const executions = [];
+        if (jsonData["交易记录"] && Array.isArray(jsonData["交易记录"])) {
+            jsonData["交易记录"].forEach(record => {
+                try {
+                    // 确定交易类型
+                    const amount = parseFloat(record["交易金额"]);
+                    const type = amount < 0 ? 'SELL' : 'BUY';
+                    
+                    // 添加到执行记录列表
+                    executions.push({
+                        date: record["日期"],
+                        type: type,
+                        price: parseFloat(record["实际交易价格"]),
+                        shares: Math.abs(parseFloat(record["交易股数"])),
+                        amount: Math.abs(amount),
+                        profit: type === 'SELL' ? parseFloat(record["收益"] || 0) : 0,
+                        profitRate: type === 'SELL' ? record["收益率"] : '0.00%'
+                    });
+                } catch (error) {
+                    console.error('处理交易记录数据失败:', error);
+                }
+            });
+        }
+        
+        // 计算执行统计信息
+        const executionCount = executions.filter(exec => exec.type === 'SELL').length;
+        
+        // 计算累计收益率
+        let cumulativeYieldRate = '0.00%';
+        try {
+            // 计算总收益
+            const totalProfit = executions.reduce((sum, exec) => {
+                if (exec.type === 'SELL' && exec.profit) {
+                    return sum + exec.profit;
+                }
+                return sum;
+            }, 0);
+            
+            // 计算总买入金额
+            const totalBuyAmount = executions.reduce((sum, exec) => {
+                if (exec.type === 'BUY') {
+                    return sum + exec.amount;
+                }
+                return sum;
+            }, 0);
+            
+            // 计算累计收益率
+            if (totalBuyAmount > 0) {
+                const yieldRate = (totalProfit / totalBuyAmount) * 100;
+                cumulativeYieldRate = yieldRate.toFixed(2) + '%';
+            }
+        } catch (error) {
+            console.error('计算累计收益率失败:', error);
+        }
+        
+        // 计算当前档位买入价
+        let currentLevelBuyPrice = '0.0000';
+        let currentLevel = 0.00;
+        try {
+            if (gridLevels.length > 0 && latestNetValue > 0) {
+                // 按照价格升序排序网格档位
+                const sortedLevels = [...gridLevels].sort((a, b) => 
+                    parseFloat(a.price) - parseFloat(b.price)
+                );
+                
+                // 根据最新净值找到当前应该买入的档位
+                let matchedLevel = null;
+                
+                // 如果最新净值低于最低档位价格，使用最低档位
+                if (latestNetValue <= parseFloat(sortedLevels[0].price)) {
+                    matchedLevel = sortedLevels[0];
+                } 
+                // 如果最新净值高于最高档位价格，使用最高档位
+                else if (latestNetValue >= parseFloat(sortedLevels[sortedLevels.length - 1].price)) {
+                    matchedLevel = sortedLevels[sortedLevels.length - 1];
+                } 
+                // 否则找到最接近但低于最新净值的档位
+                else {
+                    for (let i = 0; i < sortedLevels.length - 1; i++) {
+                        const currentPrice = parseFloat(sortedLevels[i].price);
+                        const nextPrice = parseFloat(sortedLevels[i + 1].price);
+                        
+                        if (latestNetValue >= currentPrice && latestNetValue < nextPrice) {
+                            matchedLevel = sortedLevels[i];
+                            break;
+                        }
+                    }
+                }
+                
+                if (matchedLevel) {
+                    currentLevelBuyPrice = parseFloat(matchedLevel.price).toFixed(4);
+                    currentLevel = matchedLevel.level;
+                }
+            }
+        } catch (error) {
+            console.error('计算当前档位买入价失败:', error);
+        }
+        
+        // 计算净值变化率
+        let netValueChangeRate = '0.00%';
+        let headerColor = 'gray';
+        try {
+            const buyPrice = parseFloat(currentLevelBuyPrice);
+            if (buyPrice > 0 && latestNetValue > 0) {
+                const changeRate = (latestNetValue - buyPrice) / buyPrice * 100;
+                netValueChangeRate = changeRate.toFixed(2) + '%';
+                
+                // 确定颜色：红色表示降低（适合买入），绿色表示上涨（适合卖出）
+                headerColor = changeRate < 0 ? 'red' : 'green';
+            }
+        } catch (error) {
+            console.error('计算净值变化率失败:', error);
+        }
+        
+        // 返回格式化的ETF数据对象
+        return {
+            etfName,
+            etfCode,
+            category,
+            isRunning,
+            executionCount,
+            cumulativeYieldRate,
+            currentLevel,
+            currentLevelBuyPrice,
+            stepSize,
+            latestNetValue: latestNetValue || 0,
+            netValueChangeRate,
+            headerColor,
+            sourceFile: jsonData.sourceFile || '',
+            gridLevels: gridLevels || [],
+            executions: executions || []
+        };
+    } catch (error) {
+        console.error('计算ETF数据失败:', error);
+        throw error;
+    }
+}
+
