@@ -65,6 +65,8 @@
         .tab-trigger.active {
             color: var(--primary-color);
             font-weight: 600;
+            background-color: #f5f7ff;
+            border-radius: 0.25rem 0.25rem 0 0;
         }
         .tab-trigger.active::after {
             content: '';
@@ -83,271 +85,315 @@
         .chart-container canvas {
             width: 100%;
         }
+        .tooltip-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tooltip-text {
+            visibility: hidden;
+            width: 220px;
+            background-color: #333;
+            color: white;
+            text-align: left;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.4;
+            
+            /* 定位 */
+            position: absolute;
+            z-index: 1000;
+            top: -5px;
+            left: 100%;
+            margin-left: 10px;
+            
+            /* 动画效果 */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
     <div class="container mx-auto px-4 py-6 max-w-6xl">
-        <!-- 顶部信息栏 -->
-        <div class="mb-6">
-            <div class="card border-0 shadow-sm">
-                <div class="p-5">
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
-                        <div>
-                            <div class="flex items-center">
-                                <h2 class="text-xl font-bold text-slate-800" id="etfCode">510300</h2>
-                                <span class="ml-2 font-medium border border-indigo-200 bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 text-xs" id="etfName">沪深300ETF</span>
+        <!-- 加载指示器 -->
+        <div id="loadingIndicator" class="text-center py-10">
+            <p class="text-slate-500">加载中...</p>
+            <!-- 你可以在这里添加一个 SVG 或 GIF loading spinner -->
+        </div>
+
+        <!-- 主要内容容器，默认隐藏 -->
+        <div id="mainContentContainer" style="display: none;">
+            <!-- 顶部信息栏 -->
+            <div class="mb-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="p-5">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                            <div>
+                                <div class="flex items-center">
+                                    <h2 class="text-xl font-bold text-slate-800" id="etfCode">510300</h2>
+                                    <span class="ml-2 font-medium border border-indigo-200 bg-indigo-50 text-indigo-700 rounded-full px-2 py-0.5 text-xs" id="etfName">沪深300ETF</span>
+                                </div>
+                                <div class="space-y-1 mt-2">
+                                    <div class="text-sm text-slate-600">执行次数: <span id="executionCount" class="font-medium">28</span></div>
+                                    <div class="text-sm font-medium text-emerald-600 flex items-center">
+                                        累计收益率: <span id="cumulativeReturn" class="font-semibold">17.03</span>%
+                                        <i data-lucide="arrow-up" class="h-3 w-3 ml-1"></i>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="flex items-center mt-2">
-                                <span class="text-sm text-slate-600 mr-4">执行次数: <span id="executionCount" class="font-medium">28</span></span>
-                                <span class="text-sm font-medium text-emerald-600 flex items-center">
-                                    累计收益率: <span id="cumulativeReturn" class="font-semibold">17.03</span>%
+                            <div class="space-y-1">
+                                <div class="text-sm text-slate-500">基准价/当前档位（买入价）:</div>
+                                <div class="text-lg font-semibold text-slate-800" id="currentLevel"></div>
+                                <div class="text-sm text-slate-500" id="gridTypeAndPrice"></div>
+                                <div class="text-sm text-slate-500">步长: <span id="stepSize" class="font-medium">5.0</span>%</div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="text-sm text-slate-500">最新净值:</div>
+                                <div class="text-lg font-semibold text-slate-800" id="latestNetValue">0.882</div>
+                                <div class="text-sm font-medium text-emerald-600 flex items-center">
+                                    净值对比买入价: <span id="priceChange" class="font-semibold">+3.76%</span>
                                     <i data-lucide="arrow-up" class="h-3 w-3 ml-1"></i>
-                                </span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-end">
+                                <button class="btn-outline h-9 rounded-md px-4 flex items-center text-sm" id="backButton">
+                                    <i data-lucide="arrow-left" class="h-4 w-4 mr-1.5"></i> 返回
+                                </button>
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <div class="text-sm text-slate-500">当前档位/买入价:</div>
-                            <div class="text-lg font-semibold text-slate-800" id="currentLevel">0.85</div>
-                            <div class="text-sm text-slate-500">步长: <span id="stepSize" class="font-medium">5.0</span>%</div>
-                        </div>
-                        <div class="space-y-1">
-                            <div class="text-sm text-slate-500">最新净值:</div>
-                            <div class="text-lg font-semibold text-slate-800" id="latestNetValue">0.882</div>
-                            <div class="text-sm font-medium text-emerald-600 flex items-center">
-                                净值对比买入价: <span id="priceChange" class="font-semibold">+3.76%</span>
-                                <i data-lucide="arrow-up" class="h-3 w-3 ml-1"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 趋势图 -->
+            <div class="mb-6">
+                <div class="card border-0 overflow-hidden">
+                    <div class="header-gradient text-white p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <h2 class="text-lg font-bold">趋势图展示</h2>
+                                <p class="text-sm text-blue-100">ETF净值走势与交易点位</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="bg-white/20 hover:bg-white/30 text-white text-xs rounded px-2 py-1">1月</button>
+                                <button class="bg-white/20 hover:bg-white/30 text-white text-xs rounded px-2 py-1">3月</button>
+                                <button class="bg-white/20 hover:bg-white/30 text-white text-xs rounded px-2 py-1">6月</button>
+                                <button class="bg-white text-indigo-700 text-xs font-medium rounded px-2 py-1">全部</button>
                             </div>
                         </div>
-                        <div class="flex items-center justify-end">
-                            <button class="btn-outline h-9 rounded-md px-4 flex items-center text-sm" id="backButton">
-                                <i data-lucide="arrow-left" class="h-4 w-4 mr-1.5"></i> 返回
+                    </div>
+                    <div class="h-[300px] p-4 chart-container">
+                        <canvas id="trendChart" width="100%" height="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 选项卡内容：交易明细和网格策略 -->
+            <div class="mb-6">
+                <div class="card border-0">
+                    <div class="border-b px-5 py-2">
+                        <div class="grid grid-cols-2 w-[320px]">
+                            <button class="tab-trigger active px-4 py-3 text-sm font-medium border-r" data-tab="transactions">交易明细</button>
+                            <button class="tab-trigger px-4 py-3 text-sm font-medium" data-tab="grid">网格策略</button>
+                        </div>
+                    </div>
+
+                    <div class="tab-content p-5 active" id="transactions-tab">
+                        <div class="overflow-x-auto rounded-md border border-slate-200">
+                            <table class="min-w-full border-collapse" id="transactionTable">
+                                <!-- 表格内容将通过JavaScript动态生成 -->
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tab-content p-5 hidden" id="grid-tab">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">标的类型</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" id="targetType">
+                                    <option value="中国股票">中国股票</option>
+                                    <option value="美国股票">美国股票</option>
+                                    <option value="加密货币">加密货币</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">最小报价单位</label>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="0.001" id="minQuoteUnit">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">最小交易单位</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="100" id="minTradeUnit">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">基准价</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.000" id="basePrice">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">每份金额</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="10000" id="unitAmount">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">最低价</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="0.500" id="minPrice">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">小网步长 (%)</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="5.0" id="smallGridStep">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">中网步长 (%)</label>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="15.0" id="mediumGridStep">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">大网步长 (%)</label>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="30.0" id="largeGridStep">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">档位加码系数</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.0" id="levelCoeff">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">金额加码系数</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.0" id="amountCoeff">
+                            </div>
+
+                            <div class="space-y-1">
+                                <div class="flex items-center">
+                                    <span class="text-red-500 mr-1">*</span>
+                                    <label class="text-sm font-medium text-slate-700">保留利润系数</label>
+                                    <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
+                                </div>
+                                <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.0" id="profitCoeff">
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-4 mb-6">
+                            <button class="btn-primary px-5 py-2 rounded-md flex items-center text-sm" id="generateGridBtn">
+                                <i data-lucide="calculator" class="h-4 w-4 mr-1.5"></i> 生成网格
+                            </button>
+                            <button class="btn-outline px-5 py-2 rounded-md flex items-center text-sm" id="saveGridBtn">
+                                <i data-lucide="save" class="h-4 w-4 mr-1.5"></i> 保存网格
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- 趋势图 -->
-        <div class="mb-6">
-            <div class="card border-0 overflow-hidden">
-                <div class="header-gradient text-white p-4">
-                    <div class="flex justify-between items-center">
-                        <div>
-                            <h2 class="text-lg font-bold">趋势图展示</h2>
-                            <p class="text-sm text-blue-100">ETF净值走势与交易点位</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button class="bg-white/20 hover:bg-white/30 text-white text-xs rounded px-2 py-1">1月</button>
-                            <button class="bg-white/20 hover:bg-white/30 text-white text-xs rounded px-2 py-1">3月</button>
-                            <button class="bg-white/20 hover:bg-white/30 text-white text-xs rounded px-2 py-1">6月</button>
-                            <button class="bg-white text-indigo-700 text-xs font-medium rounded px-2 py-1">全部</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="h-[300px] p-4 chart-container">
-                    <canvas id="trendChart" width="100%" height="100%"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- 选项卡内容：交易明细和网格策略 -->
-        <div class="mb-6">
-            <div class="card border-0">
-                <div class="border-b px-5 py-2">
-                    <div class="grid grid-cols-2 w-[320px]">
-                        <button class="tab-trigger active px-4 py-3 text-sm font-medium" data-tab="transactions">交易明细</button>
-                        <button class="tab-trigger px-4 py-3 text-sm font-medium" data-tab="grid">网格策略</button>
-                    </div>
-                </div>
-
-                <div class="tab-content p-5 active" id="transactions-tab">
-                    <div class="overflow-x-auto rounded-md border border-slate-200">
-                        <table class="min-w-full border-collapse" id="transactionTable">
-                            <!-- 表格内容将通过JavaScript动态生成 -->
-                        </table>
-                    </div>
-                </div>
-
-                <div class="tab-content p-5 hidden" id="grid-tab">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">标的类型</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" id="targetType">
-                                <option value="中国股票">中国股票</option>
-                                <option value="美国股票">美国股票</option>
-                                <option value="加密货币">加密货币</option>
-                            </select>
+                        <div class="overflow-x-auto rounded-md border border-slate-200">
+                            <table class="min-w-full border-collapse" id="gridTable">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">网格种类</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">档位</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">买入触发价</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">买入价</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">买入金额</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">入股数</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">卖出触发价</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">卖出价</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">出股数</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">卖出金额</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">利润</th>
+                                        <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">利润率(%)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- 表格数据将通过JavaScript动态填充 -->
+                                </tbody>
+                            </table>
                         </div>
 
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">最小报价单位</label>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="0.01" id="minQuoteUnit">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">最小交易单位</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="100" id="minTradeUnit">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">基准价</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.00" id="basePrice">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">每份金额</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="10000" id="unitAmount">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">最低价</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="0.50" id="minPrice">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">小网步长 (%)</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="5.0" id="smallGridStep">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">中网步长 (%)</label>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="15.0" id="mediumGridStep">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">大网步长 (%)</label>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="30.0" id="largeGridStep">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">档位加码系数</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.0" id="levelCoeff">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">金额加码系数</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.0" id="amountCoeff">
-                        </div>
-
-                        <div class="space-y-1">
-                            <div class="flex items-center">
-                                <span class="text-red-500 mr-1">*</span>
-                                <label class="text-sm font-medium text-slate-700">保留利润系数</label>
-                                <i data-lucide="help-circle" class="w-4 h-4 ml-1 text-gray-400 cursor-pointer"></i>
-                            </div>
-                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500" value="1.0" id="profitCoeff">
-                        </div>
-                    </div>
-
-                    <div class="flex space-x-4 mb-6">
-                        <button class="btn-primary px-5 py-2 rounded-md flex items-center text-sm" id="generateGridBtn">
-                            <i data-lucide="calculator" class="h-4 w-4 mr-1.5"></i> 生成网格
-                        </button>
-                        <button class="btn-outline px-5 py-2 rounded-md flex items-center text-sm" id="saveGridBtn">
-                            <i data-lucide="save" class="h-4 w-4 mr-1.5"></i> 保存网格
-                        </button>
-                    </div>
-
-                    <div class="overflow-x-auto rounded-md border border-slate-200">
-                        <table class="min-w-full border-collapse" id="gridTable">
-                            <thead>
-                                <tr>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">网格种类</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">档位</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">买入触发价</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">买入价</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">买入金额</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">入股数</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">卖出触发价</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">卖出价</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">出股数</th>
-                                    <th class="py-3 px-4 text-left text-xs font-semibold text-slate-700 border-b">卖出金额</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- 表格数据将通过JavaScript动态填充 -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="mt-6 bg-blue-50 p-5 rounded-lg border border-blue-100">
-                        <h3 class="text-base font-bold mb-4 text-slate-800 flex items-center">
-                            <i data-lucide="bar-chart-2" class="h-5 w-5 mr-2 text-blue-600"></i>
-                            压力测试与盈利测算
-                        </h3>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">买入金额</p>
-                                <p class="text-base font-semibold text-slate-800" id="totalBuyAmount">¥ 119,903</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">买入股数</p>
-                                <p class="text-base font-semibold text-slate-800" id="totalBuyQuantity">156,500</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">卖出金额</p>
-                                <p class="text-base font-semibold text-slate-800" id="totalSellAmount">¥ 119,426</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">卖出股数</p>
-                                <p class="text-base font-semibold text-slate-800" id="totalSellQuantity">135,600</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">剩余股数</p>
-                                <p class="text-base font-semibold text-slate-800" id="totalShares">20,900</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">利润(¥)</p>
-                                <p class="text-base font-semibold text-emerald-600" id="profit">¥ 20,423</p>
-                            </div>
-                            <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
-                                <p class="text-xs text-slate-500 mb-1">利润率(%)</p>
-                                <p class="text-base font-semibold text-emerald-600 flex items-center" id="profitRate">
-                                    17.03%
-                                    <i data-lucide="trending-up" class="h-3 w-3 ml-1 text-emerald-500"></i>
-                                </p>
+                        <div class="mt-6 bg-blue-50 p-5 rounded-lg border border-blue-100">
+                            <h3 class="text-base font-bold mb-4 text-slate-800 flex items-center">
+                                <i data-lucide="bar-chart-2" class="h-5 w-5 mr-2 text-blue-600"></i>
+                                压力测试与盈利测算
+                            </h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">买入金额</p>
+                                    <p class="text-base font-semibold text-slate-800" id="totalBuyAmount">¥ 119,903</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">买入股数</p>
+                                    <p class="text-base font-semibold text-slate-800" id="totalBuyQuantity">156,500</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">卖出金额</p>
+                                    <p class="text-base font-semibold text-slate-800" id="totalSellAmount">¥ 119,426</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">卖出股数</p>
+                                    <p class="text-base font-semibold text-slate-800" id="totalSellQuantity">135,600</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">剩余股数</p>
+                                    <p class="text-base font-semibold text-slate-800" id="totalShares">20,900</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">利润(¥)</p>
+                                    <p class="text-base font-semibold text-emerald-600" id="profit">¥ 20,423</p>
+                                </div>
+                                <div class="bg-white p-4 rounded-md shadow-sm border border-gray-100">
+                                    <p class="text-xs text-slate-500 mb-1">利润率(%)</p>
+                                    <p class="text-base font-semibold text-emerald-600 flex items-center" id="profitRate">
+                                        17.03%
+                                        <i data-lucide="trending-up" class="h-3 w-3 ml-1 text-emerald-500"></i>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -366,24 +412,51 @@
     <script>
         // 初始化Lucide图标
         lucide.createIcons();
-        
-        // 添加图表尺寸控制代码
+    </script>
+    <script src="./js/grid-detail.js"></script>
+    <!-- 添加工具提示功能的脚本 -->
+    <script>
+        // 在页面加载完成后执行
         document.addEventListener('DOMContentLoaded', function() {
-            const originalInitChart = window.initTrendChart;
-            if (typeof originalInitChart === 'function') {
-                window.initTrendChart = function(...args) {
-                    const chart = originalInitChart(...args);
-                    if (chart) {
-                        chart.options.maintainAspectRatio = true;
-                        chart.options.responsive = true;
-                        chart.options.aspectRatio = 2.5; // 稍微调整宽高比，保持合适的比例
-                        chart.resize();
-                    }
-                    return chart;
-                };
-            }
+            // 工具提示数据
+            const tooltipData = {
+                'targetType': '影响股数的计算方式',
+                'minTradeUnit': '整数值1/10/100...',
+                'basePrice': '第一份买入价',
+                'unitAmount': '第一份买入金额，不同档位的买入金额会乘一个系数',
+                'minPrice': '低于此价不会再买入（最低为其基准价的10%）',
+                'smallGridStep': '跌多少个百分点触发下一个档位',
+                'levelCoeff': '逐级增加档位间距（即利润率），默认小网从4档开始，中/大网2档开始',
+                'amountCoeff': '逐级增加买入金额。如: 0:按照设定好的每份金额买入。公式：每份金额 + 每份金额 * 系数 * (1 - 当前档位)。比如：每份金额是10000，系数是1，当前档位是0.9，则买入金额是10000 + 10000 * 1 * (1 - 0.9) = 11000',
+                'profitCoeff': '卖出时，是否保留利润。如: 0:不保留利润，0.5:保留一半利润，1:保留全部利润，2:保留两倍利润'
+            };
+            
+            // 找到所有帮助图标并添加工具提示
+            document.querySelectorAll('[data-lucide="help-circle"]').forEach(function(icon) {
+                // 获取输入字段ID
+                const input = icon.closest('.space-y-1').querySelector('input, select');
+                if (!input) return;
+                
+                const fieldId = input.id;
+                if (tooltipData[fieldId]) {
+                    // 创建工具提示容器
+                    const container = document.createElement('div');
+                    container.className = 'tooltip-container';
+                    
+                    // 创建工具提示文本
+                    const tooltip = document.createElement('span');
+                    tooltip.className = 'tooltip-text';
+                    tooltip.textContent = tooltipData[fieldId];
+                    
+                    // 替换原始图标
+                    icon.parentNode.replaceChild(container, icon);
+                    container.appendChild(icon);
+                    container.appendChild(tooltip);
+                    
+                    console.log('添加了工具提示:', fieldId);
+                }
+            });
         });
     </script>
-    <script src="../js/grid-detail.js"></script>
 </body>
 </html> 

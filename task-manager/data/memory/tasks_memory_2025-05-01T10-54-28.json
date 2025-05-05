@@ -1,0 +1,75 @@
+{
+  "tasks": [
+    {
+      "id": "ac0ccf5e-595a-423e-a985-839ff9b4e044",
+      "name": "实现网格计算引擎",
+      "description": "在 `grid/js/grid-calculator.js` 文件中创建核心计算函数。这包括：\n1. 实现 `calculateLevels` 函数，根据PRD规则精确计算小、中、大网格的所有档位值，处理步长、档位加码系数（注意中/大网加倍和起始档位）、最低价限制。\n2. 实现 `calculateSingleLevelDetails` 函数，计算单个档位的所有详细信息（买/卖触发价、买/卖价、实际买/卖金额、实际买/卖股数），必须正确处理最小交易单位（向下取整）和保留利润系数。\n3. 实现主函数 `calculateGrid`，接收参数对象，调用上述函数，整合生成包含所有网格行数据和汇总统计信息的结构化数据对象并返回。\n此任务专注于纯计算逻辑，不涉及DOM操作。",
+      "status": "已完成",
+      "dependencies": [],
+      "createdAt": "2025-05-01T10:03:51.567Z",
+      "updatedAt": "2025-05-01T10:17:46.299Z",
+      "relatedFiles": [
+        {
+          "path": "grid/js/grid-calculator.js",
+          "type": "TO_MODIFY",
+          "description": "核心计算逻辑实现文件"
+        },
+        {
+          "path": "docs/grid/grid_prd.md",
+          "type": "REFERENCE",
+          "description": "需求和计算规则文档"
+        },
+        {
+          "path": "grid/grid-detail.html",
+          "type": "REFERENCE",
+          "description": "参考HTML结构和输入参数来源"
+        }
+      ],
+      "implementationGuide": "```pseudocode\n// In grid-calculator.js\nfunction roundToDecimalPlaces(value, decimals) { /* ... */ }\nfunction floorToUnit(value, unit) { /* ... */ }\n\nfunction calculateLevels(params) {\n  // TODO: Implement level calculation per PRD\n  // Input: params (basePrice, steps, levelCoeff, startLevel, minPrice, minQuoteUnit)\n  // Output: { small: [...], medium: [...], large: [...] }\n}\n\nfunction calculateSingleLevelDetails(levelValue, prevBuyPrice, params) {\n  // TODO: Implement single level detail calculation per PRD\n  // Input: levelValue, prevBuyPrice, params (basePrice, unitAmount, amountCoeff, profitCoeff, minTradeUnit, minQuoteUnit)\n  // Output: { levelType, levelValue, buyTrigger, buyPrice, actualBuyAmount, actualBuyShares, sellTrigger, sellPrice, actualSellShares, actualSellAmount }\n}\n\nfunction calculateGrid(params) {\n  const levels = calculateLevels(params);\n  const gridData = [];\n  let prevBuyPrice = params.basePrice;\n  // TODO: Combine/sort levels from small, medium, large\n  for (const level of combined_sorted_levels) {\n    const details = calculateSingleLevelDetails(level.value, prevBuyPrice, params);\n    gridData.push(details);\n    prevBuyPrice = details.buyPrice;\n  }\n  // TODO: Calculate summary stats from gridData\n  const summary = { /* ... */ };\n  return { gridData, summary };\n}\n```",
+      "verificationCriteria": "提供一组具体的输入参数，验证 `calculateGrid` 函数返回的 `gridData` 和 `summary` 对象是否与依据PRD规则手动计算的结果完全一致。特别检查档位值、实际买卖金额/股数（考虑最小单位取整）、利润保留逻辑和汇总统计的准确性。",
+      "analysisResult": "分析结果：\n将在 `grid-calculator.js` 中实现网格策略生成功能。核心步骤包括：\n1.  **参数获取与验证**: 从 `grid-detail.html` 读取输入，进行数字验证。\n2.  **档位计算**: 实现PRD定义的复杂档位计算逻辑，包括小/中/大网格区分、步长、加码系数（中/大网加倍）、起始档位、最低价限制。特别注意PRD中关于加码系数如何影响后续档位的描述（例如“再-0.01”），伪代码中已标记此处的歧义，需要精确实现。\n3.  **单档计算**: 计算每个档位的买/卖触发价、买/卖价、实际买/卖金额、实际买/卖股数，需要精确处理最小交易单位（向下取整）和保留利润系数对卖出股数的影响。\n4.  **主流程**: 整合参数获取、档位计算、单档计算，生成表格数据数组。\n5.  **汇总计算**: 根据表格数据计算总买入/卖出额/股数、剩余股数、利润、利润率。\n6.  **DOM更新**: 编写函数清空并填充 `#gridTable` 和汇总区域。\n7.  **事件绑定**: 将计算和更新流程绑定到 `#generateGridBtn` 的点击事件。\n\n技术选型：原生JavaScript，直接操作DOM。\n文件：主要逻辑写入 `grid/js/grid-calculator.js`。\n依赖：`grid-detail.html` 中的DOM结构和元素ID。\n潜在风险：档位加码计算逻辑的精确理解和实现；浮点数精度问题；边界条件处理（最低价、0值处理）。\n验收标准：生成的表格数据和汇总信息与使用PRD规则手动计算的结果一致；在各种参数组合下表现正常。",
+      "completedAt": "2025-05-01T10:17:46.296Z",
+      "summary": "成功实现了网格计算引擎，包括：\n1. 辅助函数 `roundToDecimalPlaces`, `roundToMinQuoteUnit`, `floorToUnit` 用于处理数字精度和取整\n2. `calculateLevels` 函数，严格按照PRD规则计算小中大网格的档位值，考虑了档位加码系数（小网最初设定的系数，中网2倍，大网3倍）、最低价限制等\n3. `calculateSingleLevelDetails` 函数，计算单个档位的买卖价格、买卖金额和股数，正确处理了最小交易单位和保留利润系数\n4. `calculateGrid` 主函数，整合所有计算并返回包含网格数据和汇总信息的结构化数据对象\n5. 添加了测试函数以验证计算结果\n\n所有计算逻辑均严格遵循PRD中的规则，特别是档位加码系数对档位计算的影响，以及最小交易单位对买卖股数的影响。代码结构清晰，各函数职责分明，并添加了详细注释以说明计算逻辑。"
+    },
+    {
+      "id": "2163767f-2ef2-48d8-917b-7e0c4027e2e7",
+      "name": "将计算逻辑集成到UI界面",
+      "description": "将任务1中开发的计算引擎与 `grid-detail.html` 页面集成。主要工作包括：\n1. 在 `grid-calculator.js` (或 `grid-detail.js`) 中添加代码，用于读取 `grid-detail.html` 表单中的所有用户输入参数，并进行基本的数字有效性验证。\n2. 为 `#generateGridBtn` 按钮添加 `click` 事件监听器。\n3. 在按钮点击事件的回调函数中，调用任务1开发的 `calculateGrid` 函数，传入从表单获取的参数。\n4. 实现 `updateDOM` 函数：接收 `calculateGrid` 返回的结果数据，清空 `#gridTable` 的现有内容和汇总信息区域，然后根据结果数据动态生成表格行和更新汇总信息显示。",
+      "status": "已完成",
+      "dependencies": [
+        {
+          "taskId": "ac0ccf5e-595a-423e-a985-839ff9b4e044"
+        }
+      ],
+      "createdAt": "2025-05-01T10:03:51.567Z",
+      "updatedAt": "2025-05-01T10:36:41.329Z",
+      "relatedFiles": [
+        {
+          "path": "grid/js/grid-calculator.js",
+          "type": "TO_MODIFY",
+          "description": "UI集成和DOM操作逻辑实现文件"
+        },
+        {
+          "path": "grid/grid-detail.html",
+          "type": "REFERENCE",
+          "description": "页面结构和元素ID参考"
+        },
+        {
+          "path": "grid/js/grid-detail.js",
+          "type": "REFERENCE",
+          "description": "可能需要协调或在此文件实现部分逻辑"
+        },
+        {
+          "path": "docs/grid/grid_prd.md",
+          "type": "REFERENCE",
+          "description": "需求文档"
+        }
+      ],
+      "implementationGuide": "```pseudocode\n// In grid-calculator.js or grid-detail.js\ndocument.addEventListener('DOMContentLoaded', () => {\n  const generateBtn = document.getElementById('generateGridBtn');\n  const gridTableBody = document.getElementById('gridTable').querySelector('tbody');\n  // TODO: Get references to all summary display elements\n\n  function getFormParams() {\n    // TODO: Read values from all form inputs (#targetType, #minQuoteUnit, ...)\n    // TODO: Add input validation (e.g., check if numbers)\n    // Return params object\n  }\n\n  function updateDOM(result) {\n    // TODO: Clear table body and summary fields\n    // TODO: Loop through result.gridData, create <tr>/<td> elements, append to gridTableBody\n    // TODO: Update summary elements with result.summary data\n  }\n\n  generateBtn.addEventListener('click', () => {\n    try {\n      const params = getFormParams();\n      // Ensure calculateGrid function is accessible\n      const result = calculateGrid(params); // From Task 1\n      updateDOM(result);\n    } catch (error) {\n      console.error(\"Error:\", error);\n      alert(\"生成网格出错，请检查输入。\");\n    }\n  });\n});\n```",
+      "verificationCriteria": "在 `grid-detail.html` 页面输入有效的参数后，点击“生成网格”按钮，页面表格和汇总信息区域能正确更新显示计算结果，且无控制台错误。尝试输入无效参数，应有适当的提示或阻止计算。",
+      "analysisResult": "分析结果：\n将在 `grid-calculator.js` 中实现网格策略生成功能。核心步骤包括：\n1.  **参数获取与验证**: 从 `grid-detail.html` 读取输入，进行数字验证。\n2.  **档位计算**: 实现PRD定义的复杂档位计算逻辑，包括小/中/大网格区分、步长、加码系数（中/大网加倍）、起始档位、最低价限制。特别注意PRD中关于加码系数如何影响后续档位的描述（例如“再-0.01”），伪代码中已标记此处的歧义，需要精确实现。\n3.  **单档计算**: 计算每个档位的买/卖触发价、买/卖价、实际买/卖金额、实际买/卖股数，需要精确处理最小交易单位（向下取整）和保留利润系数对卖出股数的影响。\n4.  **主流程**: 整合参数获取、档位计算、单档计算，生成表格数据数组。\n5.  **汇总计算**: 根据表格数据计算总买入/卖出额/股数、剩余股数、利润、利润率。\n6.  **DOM更新**: 编写函数清空并填充 `#gridTable` 和汇总区域。\n7.  **事件绑定**: 将计算和更新流程绑定到 `#generateGridBtn` 的点击事件。\n\n技术选型：原生JavaScript，直接操作DOM。\n文件：主要逻辑写入 `grid/js/grid-calculator.js`。\n依赖：`grid-detail.html` 中的DOM结构和元素ID。\n潜在风险：档位加码计算逻辑的精确理解和实现；浮点数精度问题；边界条件处理（最低价、0值处理）。\n验收标准：生成的表格数据和汇总信息与使用PRD规则手动计算的结果一致；在各种参数组合下表现正常。",
+      "completedAt": "2025-05-01T10:36:41.326Z",
+      "summary": "成功完成了网格计算逻辑与UI界面的集成。主要实现内容包括：\n\n1. 创建了 `getFormParams` 函数用于读取表单参数并进行全面的数据验证，提供友好的错误提示\n2. 完善了 `#generateGridBtn` 的点击事件处理，包括加载状态显示与错误处理\n3. 优化了 `updateGridTable` 和 `updateSummaryInfo` 函数，确保正确清空并更新表格和汇总区域\n4. 增强了 `calculateGrid` 函数的错误处理和边界情况处理能力\n5. 添加了UI辅助功能，如根据标的类型自动设置默认参数值和实时表单验证\n6. 提供了 `testGridCalculator` 函数便于测试和调试\n\n用户现在可以通过两种方式验证网格计算功能：\n1. 直接在浏览器控制台中调用 `testGridCalculator()` 函数测试\n2. 在表单中输入参数并点击\"生成网格\"按钮进行交互式生成和展示\n\n所有UI元素正确更新，表单验证工作正常，错误处理机制完善。"
+    }
+  ]
+}

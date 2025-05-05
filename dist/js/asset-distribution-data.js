@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 使用fetch API加载数据，添加更多选项以提高可靠性
-    fetch('class-distribution.json', {
+    fetch('data/class-distribution.json', {
         method: 'GET',
         headers: {
             'Accept': 'application/json',

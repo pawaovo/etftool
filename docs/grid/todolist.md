@@ -29,27 +29,27 @@
 
 ## 阶段三：主界面渲染与交互 (`grid.html` / `js/grid-data.js`)
 
-- [ ] **3.1: 渲染总体概览**: 将阶段 2.7 计算出的总体信息显示在 `grid.html` 页面顶部的对应元素中。
-- [ ] **3.2: 生成卡片HTML**: 实现 `createCardElement(etfData)`，根据单个ETF计算后的数据生成卡片HTML字符串（结构需匹配 `grid.html` 中卡片容器的预期）。
-- [ ] **3.3: 分类渲染卡片**: 根据 `etfData.isRunning` 状态，将生成的卡片HTML分别添加到 `grid.html` 中 "运行中" 和 "已暂停" 的容器元素内。
+- [✅] **3.1: 渲染总体概览**: 将阶段 2.7 计算出的总体信息显示在 `grid.html` 页面顶部的对应元素中。
+- [✅] **3.2: 生成卡片HTML**: 实现 `createCardElement(etfData)`，根据单个ETF计算后的数据生成卡片HTML字符串（结构需匹配 `grid.html` 中卡片容器的预期）。
+- [✅] **3.3: 分类渲染卡片**: 根据 `etfData.isRunning` 状态，将生成的卡片HTML分别添加到 `grid.html` 中 "运行中" 和 "已暂停" 的容器元素内。
 - [✅] **3.4: 实现卡片排序**: 为 `grid.html` 中的排序控件添加事件监听，根据选择的字段 (`executionCount`, `cumulativeYieldRate`, `netValueChangeRate`) 对 `allEtfData` 排序，并清空后重新执行 3.3 渲染卡片。
-- [ ] **3.5: 实现查看详情跳转**: 给 `grid.html` 中卡片上的"查看详情"按钮添加点击事件，使其导航到 `grid-detail.html`，并通过 URL 参数传递 `etfCode` 或 `sourceFile`。
-- [ ] **3.6: 页面加载逻辑**: 确保 DOM 加载完成后，在 `js/grid-data.js` 中触发执行数据加载 (阶段二)、计算和初始渲染 (阶段三)。
+- [✅] **3.5: 实现查看详情跳转**: 给 `grid.html` 中卡片上的"查看详情"按钮添加点击事件，使其导航到 `grid-detail.html`，并通过 URL 参数传递 `etfCode` 或 `sourceFile`。
+- [✅] **3.6: 页面加载逻辑**: 确保 DOM 加载完成后，在 `js/grid-data.js` 中触发执行数据加载 (阶段二)、计算和初始渲染 (阶段三)。
 
 ## 阶段四：详情页面数据处理与渲染 (`grid-detail.html` / `js/grid-detail.js`)
 
-- [ ] **4.1: 获取参数并加载数据**: 在 `js/grid-detail.js` 中，页面加载时从 URL 参数获取 `etfCode` (或 `sourceFile`)，然后加载对应的单个 ETF JSON 数据和 `latest_netvalues.json` (或从 `grid.html` 传递数据，待定)。
-- [ ] **4.2: 计算详情数据**: 调用 `js/grid-data.js` 中的 `calculateEtfData` (或复用其逻辑) 计算该ETF的详细数据 `detailData` (应包含 `erd.md` 中"网格策略详细信息数据结构"所需的所有原始或待计算数据)。
-- [ ] **4.3: 渲染顶部信息栏**: 使用 `detailData` 填充 `grid-detail.html` 页面顶部的各项信息元素。
-- [ ] **4.4: 准备图表数据**: 实现 `prepareChartData(detailData)`，根据 `交易记录` 转换成图表库所需的格式 (参考 `erd.md` 中 `trendData` 结构)。
-- [ ] **4.5: (集成图表库) 渲染趋势图**: 初始化图表库 (如 Chart.js, ECharts)，传入 `chartData` 渲染到 `grid-detail.html` 的图表容器元素中。
-- [ ] **4.6: 实现图表交互**: 配置图表库，实现悬停在卖出点时高亮配对买入点、连线并显示详细信息的 Tooltip。
-- [ ] **4.7: 准备交易明细表格数据**: 实现 `prepareTradeDetailsTable(detailData)`，格式化 `交易记录` 并计算表尾合计 (参考 `erd.md` 中 `tradeDetailsTable` 结构)。
-- [ ] **4.8: 渲染交易明细表格**: 将 `tradeDetailsTableData` 渲染到 `grid-detail.html` 的交易明细表格元素中。
-- [ ] **4.9: 准备网格策略参数数据**: 实现 `prepareStrategyParams(detailData)`，提取或设置默认的网格策略参数 (参考 `erd.md` 中 `gridStrategyDetails.parameters` 结构)。
-- [ ] **4.10: 渲染网格策略参数区**: 将 `strategyParamsData` 显示在 `grid-detail.html` 的参数区元素中，并为可修改参数关联输入控件。
-- [ ] **4.11: 实现网格档位计算逻辑**: **(核心复杂功能)** 实现 `calculateGridLevels(strategyParams, tradeHistory)` 函数，根据输入的策略参数和交易历史，**重新计算** 网格档位详情表的所有数据及表尾合计 (参考 `erd.md` 中 `gridStrategyDetails.gridLevelsTable` 结构)。
-- [ ] **4.12: 准备并渲染初始网格档位表**: 调用 `calculateGridLevels` 使用初始参数计算数据，并将其渲染到 `grid-detail.html` 的网格档位详情表元素中。
+- [✅] **4.1: 获取参数并加载数据**: 在 `js/grid-detail.js` 中，页面加载时从 URL 参数获取 `etfCode` (或 `sourceFile`)，然后加载对应的单个 ETF JSON 数据和 `latest_netvalues.json` (或从 `grid.html` 传递数据，待定)。
+- [✅] **4.2: 计算详情数据**: 调用 `js/grid-data.js` 中的 `calculateEtfData` (或复用其逻辑) 计算该ETF的详细数据 `detailData` (应包含 `erd.md` 中"网格策略详细信息数据结构"所需的所有原始或待计算数据)。
+- [✅] **4.3: 渲染顶部信息栏**: 使用 `detailData` 填充 `grid-detail.html` 页面顶部的各项信息元素。
+- [✅] **4.4: 准备图表数据**: 实现 `prepareChartData(detailData)`，根据 `交易记录` 转换成图表库所需的格式 (参考 `erd.md` 中 `trendData` 结构).
+- [✅] **4.5: (集成图表库) 渲染趋势图**: 初始化图表库 (如 Chart.js, ECharts)，传入 `chartData` 渲染到 `grid-detail.html` 的图表容器元素中。
+- [✅] **4.6: 实现图表交互**: 配置图表库，实现悬停在卖出点时高亮配对买入点、连线并显示详细信息的 Tooltip。
+- [✅] **4.7: 准备交易明细表格数据**: 实现 `prepareTradeDetailsTable(detailData)`，格式化 `交易记录` 并计算表尾合计 (参考 `erd.md` 中 `tradeDetailsTable` 结构)。
+- [✅] **4.8: 渲染交易明细表格**: 将 `tradeDetailsTableData` 渲染到 `grid-detail.html` 的交易明细表格元素中。
+- [✅] **4.9: 准备网格策略参数数据**: 实现 `prepareStrategyParams(detailData)`，提取或设置默认的网格策略参数 (参考 `erd.md` 中 `gridStrategyDetails.parameters` 结构)。
+- [✅] **4.10: 渲染网格策略参数区**: 将 `strategyParamsData` 显示在 `grid-detail.html` 的参数区元素中，并为可修改参数关联输入控件。
+- [✅] **4.11: 实现网格档位计算逻辑**: **(核心复杂功能)** 实现 `calculateGridLevels(strategyParams, tradeHistory)` 函数，根据输入的策略参数和交易历史，**重新计算** 网格档位详情表的所有数据及表尾合计 (参考 `erd.md` 中 `gridStrategyDetails.gridLevelsTable` 结构)。
+- [✅] **4.12: 准备并渲染初始网格档位表**: 调用 `calculateGridLevels` 使用初始参数计算数据，并将其渲染到 `grid-detail.html` 的网格档位详情表元素中。
 
 ## 阶段五：详情页面交互 (`grid-detail.html` / `js/grid-detail.js`)
 

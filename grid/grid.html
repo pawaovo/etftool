@@ -3,12 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ETF工具 - S计划</title>
+    <title>ETF工具 - 网格策略</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="../plan-data.css">
     <link rel="stylesheet" href="../styles/etf-cards.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/enhanced-styles.css">
+    <link rel="stylesheet" href="css/layout-updates.css">
+    <style>
+        .paused-card {
+            background-color: #f5f5f5;
+            opacity: 0.8;
+        }
+        
+        /* 与150plan.html统一的样式 */
+        body {
+            background-color: #f5f7fa;
+        }
+
+        /* 计划选择器样式统一 */
+        .plan-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-shrink: 0;
+        }
+        
+        .plan-tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .plan-tab {
+            padding: 12px 30px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #555;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .plan-tab.active {
+            background-color: #4a89dc;
+            color: white;
+        }
+        
+        .plan-tab:hover:not(.active) {
+            background-color: #f1f1f1;
+        }
+        
+        .plan-container {
+            padding: 20px;
+        }
+        
+        .value-inline.positive {
+            color: #22c55e;
+        }
+        
+        .value-inline.negative {
+            color: #ef4444;
+        }
+        
+        .sidebar-header h3 {
+            color: #333;
+        }
+        
+        .sidebar-header h3 i {
+            color: #4a89dc;
+        }
+        
+        .fund-cards-title {
+            color: #333;
+        }
+        
+        .fund-cards-title i {
+            color: #4a89dc;
+        }
+        
+        .sort-btn {
+            background-color: #f5f5f5;
+            color: #666;
+        }
+        
+        .sort-btn.active {
+            background-color: #4a89dc;
+            color: white;
+        }
+        
+        .fund-card {
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .fund-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* 固定左侧侧栏 */
+        .plan-data-container {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(300px, auto) 1fr;
+            gap: 25px;
+            min-height: calc(100vh - 120px);
+        }
+        
+        /* 左侧信息栏样式 */
+        .info-sidebar {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
+            height: 100%;
+            justify-content: center;
+        }
+        
+        .fund-cards-header {
+            background-color: #f5f5f5;
+            border: 1px solid #eaecef;
+            border-bottom: none;
+        }
+        
+        .fund-cards-container {
+            border: 1px solid #eaecef;
+            border-top: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 优化左侧指标模块样式 */
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+            border: 1px solid #e0e0e0;
+            min-height: 110px;
+            justify-content: center;
+            width: 100%;
+            overflow: visible;
+            box-sizing: border-box;
+        }
+        
+        .info-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .info-item .icon {
+            font-size: 24px;
+            color: #4a89dc;
+            margin-bottom: 12px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .info-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 12px;
+            text-align: center;
+            font-weight: 500;
+            width: 100%;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #334155;
+            text-align: center;
+            width: 100%;
+            word-break: keep-all;
+        }
+        
+        .info-value.green-value .value-number {
+            color: #22c55e;
+        }
+        
+        .value-inline.positive .value-number {
+            color: #22c55e;
+        }
+        
+        .value-inline.positive .value-percent {
+            color: #22c55e;
+            font-weight: 600;
+        }
+        
+        .value-inline.negative .value-number,
+        .value-inline.negative .value-percent {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        
+        /* 保证长数值不会被折行且完整显示 */
+        .value-number {
+            white-space: nowrap;
+            overflow: visible;
+            width: auto;
+            display: inline-block;
+            font-size: 15px;
+            padding: 0 2px;
+        }
+        
+        .value-percent {
+            white-space: nowrap;
+            overflow: visible;
+            width: auto;
+            display: inline-block;
+            font-size: 15px;
+        }
+        
+        /* 确保信息项中的数据完整显示 */
+        .info-value.green-value {
+            width: auto;
+            overflow: visible;
+        }
+        
+        .value-inline {
+            width: auto;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        
+        /* 数据过长时调整布局 */
+        .info-item:nth-child(2) .value-number,
+        .info-item:nth-child(3) .value-number {
+            font-size: 14px;
+        }
+        
+        /* 执行次数为0时的卡片样式 */
+        .zero-execution-card .detail-btn {
+            pointer-events: none;
+            opacity: 0.7;
+            cursor: not-allowed;
+            background-color: #f1f5f9;
+            color: #94a3b8;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 992px) {
+            .plan-data-container {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+            
+            .info-sidebar {
+                position: static;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 15px;
+                justify-content: flex-start;
+            }
+            
+            .plan-container {
+                padding: 20px;
+            }
+            
+            .info-item {
+                min-height: 100px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .info-sidebar {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <main class="plan-container">
@@ -16,281 +294,73 @@
         <div class="plan-selector">
             <div class="plan-tabs">
                 <button class="plan-tab" data-plan="150">150 计划</button>
-                <button class="plan-tab active" data-plan="S">S 计划</button>
-                <button class="plan-tab" data-plan="grid">网格策略</button>
+                <button class="plan-tab active" data-plan="grid">网格策略</button>
             </div>
         </div>
 
         <!-- 主要内容区域 -->
         <div class="plan-data-container">
-            <!-- 信息导航栏 -->
-            <div class="info-nav-bar">
-                <div class="info-item">
-                    <div class="info-label">运行中/执行次数</div>
-                    <div class="info-value green-value">
-                        <span class="value-number">6/102</span>
+            <!-- 左侧 - 信息导航栏 -->
+            <div class="info-sidebar">
+                <!-- 第一个指标 -->
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-chart-bar"></i></div>
+                        <div class="info-label">运行中/执行次数</div>
+                        <div class="info-value green-value">
+                            <span class="value-number">8/99</span>
+                        </div>
                     </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">买入/卖出金额</div>
-                    <div class="info-value green-value">
-                        <span class="value-number">12309/14509</span>
+                
+                <!-- 第二个指标 -->
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="info-label">买入/卖出金额</div>
+                        <div class="info-value green-value">
+                            <span class="value-number">1151604.20/1032632.50</span>
+                        </div>
                     </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">买入/卖出/剩余股数</div>
-                    <div class="info-value green-value">
-                        <span class="value-number">23465/22465/2265</span>
+                
+                <!-- 第三个指标 -->
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-balance-scale"></i></div>
+                        <div class="info-label">买入/卖出/剩余股数</div>
+                        <div class="info-value green-value">
+                            <span class="value-number">1334300/1082400/251900</span>
+                        </div>
                     </div>
-                </div>
-                <div class="info-item">
-                    <div class="info-label">收益/收益率</div>
-                    <div class="info-value">
-                        <div class="value-inline positive">
-                            <span class="value-number">1020</span>/<span class="value-percent">+40.1%</span>
+                
+                <!-- 第四个指标 -->
+                    <div class="info-item">
+                        <div class="icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="info-label">收益/收益率</div>
+                        <div class="info-value">
+                            <div class="value-inline positive">
+                                <span class="value-number">106674.00</span>/<span class="value-percent">+9.26%</span>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- 卡片排序控件 -->
-            <div class="card-sort-controls">
-                <div class="sort-buttons">
-                    <button class="sort-btn" data-sort-by="executionCount">按执行次数</button>
-                    <button class="sort-btn" data-sort-by="cumulativeYieldRate">按收益率</button>
-                    <button class="sort-btn active" data-sort-by="netValueChangeRate">按净值变化</button>
+            <!-- 右侧 - 卡片区域 -->
+            <div class="main-content">
+                <!-- 卡片标题与排序按钮 -->
+                <div class="fund-cards-header">
+                    <!-- 排序控件融入标题栏 -->
+                    <div class="card-sort-controls">
+                        <div class="sort-buttons">
+                            <button class="sort-btn active" data-sort-by="netValueChangeRate">按净值变化</button>
+                            <button class="sort-btn" data-sort-by="cumulativeYieldRate">按收益率</button>
+                            <button class="sort-btn" data-sort-by="executionCount">按执行次数</button>
+                            <button class="sort-btn" data-sort-by="lastOperationTime">按最后操作时间</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- ETF基金卡片 -->
-            <div class="fund-cards-container">
-                <div class="fund-cards">
-                    <!-- Card 1 - Green -->
-                    <div class="fund-card">
-                        <div class="fund-card-header positive">
-                            <div class="fund-title">159920（恒生ETF）</div>
-                        </div>
-                        <div class="fund-card-content">
-                            <div class="fund-data-row">
-                                <span class="data-label">执行次数</span>
-                                <span class="data-value execution-count">20次</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">累计收益率</span>
-                                <span class="data-value profit positive">+20.76%</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">当前档位/买入价</span>
-                                <span class="data-value">
-                                    0.90 <span class="level-type">(小档)</span> /0.927
-                                </span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">步长</span>
-                                <span class="data-value">5/15/30</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">最新净值</span>
-                                <span class="data-value nav">1.1557</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">净值对比买入价变化</span>
-                                <span class="data-value nav-change positive">+2.11%</span>
-                            </div>
-                        </div>
-                        <div class="fund-card-footer positive">
-                            <button class="detail-btn">查看详情</button>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 - Green -->
-                    <div class="fund-card">
-                        <div class="fund-card-header positive">
-                            <div class="fund-title">159938（医药）</div>
-                        </div>
-                        <div class="fund-card-content">
-                            <div class="fund-data-row">
-                                <span class="data-label">执行次数</span>
-                                <span class="data-value execution-count">22次</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">累计收益率</span>
-                                <span class="data-value profit positive">+50.11%</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">当前档位/买入价</span>
-                                <span class="data-value">
-                                    0.95 <span class="level-type">(小档)</span> /0.927
-                                </span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">步长</span>
-                                <span class="data-value">5/15/30</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">最新净值</span>
-                                <span class="data-value nav">1.1900</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">净值对比买入价变化</span>
-                                <span class="data-value nav-change positive">+15.96%</span>
-                            </div>
-                        </div>
-                        <div class="fund-card-footer positive">
-                            <button class="detail-btn">查看详情</button>
-                        </div>
-                    </div>
-
-                    <!-- Card 3 - Green -->
-                    <div class="fund-card">
-                        <div class="fund-card-header positive">
-                            <div class="fund-title">512880（证券）</div>
-                        </div>
-                        <div class="fund-card-content">
-                            <div class="fund-data-row">
-                                <span class="data-label">执行次数</span>
-                                <span class="data-value execution-count">12次</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">累计收益率</span>
-                                <span class="data-value profit positive">+17.69%</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">当前档位/买入价</span>
-                                <span class="data-value">
-                                    0.70 <span class="level-type">(大档)</span> /0.727
-                                </span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">步长</span>
-                                <span class="data-value">5/15/30</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">最新净值</span>
-                                <span class="data-value nav">0.6633</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">净值对比买入价变化</span>
-                                <span class="data-value nav-change positive">+10.22%</span>
-                            </div>
-                        </div>
-                        <div class="fund-card-footer positive">
-                            <button class="detail-btn">查看详情</button>
-                        </div>
-                    </div>
-
-                    <!-- Card 4 - Red -->
-                    <div class="fund-card">
-                        <div class="fund-card-header negative">
-                            <div class="fund-title">512980（传媒）</div>
-                        </div>
-                        <div class="fund-card-content">
-                            <div class="fund-data-row">
-                                <span class="data-label">执行次数</span>
-                                <span class="data-value execution-count">13次</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">累计收益率</span>
-                                <span class="data-value profit positive">+1.07%</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">当前档位/买入价</span>
-                                <span class="data-value">
-                                    0.95 <span class="level-type">(小档)</span> /0.947
-                                </span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">步长</span>
-                                <span class="data-value">5/15/30</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">最新净值</span>
-                                <span class="data-value nav">2.2330</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">净值对比买入价变化</span>
-                                <span class="data-value nav-change negative">-1.01%</span>
-                            </div>
-                        </div>
-                        <div class="fund-card-footer negative">
-                            <button class="detail-btn">查看详情</button>
-                        </div>
-                    </div>
-
-                    <!-- Card 5 - Red -->
-                    <div class="fund-card">
-                        <div class="fund-card-header negative">
-                            <div class="fund-title">513050（中概互联）</div>
-                        </div>
-                        <div class="fund-card-content">
-                            <div class="fund-data-row">
-                                <span class="data-label">执行次数</span>
-                                <span class="data-value execution-count">10次</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">累计收益率</span>
-                                <span class="data-value profit positive">+1.33%</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">当前档位/买入价</span>
-                                <span class="data-value">
-                                    0.85 <span class="level-type">(中档)</span> /0.627
-                                </span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">步长</span>
-                                <span class="data-value">5/15/30</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">最新净值</span>
-                                <span class="data-value nav">2.1770</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">净值对比买入价变化</span>
-                                <span class="data-value nav-change negative">-4.40%</span>
-                            </div>
-                        </div>
-                        <div class="fund-card-footer negative">
-                            <button class="detail-btn">查看详情</button>
-                        </div>
-                    </div>
-
-                    <!-- Card 6 - Red -->
-                    <div class="fund-card">
-                        <div class="fund-card-header negative">
-                            <div class="fund-title">513180（恒生科技）</div>
-                        </div>
-                        <div class="fund-card-content">
-                            <div class="fund-data-row">
-                                <span class="data-label">执行次数</span>
-                                <span class="data-value execution-count">2次</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">累计收益率</span>
-                                <span class="data-value profit positive">+10.33%</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">当前档位/买入价</span>
-                                <span class="data-value">
-                                    0.95 <span class="level-type">(小档)</span> /0.937
-                                </span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">步长</span>
-                                <span class="data-value">5/15/30</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">最新净值</span>
-                                <span class="data-value nav">0.5475</span>
-                            </div>
-                            <div class="fund-data-row">
-                                <span class="data-label">净值对比买入价变化</span>
-                                <span class="data-value nav-change negative">-20.01%</span>
-                            </div>
-                        </div>
-                        <div class="fund-card-footer negative">
-                            <button class="detail-btn">查看详情</button>
-                        </div>
+                <!-- ETF基金卡片容器 - 添加可滚动区域 -->
+                <div class="fund-cards-container">
+                    <!-- 网格布局容器 -->
+                    <div class="fund-cards">
+                        <!-- 卡片将在这里动态生成 -->
                     </div>
                 </div>
             </div>
@@ -298,6 +368,28 @@
     </main>
 
     <script src="js/script.js"></script>
-    <script src="../js/grid-data.js"></script>
+    <script src="js/grid-data.js"></script>
+    
+    <!-- 添加导航处理脚本 -->
+    <script>
+        // 设置计划标签切换
+        document.addEventListener('DOMContentLoaded', function() {
+            const planTabs = document.querySelectorAll('.plan-tab');
+            
+            planTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 获取当前选择的计划
+                    const planType = this.getAttribute('data-plan');
+                    
+                    // 跳转到相应的计划页面
+                    if (planType === '150') {
+                        window.location.href = '../public/150plan.html';
+                    } else if (planType === 'grid') {
+                        // 已经在网格策略页面，不需要跳转
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html> 

@@ -1,6 +1,6 @@
 /**
  * 预处理后的ETF数据
- * 自动生成于 2025/4/26 23:20:02
+ * 自动生成于 2025/5/3 11:53:51
  * 请勿手动修改此文件
  */
 
@@ -2390,8 +2390,8 @@ const processedData = {
       "percent": 0.137,
       "isCash": false,
       "latestOperation": {
-        "timestamp": 1743955200000,
-        "formattedDate": "2025-04-07"
+        "timestamp": 1745510400000,
+        "formattedDate": "2025-04-25"
       },
       "funds": [
         {
@@ -2431,12 +2431,12 @@ const processedData = {
           "accProfit": 0.1331,
           "accProfitRate": 0,
           "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2025-04-07",
-            "navDate": 1743955200000,
-            "timestamp": 1743955200000,
-            "tradePrice": 0.6541,
-            "displayText": "买入 (2025-04-07)"
+            "tradeType": "卖出",
+            "operationDate": "2025-04-23",
+            "navDate": 1745337600000,
+            "timestamp": 1745337600000,
+            "tradePrice": 0.7449,
+            "displayText": "卖出 (2025-04-23)"
           },
           "historicalLow": 0.5978,
           "compareWithAvg": 2.67,
@@ -2481,12 +2481,12 @@ const processedData = {
           "accProfit": 0.1138,
           "accProfitRate": 0,
           "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2024-08-13",
-            "navDate": 1723478400000,
-            "timestamp": 1723478400000,
-            "tradePrice": 0.5754,
-            "displayText": "买入 (2024-08-13)"
+            "tradeType": "卖出",
+            "operationDate": "2025-04-25",
+            "navDate": 1745510400000,
+            "timestamp": 1745510400000,
+            "tradePrice": 0.7772,
+            "displayText": "卖出 (2025-04-25)"
           },
           "historicalLow": 0.5754,
           "compareWithAvg": -2.65,
@@ -3132,8 +3132,8 @@ const processedData = {
       "formattedDate": "2024-10-31"
     },
     "海外新兴市场股票": {
-      "timestamp": 1743955200000,
-      "formattedDate": "2025-04-07"
+      "timestamp": 1745510400000,
+      "formattedDate": "2025-04-25"
     },
     "海外成熟市场股票": {
       "timestamp": 1744128000000,
@@ -3156,7 +3156,7 @@ const processedData = {
       "formattedDate": "2022-04-22"
     }
   },
-  "lastUpdated": "2025-04-26T15:20:02.094Z",
+  "lastUpdated": "2025-05-03T03:53:51.150Z",
   "summary": {
     "totalUnit": 150,
     "totalProfit": 43.6258,

@@ -93,3 +93,64 @@ npm run build
 
 # 部署dist目录到服务器
 ```
+
+# Cursor自动化工具
+
+这个工具包可以自动打开Cursor的开发者工具，并在控制台中执行`cursor_auto_resume.js`脚本。
+
+## 功能介绍
+
+此工具会自动执行以下操作：
+
+1. 读取`cursor_auto_resume.js`文件内容
+2. 复制到剪贴板
+3. 模拟按下`Ctrl+Shift+I`打开开发者工具
+4. 切换到控制台面板
+5. 粘贴脚本内容并按回车执行
+
+## 使用方法
+
+提供了三种不同的运行方式，请选择一种适合您的方式：
+
+### 方法1：使用批处理文件（推荐Windows用户）
+
+1. 确保Cursor已经打开
+2. 双击运行`cursor_automation.bat`
+3. 按照提示操作
+
+### 方法2：使用Python脚本
+
+1. 确保已安装Python 3.x
+2. 安装必要的库：`pip install pyautogui pyperclip`
+3. 运行`python cursor_automation.py`
+4. 按照提示操作
+
+### 方法3：使用PowerShell脚本
+
+1. 右键点击`cursor_automation_ps1.ps1`，选择"使用PowerShell运行"
+2. 如果遇到执行策略限制，可以使用以下命令临时允许脚本运行：  
+   `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`
+3. 按照提示操作
+
+## 注意事项
+
+- 运行工具前，请确保Cursor已经打开
+- 在工具提示后，请立即点击Cursor窗口使其处于活动状态
+- 如果脚本执行失败，可能需要手动调整时间延迟或重试
+- 脚本执行过程中，请勿移动鼠标或使用键盘
+
+## 故障排除
+
+1. **无法打开开发者工具**：确认Cursor窗口处于活动状态，或手动按下`Ctrl+Shift+I`
+   
+2. **无法切换到控制台**：脚本尝试了多种方法切换到控制台，如果都失败，请在开发者工具打开后手动点击"Console"选项卡
+
+3. **Python脚本错误**：确保已安装最新版本的`pyautogui`和`pyperclip`库
+
+4. **PowerShell执行权限问题**：以管理员身份运行PowerShell，并执行`Set-ExecutionPolicy RemoteSigned`
+
+# 特别注意（非常重要）
+
+During project development, do NOT directly start implementing or modifying code based on the user's requirements in the conversation. You must carefully deliberate and first return the best solution after your analysis to the user. Only after obtaining the user's explicit consent should you begin making code modifications. (This rule is of utmost importance.)
+
+Efficiency Guideline: Favor direct file edits via tools instead of command-line operations for modifications.(This rule is of utmost importance.)

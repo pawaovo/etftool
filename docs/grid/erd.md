@@ -17,12 +17,25 @@
 
     - **(新增)** `latest_netvalues.json` ：用于提供 `最新净值` 数据，通过外部接口获得，用基金的代码作为关键字，调用接口获得其最新净值数据。
     以`512980(传媒).json`为例，基金代码为512980，
-    接口为：https://tiantian-fund-api.vercel.app/api/action?action_name=fundSearch&m=1&key=512880。
+    接口为：https://tiantian-fund-api.vercel.app/api/action?action_name=fundSearch&m=1&key=512880
     返回数据为：
 {"ErrCode":0,"ErrMsg":"fromes","Datas":[{"_id":"512880","CODE":"512880","NAME":"国泰中证全指证券公司ETF","JP":"GTZZQZZQGSETF","CATEGORY":700,"CATEGORYDESC":"基金","STOCKMARKET":null,"BACKCODE":"512880","MatchCount":1,"FundBaseInfo":{"_id":"512880","FCODE":"512880","SHORTNAME":"国泰中证全指证券公司ETF","JJGSID":"80000224","JJGS":"国泰基金","JJJLID":"30277862","JJJL":"艾小军","FUNDTYPE":"001","ISBUY":"","FTYPE":"指数型-股票","MINSG":"","JJGSBID":6,"OTHERNAME":"国泰中证全指ETF,国泰中证证券ETF,证券ETF","FSRQ":"2025-04-25","DWJZ":1.0404,"RSFUNDTYPE":"000","NAVURL":"http://fund.eastmoney.com/ZS_jzzzl.html"},"StockHolder":null,"ZTJJInfo":[{"TTYPE":"BK000128","TTYPENAME":"证券"},{"TTYPE":"BK000127","TTYPENAME":"非银金融"}],"SEARCHWEIGHT":0,"NEWTEXCH":""}]}
 其中的"DWJZ"字段为其最新净值信息"DWJZ":1.0404。
 
 将所有`<code>(<category>).json`都通用上述方法，通过基金代码得到最新净值信息，然后将最新的净值信息和对应基金信息写入`latest_netvalues.json`中。
+每天获取到的最新净值以一组数据进行存储如：
+{
+  "lastUpdated": "2025-05-03",
+  "159920": {"netValue": 1.0532},
+  "159938": {"netValue": 2.1556},
+  "512880": {"netValue": 1.0404},
+  "512980": {"netValue": 0.8765},
+  "513050": {"netValue": 1.2345},
+  "513180": {"netValue": 0.9876},
+  "513500": {"netValue": 5.4321},
+  "513520": {"netValue": 2.3456},
+  "515180": {"netValue": 1.5432}
+} 
 
 - **文档**：
   - `docs/grid/`：存放网格策略相关文档。
@@ -116,6 +129,7 @@
 "isRunning"（运行状态）：在在JSON文件中，查找"网格交易数据"，JSON中不存在的，其网格策略状态为已暂停，其余情况为运行中。
 
 "basePrice"（基准价）：为其网格策略中基金的第一份买入价格（1.00档位时的买入价）。在JSON文件中按顺序（从头到尾）查找"网格交易数据"中的第一组数据，其"买入价"会有两个数字，其平均值即为基准价。如"买入价": ["0.774", "0.776"],基准价=（0.774+0.776）/2=0.775。
+特别注意：当"买入价"中存在多组（大于2组）数据时，取其列表内倒数2组数据进行计算。
 
 
 - "交易记录"：
@@ -131,7 +145,7 @@
 收益率具体计算公式为：一次完整网格策略中的收益率 = 一次完整网格策略中的收益/吗，买入金额（买入交易）
 "overallProfitRate"（总收益率）：所有的"totalProfit"/所有的买入金额（买入交易）
 
-"level"（当前档位）：在JSON文件中，取第一个"最新时间"信息为最近一次策略的执行时间，用该时间在上文中提到的净值表`latest_netvalues.json`中进行匹配，取其对应时间下的净值数据。再用该净值数据，对比该网格策略表格中的各档位的"买入价"和"卖出价"（由"网格策略表格"功能通过计算生成），如该净值数据正好处于某档位的"买入价"和"卖出价"区间内，则此档位为当前档位，此档位的"买入价"为当前档位买入价。
+"level"（当前档位）：用上文中提到的净值表`latest_netvalues.json`中匹配对应基基金，取其最新净值数据。再用该净值数据，对比该网格策略表格中的各档位的"买入价"和"卖出价"（由"网格策略表格"功能通过计算生成），如该净值数据正好处于某档位的"买入价"和"卖出价"区间内，则此档位为当前档位，此档位的"买入价"为当前档位买入价。
 可能出现某净值数据处于多个档位的"买入价"和"卖出价"区间内，这是因为小/中/大网的策略差异，在其标注上小/中/大网标识和档位、买入价即可。即可能存在多个小/中/大网同时运行的情况。
 
 "BuyPrice"（买入价）：各档位"level"的买入价。
@@ -161,6 +175,7 @@
     "etfName": "string",             // 提取
     "etfCode": "string",             // 提取
     "category": "string",            // 提取
+    "basePrice": "number",           // **新增**: 计算: 基准价
     "isRunning": "boolean",          // 提取/计算
     "executionCount": "number",      // 计算: 单策略卖出次数
     "cumulativeYieldRate": "string", // 计算: 单策略累计收益率

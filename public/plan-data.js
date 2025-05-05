@@ -165,7 +165,7 @@ function initPlanPage() {
 
 /**
  * 设置计划标签切换
- * 切换150计划和S计划的数据展示
+ * 切换150计划和网格策略的数据展示
  */
 function setupPlanTabs() {
     const planTabs = document.querySelectorAll('.plan-tab');
@@ -184,10 +184,8 @@ function setupPlanTabs() {
             // 跳转到相应的计划页面
             if (planType === '150') {
                 window.location.href = '150plan.html';
-            } else if (planType === 'S') {
-                window.location.href = 'splan.html';
             } else if (planType === 'grid') {
-                window.location.href = 'gridplan.html';
+                window.location.href = '../grid/grid.html';
             }
         });
     });

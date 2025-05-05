@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadDateUtilsScript() {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = 'dateUtils.js';
+        script.src = 'js/dateUtils.js'; // Corrected path
         script.onload = () => {
             console.log('dateUtils.js 加载成功');
             resolve();
@@ -258,7 +258,7 @@ async function loadPlanData() {
         } else {
             // 如果没有，则从文件加载
             console.log('从文件加载数据');
-            const response = await fetch('data/fund-data.json');
+            const response = await fetch('data/fund/fund-data.json'); // Corrected path
             fundData = await response.json();
         }
         
@@ -769,7 +769,7 @@ async function loadAssetLatestOperationTime() {
         // 尝试通过fetch加载数据
         try {
             // 从adjust.json获取调整记录
-            const response = await fetch('adjust.json');
+            const response = await fetch('data/adjust.json');
             adjustmentData = await response.json();
         } catch (fetchError) {
             console.warn('通过fetch加载调整数据失败，尝试使用内联数据:', fetchError);
@@ -851,7 +851,7 @@ function loadAdjustDataWithXHR() {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.overrideMimeType("application/json");
-        xhr.open('GET', 'adjust.json', true);
+        xhr.open('GET', 'data/adjust.json', true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
@@ -901,7 +901,7 @@ async function loadAssetInfo() {
         // 尝试通过fetch加载数据
         try {
             // 从etf.json获取ETF数据
-            const response = await fetch('etf.json');
+            const response = await fetch('data/etf.json');
             etfData = await response.json();
         } catch (fetchError) {
             console.warn('通过fetch加载ETF数据失败，尝试使用内联数据:', fetchError);
@@ -1002,7 +1002,7 @@ function loadEtfDataWithXHR() {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.overrideMimeType("application/json");
-        xhr.open('GET', 'etf.json', true);
+        xhr.open('GET', 'data/etf.json', true);
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
@@ -1142,11 +1142,11 @@ async function loadEtfCardData() {
         // 尝试通过fetch加载数据
         try {
             // 加载ETF数据
-            const etfResponse = await fetch('etf.json');
+            const etfResponse = await fetch('data/etf.json');
             etfData = await etfResponse.json();
             
             // 加载调整数据
-            const adjustResponse = await fetch('adjust.json');
+            const adjustResponse = await fetch('data/adjust.json');
             adjustData = await adjustResponse.json(); // 存储到全局变量
         } catch (fetchError) {
             console.warn('通过fetch加载数据失败，尝试使用内联数据:', fetchError);
@@ -1546,7 +1546,7 @@ function loadDataWithXHR() {
         // 加载ETF数据
         const etfXHR = new XMLHttpRequest();
         etfXHR.overrideMimeType("application/json");
-        etfXHR.open('GET', 'etf.json', true);
+        etfXHR.open('GET', 'data/etf.json', true);
         etfXHR.onreadystatechange = function() {
             if (etfXHR.readyState === 4) {
                 if (etfXHR.status === 200) {
@@ -1567,7 +1567,7 @@ function loadDataWithXHR() {
         // 加载调整数据
         const adjustXHR = new XMLHttpRequest();
         adjustXHR.overrideMimeType("application/json");
-        adjustXHR.open('GET', 'adjust.json', true);
+        adjustXHR.open('GET', 'data/adjust.json', true);
         adjustXHR.onreadystatechange = function() {
             if (adjustXHR.readyState === 4) {
                 if (adjustXHR.status === 200) {

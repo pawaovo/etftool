@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETF工具 - 网格策略</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../../styles/etf-cards.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .paused-card {
+            background-color: #f5f5f5;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <main class="plan-container">
+        <!-- 计划选择器 -->
+        <div class="plan-selector">
+            <div class="plan-tabs">
+                <button class="plan-tab" data-plan="150">150 计划</button>
+                <button class="plan-tab active" data-plan="grid">网格策略</button>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="plan-data-container">
+            <!-- 信息导航栏 -->
+            <div class="info-nav-bar">
+                <div class="info-item">
+                    <div class="info-label">运行中/执行次数</div>
+                    <div class="info-value green-value">
+                        <span class="value-number">0/0</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">买入/卖出金额</div>
+                    <div class="info-value green-value">
+                        <span class="value-number">12309/14509</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">买入/卖出/剩余股数</div>
+                    <div class="info-value green-value">
+                        <span class="value-number">23465/22465/2265</span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">收益/收益率</div>
+                    <div class="info-value">
+                        <div class="value-inline positive">
+                            <span class="value-number">1020</span>/<span class="value-percent">+40.1%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卡片排序控件 -->
+            <div class="card-sort-controls">
+                <div class="sort-buttons">
+                    <button class="sort-btn active" data-sort-by="netValueChangeRate">按净值变化</button>
+                    <button class="sort-btn" data-sort-by="cumulativeYieldRate">按收益率</button>
+                    <button class="sort-btn" data-sort-by="executionCount">按执行次数</button>
+                    <button class="sort-btn" data-sort-by="lastOperationTime">按最后操作时间</button>
+                </div>
+            </div>
+
+            <!-- ETF基金卡片 -->
+            <div class="fund-cards-container">
+                <!-- 卡片将在这里动态生成 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 添加页面切换脚本 -->
+    <script>
+    // 设置当前页面为网格策略
+    window.currentPlan = 'grid';
+    
+    // 添加导航功能
+    document.addEventListener('DOMContentLoaded', function() {
+        // 设置计划标签切换
+        const planTabs = document.querySelectorAll('.plan-tab');
+        
+        planTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有标签的active类
+                planTabs.forEach(t => t.classList.remove('active'));
+                
+                // 给当前点击的标签添加active类
+                this.classList.add('active');
+                
+                // 获取当前选择的计划
+                const planType = this.getAttribute('data-plan');
+                
+                // 跳转到相应的计划页面
+                if (planType === '150') {
+                    window.location.href = '../../150plan.html';
+                } else if (planType === 'grid') {
+                    // 已经在网格策略页面，不需要跳转
+                }
+            });
+        });
+    });
+    </script>
+
+    <!-- 加载原始脚本 -->
+    <script src="js/script.js"></script>
+    <script src="js/grid-data.js"></script>
+</body>
+</html> 

@@ -1,0 +1,54 @@
+# Dependencies
+/node_modules
+
+# Build outputs
+/dist
+/build
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env*.local
+.env.*.local
+
+# IDE files
+.idea/
+.vscode/
+*.*.swp
+*.*.swo
+
+# Optional files
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Misc
+*.pyc
+__pycache__/
+.cache
+*~
+# 可能需要忽略的数据目录，如果数据不需要版本控制
+# /data/
+
+# Vercel
+.vercel
+
+# Cursor specific files
+.cursor/*
+!.cursor/rules/
+!.cursor/settings.json 

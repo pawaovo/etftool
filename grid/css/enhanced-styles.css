@@ -1,0 +1,414 @@
+/* 增强样式 - 使网格策略页面风格更接近150计划页面 */
+
+/* 基础样式 */
+body {
+    background-color: #f5f7fa;
+    font-family: 'Noto Sans SC', sans-serif;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* 主容器样式 */
+.plan-container {
+    margin: 0 auto;
+    padding: 20px;
+    min-height: calc(100vh - 60px);
+}
+
+/* 计划选择器 - 与150plan.html完全一致 */
+.plan-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.plan-tabs {
+    display: flex;
+    background-color: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 500px;
+    border: 1px solid #eaecef;
+}
+
+.plan-tab {
+    flex: 1;
+    padding: 12px 30px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #555;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.plan-tab.active {
+    background-color: #4a89dc;
+    color: white;
+}
+
+.plan-tab:hover:not(.active) {
+    background-color: #f1f1f1;
+}
+
+/* 原导航信息栏样式保留，但将被 layout-updates.css 覆盖 */
+.info-nav-bar {
+    display: flex;
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eaecef;
+}
+
+.info-item {
+    flex: 1;
+    padding: 0 10px;
+    border-right: 1px solid #eaecef;
+}
+
+.info-item:last-child {
+    border-right: none;
+}
+
+.info-label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* 颜色调整 */
+.green-value {
+    color: #27ae60;
+}
+
+.positive {
+    color: #e74c3c; /* 正收益为红色 */
+}
+
+.negative {
+    color: #27ae60; /* 负收益为绿色 */
+}
+
+/* 卡片排序控件 - 调整为与150plan.html一致 */
+.card-sort-controls {
+    margin-bottom: 20px;
+}
+
+.sort-buttons {
+    display: flex;
+    background-color: #f5f7fa;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: none;
+    border: 1px solid #dddddd;
+}
+
+.sort-btn {
+    flex: 1;
+    padding: 8px 10px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #666;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.sort-btn.active {
+    background-color: #4a89dc;
+    color: white;
+    font-weight: 500;
+}
+
+.sort-btn:hover:not(.active) {
+    background-color: #e9ecef;
+}
+
+/* 基金卡片容器 */
+.fund-cards-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #eaecef;
+}
+
+/* 基金卡片 - 扩大尺寸，优化内部布局 */
+.fund-card {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* 防止卡片内容溢出 */
+}
+
+.fund-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* 基金卡片头部 */
+.fund-card-header {
+    padding: 14px 16px;
+    text-align: center;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    margin: -20px -20px 16px -20px;
+}
+
+.fund-card-header.positive {
+    background: linear-gradient(to right, #d1fae5, #ecfdf5);
+    border-color: #a7f3d0;
+}
+
+.fund-card-header.negative {
+    background: linear-gradient(to right, #fee2e2, #fef2f2);
+    border-color: #fecaca;
+}
+
+.fund-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+    white-space: nowrap; /* 防止标题换行 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.fund-code {
+    font-size: 14px;
+    color: #666;
+    font-weight: normal;
+}
+
+/* 基金卡片内容 */
+.fund-card-content {
+    padding: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0; /* 防止内容溢出 */
+}
+
+.fund-data-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-width: 0; /* 防止内容溢出 */
+    line-height: 1.4;
+}
+
+.data-label {
+    font-size: 14px;
+    color: #666;
+    flex: 0 0 40%; /* 固定标签宽度 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.data-value {
+    font-weight: 600;
+    font-size: 15px;
+    text-align: right;
+    flex: 0 0 58%; /* 固定值宽度 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.execution-count {
+    display: inline-block;
+    padding: 2px 8px;
+    background-color: #f0f2f5;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #4a89dc;
+}
+
+.execution-count.zero {
+    color: #a0a0a0; /* 执行次数为0时使用灰色 */
+    background-color: #f8f8f8;
+}
+
+.level-type {
+    font-size: 14px;
+    color: #4a89dc;
+}
+
+.nav {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.nav-change.positive {
+    color: #27ae60; /* 正值为绿色 */
+    font-weight: 600;
+}
+
+.nav-change.negative {
+    color: #e74c3c; /* 负值为红色 */
+    font-weight: 600;
+}
+
+/* 基金卡片底部 */
+.fund-card-footer {
+    padding: 16px;
+    text-align: center;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    margin: 16px -20px -20px -20px;
+}
+
+.fund-card-footer.positive {
+    background-color: #ecfdf5;
+    border-color: #a7f3d0;
+}
+
+.fund-card-footer.negative {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+}
+
+.detail-btn {
+    display: inline-block;
+    padding: 8px 18px;
+    background-color: #f8fafc;
+    border: 1px solid #eaecef;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #4a89dc;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.detail-btn:hover {
+    background-color: #e9ecef;
+    color: #366bb0;
+}
+
+.detail-btn.disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+    border: 1px solid #e2e8f0;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.detail-btn.disabled:hover {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+}
+
+.fund-card-footer.positive .detail-btn {
+    background-color: #fff;
+    color: #10b981;
+    border-color: #a7f3d0;
+}
+
+.fund-card-footer.positive .detail-btn:hover {
+    background-color: #d1fae5;
+    color: #059669;
+}
+
+.fund-card-footer.negative .detail-btn {
+    background-color: #fff;
+    color: #e74c3c;
+    border-color: #fecaca;
+}
+
+.fund-card-footer.negative .detail-btn:hover {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* 暂停卡片样式 */
+.paused-card {
+    opacity: 0.8;
+    background-color: #f5f5f5;
+}
+
+.paused-card .fund-card-header {
+    background-color: #f1f1f1;
+    color: #888;
+}
+
+/* 无执行次数卡片样式 */
+.zero-execution-card .detail-btn {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+    border: 1px solid #e2e8f0;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+    .info-nav-bar {
+        flex-wrap: wrap;
+    }
+    
+    .info-item {
+        flex: 1 0 50%;
+        border-right: none;
+        border-bottom: 1px solid #eaecef;
+        padding: 10px;
+    }
+    
+    .info-item:nth-child(even) {
+        border-left: 1px solid #eaecef;
+    }
+    
+    .info-item:nth-last-child(-n+2) {
+        border-bottom: none;
+    }
+    
+    .plan-tab {
+        padding: 10px 15px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .info-item {
+        flex: 1 0 100%;
+        border-left: none !important;
+    }
+    
+    .info-item:nth-last-child(1) {
+        border-bottom: none;
+    }
+    
+    .sort-btn {
+        padding: 8px 10px;
+        font-size: 0.8rem;
+    }
+}
+
+/* 与 150plan.html 的计划选择器完全一致的媒体查询 */
+@media (max-width: 576px) {
+    .plan-tab {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+        min-width: 80px;
+    }
+} 

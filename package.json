@@ -8,7 +8,12 @@
     "prebuild": "npm run clean",
     "build": "node scripts/process-data.js && node scripts/copy-to-dist.js",
     "start": "node scripts/serve.js",
-    "dev": "npm run build && npm run start"
+    "dev": "npm run build && npm run start",
+    "update-netvalues": "node scripts/updateNetValues.js",
+    "update-netvalues-mock": "node scripts/updateNetValues.js --mock",
+    "update-netvalues-python": "node scripts/python-api-bridge.js",
+    "import-netvalues": "node scripts/updateNetValuesFromJson.js public/data/grid/netvalues-sample.json",
+    "schedule": "node scripts/schedule.js"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -18,6 +23,8 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.2",
     "@modelcontextprotocol/server-github": "^2025.4.8",
+    "axios": "^1.6.7",
+    "node-cron": "^3.0.3",
     "rimraf": "^3.0.2"
   }
 }

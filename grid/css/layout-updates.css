@@ -1,0 +1,408 @@
+/* 
+ * 布局更新样式 - 使网格策略页面布局更接近150计划页面
+ * 1. 调整顶部导航按钮样式一致性
+ * 2. 移动导航信息栏到左侧并垂直排列
+ * 3. 将排序按钮与卡片区域整合
+ */
+
+/* 增大主容器最大宽度 */
+.plan-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 20px 20px 20px 0; /* 移除左侧内边距，让左侧信息栏靠近边缘 */
+}
+
+/* 主要布局容器调整为两栏网格布局，缩小左侧宽度 */
+.plan-data-container {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 15px; /* 减小左右两栏间距，让主内容更居中 */
+    margin-top: 20px;
+    height: auto;
+    min-height: 600px;
+    overflow: visible;
+    position: relative;
+    margin-left: -80px; /* 整体向左移动 */
+}
+
+/* 左侧信息栏样式 - 完全分离左侧信息指标 */
+.info-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* 减小信息项之间的间距 */
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+    max-height: 90vh;
+    margin-left: -30px; /* 适当向左移动信息栏 */
+    width: 200px; /* 调整宽度 */
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    border: none;
+}
+
+/* 去掉网格策略数据标题 */
+.sidebar-header {
+    display: none;
+}
+
+/* 将信息栏改为垂直分离的信息块 */
+.info-nav-bar {
+    flex-direction: column;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 0;
+    gap: 20px; /* 减小信息项之间的间距 */
+    display: flex;
+}
+
+/* 单独信息指标样式 */
+.info-item {
+    padding: 15px 15px;
+    border-right: none;
+    border-bottom: none;
+    transition: all 0.2s ease;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #eaecef;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.info-item:hover {
+    background-color: #f8fafc;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.info-item .icon {
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.info-label {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.info-value {
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.value-inline {
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.value-number, .value-percent {
+    font-size: 0.95rem !important;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* 右侧内容区域 */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    max-width: calc(100% - 30px); /* 调整最大宽度 */
+    width: 100%;
+    margin-left: -20px; /* 向左移动主内容区域 */
+}
+
+/* 卡片区域标题栏 */
+.fund-cards-header {
+    display: flex;
+    justify-content: flex-end; /* 将排序按钮靠右对齐 */
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 10px 20px; /* 减小上下内边距 */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    margin-bottom: 0;
+    border: 1px solid #eaecef;
+    border-bottom: none;
+    transition: all 0.3s ease;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* 去掉网格策略基金标题 */
+.fund-cards-title {
+    display: none;
+}
+
+/* 将排序控件整合到卡片区域内 */
+.card-sort-controls {
+    margin-bottom: 0;
+    display: flex;
+    justify-content: flex-end; /* 排序按钮靠右对齐 */
+    width: auto;
+}
+
+.sort-buttons {
+    box-shadow: none;
+    background: none;
+    width: auto;
+    display: flex;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 500px; /* 保持按钮宽度 */
+}
+
+.sort-btn {
+    padding: 6px 15px; /* 减小上下内边距 */
+    font-size: 13px; /* 减小字体大小 */
+    border-radius: 0;
+    margin-left: 0;
+    border: none;
+    background-color: #f5f5f5;
+    color: #666;
+    transition: all 0.2s ease;
+    white-space: nowrap; /* 防止按钮文字换行 */
+    min-width: 100px; /* 设置按钮最小宽度 */
+}
+
+.sort-btn.active {
+    background-color: #4a89dc;
+    color: white;
+    border-color: transparent;
+    box-shadow: none;
+}
+
+.sort-btn:hover:not(.active) {
+    background-color: #e9ecef;
+    transform: none;
+}
+
+/* 重新设置卡片容器样式，添加可滚动区域 */
+.fund-cards-container {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: 0;
+    background-color: white;
+    border: 1px solid #eaecef;
+    border-top: none;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+}
+
+/* 滚动条样式 */
+.fund-cards-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.fund-cards-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0 0 10px 0;
+}
+
+.fund-cards-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 5px;
+}
+
+.fund-cards-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* 基金卡片网格 - 确保卡片处于居中位置，减小卡片间距 */
+.fund-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px; /* 减小卡片间距 */
+    padding: 15px; /* 减小内边距 */
+    width: 92%; /* 调整宽度，减少边距空白 */
+    margin: 0 auto; /* 居中显示 */
+    justify-content: center; /* 确保卡片水平居中 */
+}
+
+/* 添加ETF卡片内容优化样式，减小卡片高度 */
+.fund-card-header {
+    font-size: 0.9rem;
+    padding: 10px; /* 减小标题区域内边距 */
+}
+
+.fund-card-body {
+    font-size: 0.8rem;
+    padding: 10px; /* 减小内容区域内边距 */
+}
+
+.fund-card-body .data-row {
+    margin-bottom: 4px; /* 减小行间距 */
+}
+
+.fund-card-body .label {
+    font-size: 0.75rem;
+}
+
+.fund-card-body .value {
+    font-size: 0.8rem;
+}
+
+/* 卡片底部调整 */
+.fund-card-footer {
+    padding: 10px; /* 减小底部区域内边距 */
+}
+
+.fund-card-footer .detail-btn {
+    padding: 5px 10px; /* 减小按钮内边距 */
+    font-size: 0.85rem; /* 减小按钮字体大小 */
+}
+
+/* 简化执行次数样式 */
+.execution-count {
+    font-size: 0.85rem !important;
+    font-weight: normal !important;
+    display: inline !important;
+    background: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    color: inherit !important;
+}
+
+/* 响应式调整 */
+@media (max-width: 1500px) {
+    .sort-buttons {
+        min-width: 450px;
+    }
+}
+
+@media (max-width: 1300px) {
+    .fund-cards {
+        grid-template-columns: repeat(2, 1fr);
+        width: 90%;
+    }
+    
+    .info-sidebar {
+        margin-left: -30px;
+        width: 190px;
+    }
+    
+    .plan-data-container {
+        grid-template-columns: 170px 1fr;
+        gap: 20px;
+    }
+    
+    .sort-buttons {
+        min-width: 400px;
+    }
+}
+
+@media (max-width: 992px) {
+    .plan-data-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .info-sidebar {
+        position: static;
+        margin-bottom: 20px;
+        max-height: none;
+        margin-left: 0;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .info-nav-bar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        width: 100%;
+    }
+    
+    .info-item {
+        flex: 1 0 calc(50% - 10px);
+        min-width: 0;
+    }
+    
+    .card-sort-controls {
+        width: 100%;
+        margin-top: 0;
+        justify-content: center;
+    }
+    
+    .fund-cards-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        position: static;
+    }
+    
+    .fund-cards-container {
+        max-height: none;
+        overflow: visible;
+    }
+    
+    .fund-cards {
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+    }
+    
+    .main-content {
+        margin-right: 0;
+        width: 100%;
+    }
+    
+    .plan-container {
+        padding: 20px;
+    }
+    
+    .sort-buttons {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-nav-bar {
+        gap: 10px;
+    }
+    
+    .info-item {
+        flex: 1 0 calc(50% - 5px);
+        padding: 10px;
+    }
+    
+    .sort-buttons {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0;
+    }
+    
+    .sort-btn {
+        margin-left: 0;
+        min-width: 0;
+    }
+    
+    .plan-tab {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .fund-cards {
+        grid-template-columns: 1fr;
+    }
+} 
