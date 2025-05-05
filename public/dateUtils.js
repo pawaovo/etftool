@@ -61,27 +61,37 @@ function convertDateToTimestamp(dateStr, useChineseTimezone = true) {
   return timestamp;
 }
 
-// 导出函数，使其可以在其他文件中使用
-module.exports = {
-  convertTimestampToDate,
-  convertDateToTimestamp
-};
+// 兼容浏览器和 Node.js 的导出方式
+if (typeof module !== 'undefined' && module.exports) {
+  // Node.js 环境
+  module.exports = {
+    convertTimestampToDate,
+    convertDateToTimestamp
+  };
 
-// 测试示例
-if (require.main === module) {
-  // 测试时间戳转日期
-  console.log('测试时间戳转日期:');
-  console.log('1744128000000 =>', convertTimestampToDate(1744128000000)); // 应该输出 2025-04-09
-  console.log('1743955200000 =>', convertTimestampToDate(1743955200000)); // 应该输出 2025-04-07
-  console.log('1741276800000 =>', convertTimestampToDate(1741276800000)); // 应该输出 2025-03-07
-  console.log('1739980800000 =>', convertTimestampToDate(1739980800000)); // 应该输出 2025-02-20
-  console.log('1709740800000 =>', convertTimestampToDate(1709740800000)); // 应该输出 2024-03-07
-  
-  // 测试日期转时间戳
-  console.log('\n测试日期转时间戳:');
-  console.log('2025-04-09 =>', convertDateToTimestamp('2025-04-09')); // 应该接近 1744128000000
-  console.log('2025-04-07 =>', convertDateToTimestamp('2025-04-07')); // 应该接近 1743955200000
-  console.log('2025-03-07 =>', convertDateToTimestamp('2025-03-07')); // 应该接近 1741276800000
-  console.log('2025-02-20 =>', convertDateToTimestamp('2025-02-20')); // 应该接近 1739980800000
-  console.log('2024-03-07 =>', convertDateToTimestamp('2024-03-07')); // 应该接近 1709740800000
-} 
+  // 将测试示例移到 Node.js 环境检查内部
+  if (require.main === module) {
+    // 测试时间戳转日期
+    console.log('测试时间戳转日期:');
+    console.log('1744128000000 =>', convertTimestampToDate(1744128000000)); // 应该输出 2025-04-09
+    console.log('1743955200000 =>', convertTimestampToDate(1743955200000)); // 应该输出 2025-04-07
+    console.log('1741276800000 =>', convertTimestampToDate(1741276800000)); // 应该输出 2025-03-07
+    console.log('1739980800000 =>', convertTimestampToDate(1739980800000)); // 应该输出 2025-02-20
+    console.log('1709740800000 =>', convertTimestampToDate(1709740800000)); // 应该输出 2024-03-07
+    
+    // 测试日期转时间戳
+    console.log('\n测试日期转时间戳:');
+    console.log('2025-04-09 =>', convertDateToTimestamp('2025-04-09')); // 应该接近 1744128000000
+    console.log('2025-04-07 =>', convertDateToTimestamp('2025-04-07')); // 应该接近 1743955200000
+    console.log('2025-03-07 =>', convertDateToTimestamp('2025-03-07')); // 应该接近 1741276800000
+    console.log('2025-02-20 =>', convertDateToTimestamp('2025-02-20')); // 应该接近 1739980800000
+    console.log('2024-03-07 =>', convertDateToTimestamp('2024-03-07')); // 应该接近 1709740800000
+  }
+
+} else if (typeof window !== 'undefined') {
+  // 浏览器环境 - 将函数挂载到 window 对象下
+  window.dateUtils = {
+    convertTimestampToDate,
+    convertDateToTimestamp
+  };
+}

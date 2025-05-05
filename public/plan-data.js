@@ -159,8 +159,8 @@ function initPlanPage() {
         setupAssetItems();
     }
     
-    // 加载初始数据
-    loadPlanData();
+    // 加载初始数据 (移除，因为数据应来自 processed-data.js)
+    // loadPlanData();
 }
 
 /**
@@ -240,7 +240,7 @@ function setupAssetItems() {
 }
 
 /**
- * 加载计划数据
+ * 加载计划数据 (此函数可能不再需要，因为数据应来自 processed-data.js)
  */
 async function loadPlanData() {
     console.log('加载计划数据');
@@ -767,7 +767,12 @@ async function loadAssetLatestOperationTime() {
         // 尝试通过fetch加载数据
         try {
             // 从adjust.json获取调整记录
-            const response = await fetch('adjust.json');
+            const response = await fetch('/data/adjust.json', { // 修改路径
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
             adjustmentData = await response.json();
         } catch (fetchError) {
             console.warn('通过fetch加载调整数据失败，尝试使用内联数据:', fetchError);
@@ -899,7 +904,12 @@ async function loadAssetInfo() {
         // 尝试通过fetch加载数据
         try {
             // 从etf.json获取ETF数据
-            const response = await fetch('etf.json');
+            const response = await fetch('/data/etf.json', { // 修改路径
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
             etfData = await response.json();
         } catch (fetchError) {
             console.warn('通过fetch加载ETF数据失败，尝试使用内联数据:', fetchError);
@@ -1140,11 +1150,21 @@ async function loadEtfCardData() {
         // 尝试通过fetch加载数据
         try {
             // 加载ETF数据
-            const etfResponse = await fetch('etf.json');
+            const etfResponse = await fetch('/data/etf.json', { // 修改路径
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
             etfData = await etfResponse.json();
             
             // 加载调整数据
-            const adjustResponse = await fetch('adjust.json');
+            const adjustResponse = await fetch('/data/adjust.json', { // 修改路径
+              method: 'GET',
+              headers: {
+                'Accept': 'application/json'
+              }
+            });
             adjustData = await adjustResponse.json(); // 存储到全局变量
         } catch (fetchError) {
             console.warn('通过fetch加载数据失败，尝试使用内联数据:', fetchError);

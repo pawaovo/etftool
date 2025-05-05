@@ -1,6 +1,6 @@
 {
   "routes": [
-    { "src": "/", "dest": "/splan.html" },
+    { "src": "/", "dest": "/150plan.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
   "outputDirectory": "dist",

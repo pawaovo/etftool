@@ -1,6 +1,6 @@
 /**
  * 预处理后的ETF数据
- * 自动生成于 2025/4/26 23:20:02
+ * 自动生成于 2025/5/6 00:48:30
  * 请勿手动修改此文件
  */
 
@@ -17,8 +17,8 @@ const processedData = {
         "classCode": "CHINA_STOCK",
         "unit": 85,
         "profitRate": null,
-        "accProfitRate": 0.3075,
-        "percent": 0.5144,
+        "accProfitRate": 0.3202,
+        "percent": 0.5127,
         "isCash": false,
         "compList": [
           {
@@ -30,22 +30,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.9340",
-              "navDate": "2025-04-10",
+              "nav": "0.9440",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "中证红利",
-            "nav": 0.934,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0076,
+            "nav": 0.944,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0063,
             "planUnit": 13,
             "strategyType": "LONG",
             "unitValue": 0.6071,
-            "percent": 0.0816,
+            "percent": 0.0811,
             "isCash": false,
-            "accProfit": 0.499
+            "accProfit": 0.5101
           },
           {
             "fund": {
@@ -56,22 +56,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.4893",
-              "navDate": "2025-04-10",
+              "nav": "2.5621",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "建信500",
-            "nav": 2.4893,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.022,
+            "nav": 2.5621,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0055,
             "planUnit": 10,
             "strategyType": "LONG",
             "unitValue": 2.3545,
-            "percent": 0.0545,
+            "percent": 0.0551,
             "isCash": false,
-            "accProfit": 0.1208
+            "accProfit": 0.1472
           },
           {
             "fund": {
@@ -82,22 +82,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.4870",
-              "navDate": "2025-04-10",
+              "nav": "1.5130",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "富国300",
-            "nav": 1.487,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0136,
+            "nav": 1.513,
+            "navDate": 1745942400000,
+            "dailyReturn": 0,
             "planUnit": 7,
             "strategyType": "LONG",
             "unitValue": 1.1713,
             "percent": 0.046,
             "isCash": false,
-            "accProfit": 0.2695
+            "accProfit": 0.2917
           },
           {
             "fund": {
@@ -108,22 +108,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.6633",
-              "navDate": "2025-04-10",
+              "nav": "0.6734",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": "125000000.00",
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "中证500",
-            "nav": 0.6633,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0183,
+            "nav": 0.6734,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0046,
             "planUnit": 7,
             "strategyType": "LONG",
             "unitValue": 0.6018,
-            "percent": 0.0406,
+            "percent": 0.0405,
             "isCash": false,
-            "accProfit": 0.1769
+            "accProfit": 0.1906
           },
           {
             "fund": {
@@ -134,22 +134,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.7529",
-              "navDate": "2025-04-10",
+              "nav": "0.7625",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "全指医药",
-            "nav": 0.7529,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0155,
+            "nav": 0.7625,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0085,
             "planUnit": 7,
             "strategyType": "LONG",
             "unitValue": 0.8433,
-            "percent": 0.0351,
+            "percent": 0.0349,
             "isCash": false,
-            "accProfit": 0.1563
+            "accProfit": 0.1644
           },
           {
             "fund": {
@@ -160,22 +160,22 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.8837",
-              "navDate": "2025-04-10",
+              "nav": "0.8842",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "投顾策略单只基金所有客户持有份额总和，不得超过该基金总份额20%，指数基金不得超过30%。该品种即将达到该限制，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "养老产业",
-            "nav": 0.8837,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0227,
+            "nav": 0.8842,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0034,
             "planUnit": 7,
             "strategyType": "LONG",
             "unitValue": 0.9923,
-            "percent": 0.0328,
+            "percent": 0.0323,
             "isCash": false,
-            "accProfit": 0.0975
+            "accProfit": 0.0978
           },
           {
             "fund": {
@@ -186,22 +186,22 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.5475",
-              "navDate": "2025-04-10",
+              "nav": "0.5512",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "该品种属于短期波段交易，买卖频率较高，如果不能及时跟车买入、卖出，可能会由于持仓不足7天而缴纳惩罚性赎回费，为了避免产生这类损失，不支持自主买入。"
             },
             "shareType": "A",
             "variety": "华宝医疗C",
-            "nav": 0.5475,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0161,
+            "nav": 0.5512,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0051,
             "planUnit": 4,
             "strategyType": "GRID",
             "unitValue": 0.6845,
-            "percent": 0.0246,
+            "percent": 0.0243,
             "isCash": false,
-            "accProfit": -0.2002
+            "accProfit": -0.1948
           },
           {
             "fund": {
@@ -212,22 +212,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.9401",
-              "navDate": "2025-04-10",
+              "nav": "0.9481",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "上证50",
-            "nav": 0.9401,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0057,
+            "nav": 0.9481,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0043,
             "planUnit": 4,
             "strategyType": "LONG",
             "unitValue": 0.7665,
-            "percent": 0.0242,
+            "percent": 0.024,
             "isCash": false,
-            "accProfit": 0.5353
+            "accProfit": 0.5401
           },
           {
             "fund": {
@@ -238,22 +238,22 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.1770",
-              "navDate": "2025-04-10",
+              "nav": "2.1950",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "该品种属于短期波段交易，买卖频率较高，如果不能及时跟车买入、卖出，可能会由于持仓不足7天而缴纳惩罚性赎回费，为了避免产生这类损失，不支持自主买入。"
             },
             "shareType": "A",
             "variety": "富国消费C",
-            "nav": 2.177,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0111,
+            "nav": 2.195,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0041,
             "planUnit": 3,
             "strategyType": "GRID",
             "unitValue": 2.2771,
-            "percent": 0.0236,
+            "percent": 0.0234,
             "isCash": false,
-            "accProfit": 0.0133
+            "accProfit": 0.0215
           },
           {
             "fund": {
@@ -264,22 +264,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.2330",
-              "navDate": "2025-04-10",
+              "nav": "2.2520",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "富国消费",
-            "nav": 2.233,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0109,
+            "nav": 2.252,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.004,
             "planUnit": 3,
             "strategyType": "LONG",
             "unitValue": 2.2558,
-            "percent": 0.0235,
+            "percent": 0.0233,
             "isCash": false,
-            "accProfit": 0.0107
+            "accProfit": 0.0192
           },
           {
             "fund": {
@@ -290,22 +290,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.8690",
-              "navDate": "2025-04-10",
+              "nav": "1.9060",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "富国500",
-            "nav": 1.869,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0163,
+            "nav": 1.906,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0037,
             "planUnit": 3,
             "strategyType": "LONG",
             "unitValue": 1.2742,
-            "percent": 0.0228,
+            "percent": 0.0229,
             "isCash": false,
-            "accProfit": 0.4668
+            "accProfit": 0.4959
           },
           {
             "fund": {
@@ -316,22 +316,22 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.6580",
-              "navDate": "2025-04-10",
+              "nav": "1.7020",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "投顾策略单只基金所有客户持有份额总和，不得超过该基金总份额20%，指数基金不得超过30%。该品种即将达到该限制，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "大摩健康产业",
-            "nav": 1.658,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0184,
+            "nav": 1.702,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0107,
             "planUnit": 4,
             "strategyType": "LONG",
             "unitValue": 2.3649,
-            "percent": 0.0207,
+            "percent": 0.0209,
             "isCash": false,
-            "accProfit": -0.2989
+            "accProfit": -0.2803
           },
           {
             "fund": {
@@ -342,22 +342,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.5517",
-              "navDate": "2025-04-10",
+              "nav": "0.5555",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "华宝医疗A",
-            "nav": 0.5517,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0162,
+            "nav": 0.5555,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0051,
             "planUnit": 3,
             "strategyType": "LONG",
             "unitValue": 0.7242,
-            "percent": 0.0174,
+            "percent": 0.0172,
             "isCash": false,
-            "accProfit": -0.2382
+            "accProfit": -0.2329
           },
           {
             "fund": {
@@ -368,22 +368,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.3849",
-              "navDate": "2025-04-10",
+              "nav": "1.3993",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "沪深300",
-            "nav": 1.3849,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0124,
+            "nav": 1.3993,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0009,
             "planUnit": 2,
             "strategyType": "LONG",
             "unitValue": 1.3102,
-            "percent": 0.014,
+            "percent": 0.0139,
             "isCash": false,
-            "accProfit": 0.45
+            "accProfit": 0.4618
           },
           {
             "fund": {
@@ -394,22 +394,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.1557",
-              "navDate": "2025-04-10",
+              "nav": "1.1703",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "全指金融",
-            "nav": 1.1557,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0101,
+            "nav": 1.1703,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0098,
             "planUnit": 2,
             "strategyType": "LONG",
             "unitValue": 1.1318,
-            "percent": 0.0129,
+            "percent": 0.0128,
             "isCash": false,
-            "accProfit": 0.2076
+            "accProfit": 0.2135
           },
           {
             "fund": {
@@ -420,22 +420,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.7881",
-              "navDate": "2025-04-10",
+              "nav": "0.8108",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "中证传媒",
-            "nav": 0.7881,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0271,
+            "nav": 0.8108,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0106,
             "planUnit": 2,
             "strategyType": "LONG",
             "unitValue": 0.9971,
-            "percent": 0.0109,
+            "percent": 0.011,
             "isCash": false,
-            "accProfit": 0.0266
+            "accProfit": 0.0344
           },
           {
             "fund": {
@@ -446,22 +446,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.0446",
-              "navDate": "2025-04-10",
+              "nav": "1.0742",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "广发创业板",
-            "nav": 1.0446,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0215,
+            "nav": 1.0742,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0082,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 0.9573,
-            "percent": 0.0085,
+            "percent": 0.0086,
             "isCash": false,
-            "accProfit": 0.3592
+            "accProfit": 0.3746
           },
           {
             "fund": {
@@ -472,22 +472,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.6555",
-              "navDate": "2025-04-10",
+              "nav": "0.6622",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "中证环保",
-            "nav": 0.6555,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0131,
+            "nav": 0.6622,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0009,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 0.6897,
-            "percent": 0.0074,
+            "percent": 0.0073,
             "isCash": false,
-            "accProfit": 0.5775
+            "accProfit": 0.5786
           },
           {
             "fund": {
@@ -498,22 +498,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.1900",
-              "navDate": "2025-04-10",
+              "nav": "1.1947",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "证券公司",
-            "nav": 1.19,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0134,
+            "nav": 1.1947,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0024,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 1.0262,
-            "percent": 0.0073,
+            "percent": 0.0072,
             "isCash": false,
-            "accProfit": 0.5011
+            "accProfit": 0.5025
           },
           {
             "fund": {
@@ -524,22 +524,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.3020",
-              "navDate": "2025-04-10",
+              "nav": "2.3640",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "融通健康产业",
-            "nav": 2.302,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0268,
+            "nav": 2.364,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0085,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 2.9264,
             "percent": 0.006,
             "isCash": false,
-            "accProfit": 0.089
+            "accProfit": 0.1102
           },
           {
             "fund": {
@@ -550,16 +550,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.9632",
-              "navDate": "2025-04-10",
+              "nav": "2.0186",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "易方达创业板",
-            "nav": 1.9632,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0212,
+            "nav": 2.0186,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0081,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -576,16 +576,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.1065",
-              "navDate": "2025-04-10",
+              "nav": "1.1450",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "信息技术",
-            "nav": 1.1065,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0195,
+            "nav": 1.145,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0132,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -602,16 +602,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.3930",
-              "navDate": "2025-04-10",
+              "nav": "2.5110",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "易方达信息产业",
-            "nav": 2.393,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0148,
+            "nav": 2.511,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0141,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -628,16 +628,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "3.5210",
-              "navDate": "2025-04-10",
+              "nav": "3.4600",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "易方达消费行业",
-            "nav": 3.521,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0109,
+            "nav": 3.46,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0014,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -654,16 +654,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.3546",
-              "navDate": "2025-04-10",
+              "nav": "1.3684",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "该品种属于短期波段交易，买卖频率较高，如果不能及时跟车买入、卖出，可能会由于持仓不足7天而缴纳惩罚性赎回费，为了避免产生这类损失，不支持自主买入。"
             },
             "shareType": "A",
             "variety": "沪深300C",
-            "nav": 1.3546,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0125,
+            "nav": 1.3684,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0009,
             "planUnit": 0,
             "strategyType": "GRID",
             "unitValue": null,
@@ -680,16 +680,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.0314",
-              "navDate": "2025-04-10",
+              "nav": "1.0472",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "该品种属于短期波段交易，买卖频率较高，如果不能及时跟车买入、卖出，可能会由于持仓不足7天而缴纳惩罚性赎回费，为了避免产生这类损失，不支持自主买入。"
             },
             "shareType": "A",
             "variety": "中证500C类",
-            "nav": 1.0314,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0182,
+            "nav": 1.0472,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0044,
             "planUnit": 0,
             "strategyType": "GRID",
             "unitValue": null,
@@ -702,28 +702,28 @@ const processedData = {
       {
         "className": "现金",
         "classCode": "CASH",
-        "unit": 30,
+        "unit": 32,
         "profitRate": null,
         "accProfitRate": null,
-        "percent": 0.2388,
+        "percent": 0.2517,
         "isCash": true,
         "compList": [
           {
             "variety": "现金",
-            "planUnit": 30,
+            "planUnit": 32,
             "isCash": true,
-            "accProfit": 0.3144,
-            "percent": 0.2388
+            "accProfit": 0.3156,
+            "percent": 0.2517
           }
         ]
       },
       {
         "className": "海外新兴市场股票",
         "classCode": "OVERSEA_STOCK_EMERGING",
-        "unit": 21,
+        "unit": 19,
         "profitRate": null,
-        "accProfitRate": 0.1731,
-        "percent": 0.137,
+        "accProfitRate": 0.2314,
+        "percent": 0.1268,
         "isCash": false,
         "compList": [
           {
@@ -735,22 +735,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.2887",
-              "navDate": "2025-04-10",
+              "nav": "1.3755",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "恒生指数",
-            "nav": 1.2887,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0212,
+            "nav": 1.3755,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0059,
             "planUnit": 10,
             "strategyType": "LONG",
             "unitValue": 1.1937,
-            "percent": 0.0635,
+            "percent": 0.0666,
             "isCash": false,
-            "accProfit": 0.2449
+            "accProfit": 0.3009
           },
           {
             "fund": {
@@ -761,22 +761,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.7125",
-              "navDate": "2025-04-10",
+              "nav": "0.7484",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": "20000.00",
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "恒生科技",
-            "nav": 0.7125,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0252,
-            "planUnit": 4,
+            "nav": 0.7484,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0124,
+            "planUnit": 3,
             "strategyType": "LONG",
-            "unitValue": 0.694,
-            "percent": 0.0326,
+            "unitValue": 0.72,
+            "percent": 0.0252,
             "isCash": false,
-            "accProfit": 0.1331
+            "accProfit": 0.1745
           },
           {
             "fund": {
@@ -787,22 +787,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.0811",
-              "navDate": "2025-04-09",
+              "nav": "1.1453",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "中国海外互联",
-            "nav": 1.0811,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.0225,
+            "nav": 1.1453,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0053,
             "planUnit": 4,
             "strategyType": "LONG",
             "unitValue": 1.5822,
-            "percent": 0.0191,
+            "percent": 0.0198,
             "isCash": false,
-            "accProfit": 0.0296
+            "accProfit": 0.0702
           },
           {
             "fund": {
@@ -813,22 +813,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.6900",
-              "navDate": "2025-04-10",
+              "nav": "0.7777",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "恒生医疗",
-            "nav": 0.69,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0256,
-            "planUnit": 2,
+            "nav": 0.7777,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.007,
+            "planUnit": 1,
             "strategyType": "LONG",
-            "unitValue": 0.7088,
-            "percent": 0.0155,
+            "unitValue": 0.9209,
+            "percent": 0.0086,
             "isCash": false,
-            "accProfit": 0.1138
+            "accProfit": 0.2372
           },
           {
             "fund": {
@@ -839,22 +839,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.9734",
-              "navDate": "2025-04-09",
+              "nav": "1.0370",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "易方达中概互联",
-            "nav": 0.9734,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.0166,
+            "nav": 1.037,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0008,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 1.0963,
-            "percent": 0.0063,
+            "percent": 0.0066,
             "isCash": false,
-            "accProfit": -0.1121
+            "accProfit": -0.0541
           }
         ]
       },
@@ -863,8 +863,8 @@ const processedData = {
         "classCode": "CHINA_BOND",
         "unit": 8,
         "profitRate": null,
-        "accProfitRate": 0.3419,
-        "percent": 0.0593,
+        "accProfitRate": 0.3429,
+        "percent": 0.0584,
         "isCash": false,
         "compList": [
           {
@@ -876,22 +876,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.0555",
-              "navDate": "2025-04-10",
-              "personalHighestBuyAmount": "1000000.00",
+              "nav": "1.0318",
+              "navDate": "2025-04-30",
+              "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "兴全转债",
-            "nav": 1.0555,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.01,
+            "nav": 1.0318,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.001,
             "planUnit": 4,
             "strategyType": "LONG",
-            "unitValue": 0.7257,
-            "percent": 0.0303,
+            "unitValue": 0.7092,
+            "percent": 0.0298,
             "isCash": false,
-            "accProfit": 0.4934
+            "accProfit": 0.4938
           },
           {
             "fund": {
@@ -902,22 +902,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.0211",
-              "navDate": "2025-04-10",
+              "nav": "2.0278",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "易方达安心回报债",
-            "nav": 2.0211,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0022,
+            "nav": 2.0278,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0002,
             "planUnit": 3,
             "strategyType": "LONG",
             "unitValue": 1.4859,
-            "percent": 0.0207,
+            "percent": 0.0204,
             "isCash": false,
-            "accProfit": 0.3389
+            "accProfit": 0.3414
           },
           {
             "fund": {
@@ -928,22 +928,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.3376",
-              "navDate": "2025-04-10",
+              "nav": "1.3420",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "7-10国开债",
-            "nav": 1.3376,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0007,
+            "nav": 1.342,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0006,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 1.1418,
-            "percent": 0.0083,
+            "percent": 0.0082,
             "isCash": false,
-            "accProfit": 0.1369
+            "accProfit": 0.1374
           },
           {
             "fund": {
@@ -954,16 +954,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.1315",
-              "navDate": "2025-04-10",
-              "personalHighestBuyAmount": "5000000.00",
+              "nav": "1.1287",
+              "navDate": "2025-04-30",
+              "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "博时信用债",
-            "nav": 1.1315,
-            "navDate": 1744214400000,
-            "dailyReturn": -0.0001,
+            "nav": 1.1287,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0002,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -980,16 +980,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.2588",
-              "navDate": "2025-04-10",
+              "nav": "1.2488",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": "12000000.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "广发纯债",
-            "nav": 1.2588,
-            "navDate": 1744214400000,
-            "dailyReturn": -0.0002,
+            "nav": 1.2488,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0005,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1006,16 +1006,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.6075",
-              "navDate": "2025-04-10",
+              "nav": "1.6158",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "长信可转债",
-            "nav": 1.6075,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0164,
+            "nav": 1.6158,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0082,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1032,16 +1032,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.0864",
-              "navDate": "2025-04-10",
+              "nav": "1.0904",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "南方通利纯债",
-            "nav": 1.0864,
-            "navDate": 1744214400000,
-            "dailyReturn": -0.0001,
+            "nav": 1.0904,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0003,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1058,16 +1058,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.2151",
-              "navDate": "2025-04-10",
+              "nav": "1.2149",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "易方达高等级信用债",
-            "nav": 1.2151,
-            "navDate": 1744214400000,
-            "dailyReturn": -0.0002,
+            "nav": 1.2149,
+            "navDate": 1745942400000,
+            "dailyReturn": 0.0003,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1082,8 +1082,8 @@ const processedData = {
         "classCode": "OVERSEA_STOCK_MATURE",
         "unit": 3,
         "profitRate": null,
-        "accProfitRate": 0.4983,
-        "percent": 0.0263,
+        "accProfitRate": 0.5093,
+        "percent": 0.0264,
         "isCash": false,
         "compList": [
           {
@@ -1092,25 +1092,51 @@ const processedData = {
               "fundName": "博时标普500ETF联接A",
               "fundInvestType": "1",
               "isQdii": true,
-              "canBuy": false,
+              "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "4.2589",
-              "navDate": "2025-04-09",
-              "personalHighestBuyAmount": "100.00",
-              "cannotBuyReason": "QDII基金品种，会因海外节假日休市暂停申购；其他品种，会因基金份额定期折算而暂停申购。若有疑问，您可以关注“且慢管家”公众号，咨询客服。"
+              "nav": "4.3381",
+              "navDate": "2025-04-29",
+              "personalHighestBuyAmount": "1000.00",
+              "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "标普500",
-            "nav": 4.2589,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.0911,
+            "nav": 4.3381,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0053,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 3.1127,
             "percent": 0.0105,
             "isCash": false,
-            "accProfit": 0.4122
+            "accProfit": 0.4256
+          },
+          {
+            "fund": {
+              "fundCode": "000369",
+              "fundName": "广发全球医疗保健(QDII)(人民币)A",
+              "fundInvestType": "1",
+              "isQdii": true,
+              "canBuy": false,
+              "canRedeem": false,
+              "onSale": true,
+              "nav": "2.3330",
+              "navDate": "2025-04-29",
+              "personalHighestBuyAmount": "100.00",
+              "cannotBuyReason": "QDII基金品种，会因海外节假日休市暂停申购；其他品种，会因基金份额定期折算而暂停申购。若有疑问，您可以关注“且慢管家”公众号，咨询客服。"
+            },
+            "shareType": "A",
+            "variety": "全球医疗保健",
+            "nav": 2.333,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.006,
+            "planUnit": 1,
+            "strategyType": "LONG",
+            "unitValue": 2.2419,
+            "percent": 0.008,
+            "isCash": false,
+            "accProfit": 0.0406
           },
           {
             "fund": {
@@ -1121,48 +1147,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "5.7643",
-              "navDate": "2025-04-09",
-              "personalHighestBuyAmount": "2000.00",
+              "nav": "5.8668",
+              "navDate": "2025-04-29",
+              "personalHighestBuyAmount": "300.00",
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "纳指100",
-            "nav": 5.7643,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.1176,
+            "nav": 5.8668,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0058,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 5.7718,
             "percent": 0.0079,
             "isCash": false,
-            "accProfit": 0.44
-          },
-          {
-            "fund": {
-              "fundCode": "000369",
-              "fundName": "广发全球医疗保健(QDII)(人民币)A",
-              "fundInvestType": "1",
-              "isQdii": true,
-              "canBuy": true,
-              "canRedeem": true,
-              "onSale": true,
-              "nav": "2.2600",
-              "navDate": "2025-04-09",
-              "personalHighestBuyAmount": "200.00",
-              "cannotBuyReason": null
-            },
-            "shareType": "A",
-            "variety": "全球医疗保健",
-            "nav": 2.26,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.0212,
-            "planUnit": 1,
-            "strategyType": "LONG",
-            "unitValue": 2.2419,
-            "percent": 0.0079,
-            "isCash": false,
-            "accProfit": 0.0081
+            "accProfit": 0.4489
           },
           {
             "fund": {
@@ -1173,16 +1173,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.6302",
-              "navDate": "2025-04-09",
+              "nav": "1.9032",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": "5000.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "德国DAX",
-            "nav": 1.6302,
-            "navDate": 1744128000000,
-            "dailyReturn": -0.0242,
+            "nav": 1.9032,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0087,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1199,16 +1199,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.0730",
-              "navDate": "2025-04-09",
-              "personalHighestBuyAmount": "1000.00",
+              "nav": "1.1340",
+              "navDate": "2025-04-29",
+              "personalHighestBuyAmount": "100.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "纳斯达克生物科技",
-            "nav": 1.073,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.0479,
+            "nav": 1.134,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0018,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1223,10 +1223,36 @@ const processedData = {
         "classCode": "OVERSEA_BOND",
         "unit": 3,
         "profitRate": null,
-        "accProfitRate": 0.0637,
-        "percent": 0.0242,
+        "accProfitRate": 0.0727,
+        "percent": 0.024,
         "isCash": false,
         "compList": [
+          {
+            "fund": {
+              "fundCode": "004419",
+              "fundName": "汇添富美元债债券人民币A",
+              "fundInvestType": "2",
+              "isQdii": true,
+              "canBuy": true,
+              "canRedeem": true,
+              "onSale": true,
+              "nav": "1.0593",
+              "navDate": "2025-04-29",
+              "personalHighestBuyAmount": "50000.00",
+              "cannotBuyReason": null
+            },
+            "shareType": "A",
+            "variety": "汇添富美元债",
+            "nav": 1.0593,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0015,
+            "planUnit": 1,
+            "strategyType": "LONG",
+            "unitValue": 1.0548,
+            "percent": 0.008,
+            "isCash": false,
+            "accProfit": 0.0042
+          },
           {
             "fund": {
               "fundCode": "100050",
@@ -1236,22 +1262,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.2862",
-              "navDate": "2025-04-09",
+              "nav": "1.3005",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": "100.00",
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "富国全球债A",
-            "nav": 1.2862,
-            "navDate": 1744128000000,
-            "dailyReturn": -0.0014,
+            "nav": 1.3005,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0015,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 1.2503,
-            "percent": 0.0081,
+            "percent": 0.008,
             "isCash": false,
-            "accProfit": 0.0287
+            "accProfit": 0.0401
           },
           {
             "fund": {
@@ -1262,48 +1288,22 @@ const processedData = {
               "canBuy": true,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.2808",
-              "navDate": "2025-04-09",
+              "nav": "1.2948",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": "100.00",
               "cannotBuyReason": null
             },
             "shareType": "A",
             "variety": "富国全球债C",
-            "nav": 1.2808,
-            "navDate": 1744128000000,
-            "dailyReturn": -0.0014,
+            "nav": 1.2948,
+            "navDate": 1745856000000,
+            "dailyReturn": 0.0014,
             "planUnit": 1,
             "strategyType": "LONG",
             "unitValue": 1.2463,
-            "percent": 0.0081,
-            "isCash": false,
-            "accProfit": 0.0277
-          },
-          {
-            "fund": {
-              "fundCode": "004419",
-              "fundName": "汇添富美元债债券人民币A",
-              "fundInvestType": "2",
-              "isQdii": true,
-              "canBuy": true,
-              "canRedeem": true,
-              "onSale": true,
-              "nav": "1.0451",
-              "navDate": "2025-04-09",
-              "personalHighestBuyAmount": "10000.00",
-              "cannotBuyReason": null
-            },
-            "shareType": "A",
-            "variety": "汇添富美元债",
-            "nav": 1.0451,
-            "navDate": 1744128000000,
-            "dailyReturn": -0.0052,
-            "planUnit": 1,
-            "strategyType": "LONG",
-            "unitValue": 1.0548,
             "percent": 0.008,
             "isCash": false,
-            "accProfit": -0.0092
+            "accProfit": 0.0389
           },
           {
             "fund": {
@@ -1314,16 +1314,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.4369",
-              "navDate": "2025-04-09",
+              "nav": "1.4663",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": "1000.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "海外收益债",
-            "nav": 1.4369,
-            "navDate": 1744128000000,
-            "dailyReturn": -0.0031,
+            "nav": 1.4663,
+            "navDate": 1745856000000,
+            "dailyReturn": 0,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1351,16 +1351,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "1.5297",
-              "navDate": "2025-04-09",
-              "personalHighestBuyAmount": "1000.00",
+              "nav": "1.5983",
+              "navDate": "2025-04-29",
+              "personalHighestBuyAmount": "10.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "石油基金",
-            "nav": 1.5297,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.0379,
+            "nav": 1.5983,
+            "navDate": 1745856000000,
+            "dailyReturn": -0.0014,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1377,16 +1377,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "0.6493",
-              "navDate": "2025-04-09",
+              "nav": "0.6499",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": "50.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "华宝油气",
-            "nav": 0.6493,
-            "navDate": 1744128000000,
-            "dailyReturn": 0.1097,
+            "nav": 0.6499,
+            "navDate": 1745856000000,
+            "dailyReturn": -0.0063,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1401,18 +1401,18 @@ const processedData = {
               "fundInvestType": "8",
               "isQdii": true,
               "canBuy": false,
-              "canRedeem": true,
+              "canRedeem": false,
               "onSale": true,
-              "nav": "1.0741",
-              "navDate": "2025-04-09",
+              "nav": "1.1395",
+              "navDate": "2025-04-29",
               "personalHighestBuyAmount": "100.00",
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "南方原油",
-            "nav": 1.0741,
-            "navDate": 1744128000000,
-            "dailyReturn": -0.0343,
+            "nav": 1.1395,
+            "navDate": 1745856000000,
+            "dailyReturn": -0.007,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1440,16 +1440,16 @@ const processedData = {
               "canBuy": false,
               "canRedeem": true,
               "onSale": true,
-              "nav": "2.5839",
-              "navDate": "2025-04-10",
+              "nav": "2.7224",
+              "navDate": "2025-04-30",
               "personalHighestBuyAmount": null,
               "cannotBuyReason": "主理人已清仓该品种，该品种价格暂时不符合长赢计划买入条件，自主买入具有很大的收益不确定性，因此暂时不支持自主买入。"
             },
             "shareType": "A",
             "variety": "黄金",
-            "nav": 2.5839,
-            "navDate": 1744214400000,
-            "dailyReturn": 0.0171,
+            "nav": 2.7224,
+            "navDate": 1745942400000,
+            "dailyReturn": -0.0002,
             "planUnit": 0,
             "strategyType": "LONG",
             "unitValue": null,
@@ -1462,19 +1462,19 @@ const processedData = {
     ],
     "risk5Level": 4,
     "risk5LevelName": "中高风险",
-    "investedUnit": 120,
-    "annualCompoundedReturn": 0.0414,
-    "nav": 1.4871,
-    "navDate": 1744214400000,
-    "dailyReturn": 0.0105,
-    "fromSetupReturn": 0.4871,
+    "investedUnit": 118,
+    "annualCompoundedReturn": 0.043,
+    "nav": 1.5137,
+    "navDate": 1745942400000,
+    "dailyReturn": 0.0019,
+    "fromSetupReturn": 0.5137,
     "maxDrawdown": 0.1979,
-    "volatility": 0.1169,
-    "sharpe": 0.2257,
-    "adjustedCount": 213,
-    "joinedCount": 425184,
-    "investedACR": 0.0468,
-    "investedACRDate": 1744214400000,
+    "volatility": 0.1176,
+    "sharpe": 0.2385,
+    "adjustedCount": 215,
+    "joinedCount": 425932,
+    "investedACR": 0.0494,
+    "investedACRDate": 1745942400000,
     "navBenchMarks": [
       {
         "code": "hs300",
@@ -1595,10 +1595,10 @@ const processedData = {
         "url": "https://cdn-disclosure.yingmi.cn/CN_50050000_050025_FA010080_20250045_050025_20250205_090000_01.pdf"
       },
       {
-        "id": "SUMMARY006327-V20250127",
+        "id": "SUMMARY006327-V20250416",
         "fundCode": "006327",
         "name": "易方达中证海外联接人民币A-产品概要",
-        "url": "https://cdn-disclosure.yingmi.cn/CN_50110000_006327_FA010080_20250001_006327_20250127_090000_01.pdf"
+        "url": "https://cdn-disclosure.yingmi.cn/CN_50110000_006327_FA010080_20250007_006327_20250416_090000_01.pdf"
       },
       {
         "id": "SUMMARY012348-V20250213",
@@ -1625,10 +1625,10 @@ const processedData = {
         "url": "https://cdn-disclosure.yingmi.cn/CN_50050000_014424_FA010080_20241667_014424_20240626_090000_01.pdf"
       },
       {
-        "id": "SUMMARY000727-V20240712",
+        "id": "SUMMARY000727-V20250430",
         "fundCode": "000727",
         "name": "融通健康产业灵活配置混合A-产品概要",
-        "url": "https://cdn-disclosure.yingmi.cn/CN_50130000_000727_FA010080_20240006_000727_20240712_000000_01.pdf"
+        "url": "https://cdn-disclosure.yingmi.cn/CN_50130000_000727_FA010080_20250002_000727_20250430_000000_01.pdf"
       },
       {
         "id": "SUMMARY270042-V20250205",
@@ -1673,10 +1673,10 @@ const processedData = {
         "url": "https://cdn-disclosure.yingmi.cn/CN_50300000_000369_FA010080_20250006_000369_20250321_090000_01.pdf"
       },
       {
-        "id": "SUMMARY004419-V20250127",
+        "id": "SUMMARY004419-V20250418",
         "fundCode": "004419",
         "name": "汇添富美元债债券人民币A-产品概要",
-        "url": "https://cdn-disclosure.yingmi.cn/CN_50460000_004419_FA010080_20250131_004419_20250127_000000_01.pdf"
+        "url": "https://cdn-disclosure.yingmi.cn/CN_50460000_004419_FA010080_20250566_004419_20250418_000000_01.pdf"
       },
       {
         "id": "SUMMARY100050-V20241104",
@@ -1699,8 +1699,8 @@ const processedData = {
       "classCode": "CHINA_STOCK",
       "unit": 85,
       "profitRate": 0,
-      "accProfitRate": 0.3075,
-      "percent": 0.5144,
+      "accProfitRate": 0.3202,
+      "percent": 0.5127,
       "isCash": false,
       "latestOperation": {
         "timestamp": 1733760000000,
@@ -1712,11 +1712,11 @@ const processedData = {
           "fundName": "富国中证红利指数增强A",
           "variety": "中证红利",
           "planUnit": 13,
-          "nav": 0.934,
-          "navDate": "2025-04-10",
+          "nav": 0.944,
+          "navDate": "2025-04-30",
           "unitValue": 0.6071,
-          "percent": 0.0816,
-          "accProfit": 0.499,
+          "percent": 0.0811,
+          "accProfit": 0.5101,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -1727,9 +1727,9 @@ const processedData = {
             "displayText": "卖出 (2024-03-07)"
           },
           "historicalLow": 0.958,
-          "compareWithAvg": 53.85,
-          "compareWithLowest": -2.51,
-          "estValue": 0.934,
+          "compareWithAvg": 55.49,
+          "compareWithLowest": -1.46,
+          "estValue": 0.944,
           "costAmount": 7.8923
         },
         {
@@ -1737,11 +1737,11 @@ const processedData = {
           "fundName": "建信中证500指数增强A",
           "variety": "建信500",
           "planUnit": 10,
-          "nav": 2.4893,
-          "navDate": "2025-04-10",
+          "nav": 2.5621,
+          "navDate": "2025-04-30",
           "unitValue": 2.3545,
-          "percent": 0.0545,
-          "accProfit": 0.1208,
+          "percent": 0.0551,
+          "accProfit": 0.1472,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -1752,9 +1752,9 @@ const processedData = {
             "displayText": "卖出 (2023-02-01)"
           },
           "historicalLow": 1.9367,
-          "compareWithAvg": 5.73,
-          "compareWithLowest": 28.53,
-          "estValue": 2.4893,
+          "compareWithAvg": 8.82,
+          "compareWithLowest": 32.29,
+          "estValue": 2.5621,
           "costAmount": 23.544999999999998
         },
         {
@@ -1762,11 +1762,11 @@ const processedData = {
           "fundName": "富国沪深300指数增强A",
           "variety": "富国300",
           "planUnit": 7,
-          "nav": 1.487,
-          "navDate": "2025-04-10",
+          "nav": 1.513,
+          "navDate": "2025-04-30",
           "unitValue": 1.1713,
           "percent": 0.046,
-          "accProfit": 0.2695,
+          "accProfit": 0.2917,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -1777,9 +1777,9 @@ const processedData = {
             "displayText": "买入 (2019-01-31)"
           },
           "historicalLow": 1.46,
-          "compareWithAvg": 26.95,
-          "compareWithLowest": 1.85,
-          "estValue": 1.487,
+          "compareWithAvg": 29.17,
+          "compareWithLowest": 3.63,
+          "estValue": 1.513,
           "costAmount": 8.1991
         },
         {
@@ -1787,11 +1787,11 @@ const processedData = {
           "fundName": "华夏中证500ETF联接A",
           "variety": "中证500",
           "planUnit": 7,
-          "nav": 0.6633,
-          "navDate": "2025-04-10",
+          "nav": 0.6734,
+          "navDate": "2025-04-30",
           "unitValue": 0.6018,
-          "percent": 0.0406,
-          "accProfit": 0.1769,
+          "percent": 0.0405,
+          "accProfit": 0.1906,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -1802,9 +1802,9 @@ const processedData = {
             "displayText": "卖出 (2024-10-08)"
           },
           "historicalLow": 0.485,
-          "compareWithAvg": 10.22,
-          "compareWithLowest": 36.76,
-          "estValue": 0.6633,
+          "compareWithAvg": 11.9,
+          "compareWithLowest": 38.85,
+          "estValue": 0.6734,
           "costAmount": 4.2126
         },
         {
@@ -1812,11 +1812,11 @@ const processedData = {
           "fundName": "广发医药卫生联接A",
           "variety": "全指医药",
           "planUnit": 7,
-          "nav": 0.7529,
-          "navDate": "2025-04-10",
+          "nav": 0.7625,
+          "navDate": "2025-04-30",
           "unitValue": 0.8433,
-          "percent": 0.0351,
-          "accProfit": 0.1563,
+          "percent": 0.0349,
+          "accProfit": 0.1644,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -1827,9 +1827,9 @@ const processedData = {
             "displayText": "买入 (2023-06-26)"
           },
           "historicalLow": 0.6951,
-          "compareWithAvg": -10.72,
-          "compareWithLowest": 8.32,
-          "estValue": 0.7529,
+          "compareWithAvg": -9.58,
+          "compareWithLowest": 9.7,
+          "estValue": 0.7625,
           "costAmount": 5.9031
         },
         {
@@ -1837,11 +1837,11 @@ const processedData = {
           "fundName": "广发养老指数A",
           "variety": "养老产业",
           "planUnit": 7,
-          "nav": 0.8837,
-          "navDate": "2025-04-10",
+          "nav": 0.8842,
+          "navDate": "2025-04-30",
           "unitValue": 0.9923,
-          "percent": 0.0328,
-          "accProfit": 0.0975,
+          "percent": 0.0323,
+          "accProfit": 0.0978,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -1852,9 +1852,9 @@ const processedData = {
             "displayText": "卖出 (2020-09-11)"
           },
           "historicalLow": 0.8037,
-          "compareWithAvg": -10.94,
-          "compareWithLowest": 9.95,
-          "estValue": 0.8837,
+          "compareWithAvg": -10.89,
+          "compareWithLowest": 10.02,
+          "estValue": 0.8842,
           "costAmount": 6.9460999999999995
         },
         {
@@ -1862,11 +1862,11 @@ const processedData = {
           "fundName": "华宝医疗ETF联接C",
           "variety": "华宝医疗C",
           "planUnit": 4,
-          "nav": 0.5475,
-          "navDate": "2025-04-10",
+          "nav": 0.5512,
+          "navDate": "2025-04-30",
           "unitValue": 0.6845,
-          "percent": 0.0246,
-          "accProfit": -0.2002,
+          "percent": 0.0243,
+          "accProfit": -0.1948,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -1877,9 +1877,9 @@ const processedData = {
             "displayText": "买入 (2024-04-11)"
           },
           "historicalLow": 0.5579,
-          "compareWithAvg": -20.01,
-          "compareWithLowest": -1.86,
-          "estValue": 0.5475,
+          "compareWithAvg": -19.47,
+          "compareWithLowest": -1.2,
+          "estValue": 0.5512,
           "costAmount": 2.738
         },
         {
@@ -1887,11 +1887,11 @@ const processedData = {
           "fundName": "华夏上证50ETF联接A",
           "variety": "上证50",
           "planUnit": 4,
-          "nav": 0.9401,
-          "navDate": "2025-04-10",
+          "nav": 0.9481,
+          "navDate": "2025-04-30",
           "unitValue": 0.7665,
-          "percent": 0.0242,
-          "accProfit": 0.5353,
+          "percent": 0.024,
+          "accProfit": 0.5401,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -1902,9 +1902,9 @@ const processedData = {
             "displayText": "卖出 (2022-07-05)"
           },
           "historicalLow": 0.637,
-          "compareWithAvg": 22.65,
-          "compareWithLowest": 47.58,
-          "estValue": 0.9401,
+          "compareWithAvg": 23.69,
+          "compareWithLowest": 48.84,
+          "estValue": 0.9481,
           "costAmount": 3.066
         },
         {
@@ -1912,11 +1912,11 @@ const processedData = {
           "fundName": "富国消费主题混合C",
           "variety": "富国消费C",
           "planUnit": 3,
-          "nav": 2.177,
-          "navDate": "2025-04-10",
+          "nav": 2.195,
+          "navDate": "2025-04-30",
           "unitValue": 2.2771,
-          "percent": 0.0236,
-          "accProfit": 0.0133,
+          "percent": 0.0234,
+          "accProfit": 0.0215,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -1927,9 +1927,9 @@ const processedData = {
             "displayText": "买入 (2024-08-28)"
           },
           "historicalLow": 1.973,
-          "compareWithAvg": -4.4,
-          "compareWithLowest": 10.34,
-          "estValue": 2.177,
+          "compareWithAvg": -3.61,
+          "compareWithLowest": 11.25,
+          "estValue": 2.195,
           "costAmount": 6.8313
         },
         {
@@ -1937,11 +1937,11 @@ const processedData = {
           "fundName": "富国消费主题混合A",
           "variety": "富国消费",
           "planUnit": 3,
-          "nav": 2.233,
-          "navDate": "2025-04-10",
+          "nav": 2.252,
+          "navDate": "2025-04-30",
           "unitValue": 2.2558,
-          "percent": 0.0235,
-          "accProfit": 0.0107,
+          "percent": 0.0233,
+          "accProfit": 0.0192,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -1952,9 +1952,9 @@ const processedData = {
             "displayText": "买入 (2024-09-18)"
           },
           "historicalLow": 1.978,
-          "compareWithAvg": -1.01,
-          "compareWithLowest": 12.89,
-          "estValue": 2.233,
+          "compareWithAvg": -0.17,
+          "compareWithLowest": 13.85,
+          "estValue": 2.252,
           "costAmount": 6.767399999999999
         },
         {
@@ -1962,11 +1962,11 @@ const processedData = {
           "fundName": "富国中证500指数增强A",
           "variety": "富国500",
           "planUnit": 3,
-          "nav": 1.869,
-          "navDate": "2025-04-10",
+          "nav": 1.906,
+          "navDate": "2025-04-30",
           "unitValue": 1.2742,
-          "percent": 0.0228,
-          "accProfit": 0.4668,
+          "percent": 0.0229,
+          "accProfit": 0.4959,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -1977,9 +1977,9 @@ const processedData = {
             "displayText": "买入 (2018-10-30)"
           },
           "historicalLow": 1.636,
-          "compareWithAvg": 46.68,
-          "compareWithLowest": 14.24,
-          "estValue": 1.869,
+          "compareWithAvg": 49.58,
+          "compareWithLowest": 16.5,
+          "estValue": 1.906,
           "costAmount": 3.8226
         },
         {
@@ -1987,11 +1987,11 @@ const processedData = {
           "fundName": "大摩健康产业混合A",
           "variety": "大摩健康产业",
           "planUnit": 4,
-          "nav": 1.658,
-          "navDate": "2025-04-10",
+          "nav": 1.702,
+          "navDate": "2025-04-30",
           "unitValue": 2.3649,
-          "percent": 0.0207,
-          "accProfit": -0.2989,
+          "percent": 0.0209,
+          "accProfit": -0.2803,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2002,9 +2002,9 @@ const processedData = {
             "displayText": "买入 (2023-06-12)"
           },
           "historicalLow": 2.059,
-          "compareWithAvg": -29.89,
-          "compareWithLowest": -19.48,
-          "estValue": 1.658,
+          "compareWithAvg": -28.03,
+          "compareWithLowest": -17.34,
+          "estValue": 1.702,
           "costAmount": 9.4596
         },
         {
@@ -2012,11 +2012,11 @@ const processedData = {
           "fundName": "华宝医疗ETF联接A",
           "variety": "华宝医疗A",
           "planUnit": 3,
-          "nav": 0.5517,
-          "navDate": "2025-04-10",
+          "nav": 0.5555,
+          "navDate": "2025-04-30",
           "unitValue": 0.7242,
-          "percent": 0.0174,
-          "accProfit": -0.2382,
+          "percent": 0.0172,
+          "accProfit": -0.2329,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2027,9 +2027,9 @@ const processedData = {
             "displayText": "买入 (2023-08-22)"
           },
           "historicalLow": 0.6861,
-          "compareWithAvg": -23.82,
-          "compareWithLowest": -19.59,
-          "estValue": 0.5517,
+          "compareWithAvg": -23.29,
+          "compareWithLowest": -19.04,
+          "estValue": 0.5555,
           "costAmount": 2.1726
         },
         {
@@ -2037,11 +2037,11 @@ const processedData = {
           "fundName": "华夏沪深300ETF联接A",
           "variety": "沪深300",
           "planUnit": 2,
-          "nav": 1.3849,
-          "navDate": "2025-04-10",
+          "nav": 1.3993,
+          "navDate": "2025-04-30",
           "unitValue": 1.3102,
-          "percent": 0.014,
-          "accProfit": 0.45,
+          "percent": 0.0139,
+          "accProfit": 0.4618,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2052,9 +2052,9 @@ const processedData = {
             "displayText": "买入 (2023-01-06)"
           },
           "historicalLow": 0.974,
-          "compareWithAvg": 5.7,
-          "compareWithLowest": 42.19,
-          "estValue": 1.3849,
+          "compareWithAvg": 6.8,
+          "compareWithLowest": 43.67,
+          "estValue": 1.3993,
           "costAmount": 2.6204
         },
         {
@@ -2062,11 +2062,11 @@ const processedData = {
           "fundName": "广发中证全指金融地产联接A",
           "variety": "全指金融",
           "planUnit": 2,
-          "nav": 1.1557,
-          "navDate": "2025-04-10",
+          "nav": 1.1703,
+          "navDate": "2025-04-30",
           "unitValue": 1.1318,
-          "percent": 0.0129,
-          "accProfit": 0.2076,
+          "percent": 0.0128,
+          "accProfit": 0.2135,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2077,9 +2077,9 @@ const processedData = {
             "displayText": "卖出 (2024-12-10)"
           },
           "historicalLow": 0.866,
-          "compareWithAvg": 2.11,
-          "compareWithLowest": 33.45,
-          "estValue": 1.1557,
+          "compareWithAvg": 3.4,
+          "compareWithLowest": 35.14,
+          "estValue": 1.1703,
           "costAmount": 2.2636
         },
         {
@@ -2087,11 +2087,11 @@ const processedData = {
           "fundName": "广发中证传媒ETF联接A",
           "variety": "中证传媒",
           "planUnit": 2,
-          "nav": 0.7881,
-          "navDate": "2025-04-10",
+          "nav": 0.8108,
+          "navDate": "2025-04-30",
           "unitValue": 0.9971,
-          "percent": 0.0109,
-          "accProfit": 0.0266,
+          "percent": 0.011,
+          "accProfit": 0.0344,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2102,9 +2102,9 @@ const processedData = {
             "displayText": "卖出 (2023-05-31)"
           },
           "historicalLow": 0.6802,
-          "compareWithAvg": -20.96,
-          "compareWithLowest": 15.86,
-          "estValue": 0.7881,
+          "compareWithAvg": -18.68,
+          "compareWithLowest": 19.2,
+          "estValue": 0.8108,
           "costAmount": 1.9942
         },
         {
@@ -2112,11 +2112,11 @@ const processedData = {
           "fundName": "广发创业板ETF联接A",
           "variety": "广发创业板",
           "planUnit": 1,
-          "nav": 1.0446,
-          "navDate": "2025-04-10",
+          "nav": 1.0742,
+          "navDate": "2025-04-30",
           "unitValue": 0.9573,
-          "percent": 0.0085,
-          "accProfit": 0.3592,
+          "percent": 0.0086,
+          "accProfit": 0.3746,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2127,9 +2127,9 @@ const processedData = {
             "displayText": "买入 (2024-01-10)"
           },
           "historicalLow": 0.8111,
-          "compareWithAvg": 9.12,
-          "compareWithLowest": 28.79,
-          "estValue": 1.0446,
+          "compareWithAvg": 12.21,
+          "compareWithLowest": 32.44,
+          "estValue": 1.0742,
           "costAmount": 0.9573
         },
         {
@@ -2137,11 +2137,11 @@ const processedData = {
           "fundName": "广发中证环保ETF联接A",
           "variety": "中证环保",
           "planUnit": 1,
-          "nav": 0.6555,
-          "navDate": "2025-04-10",
+          "nav": 0.6622,
+          "navDate": "2025-04-30",
           "unitValue": 0.6897,
-          "percent": 0.0074,
-          "accProfit": 0.5775,
+          "percent": 0.0073,
+          "accProfit": 0.5786,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2152,9 +2152,9 @@ const processedData = {
             "displayText": "买入 (2023-12-12)"
           },
           "historicalLow": 0.4769,
-          "compareWithAvg": -4.96,
-          "compareWithLowest": 37.45,
-          "estValue": 0.6555,
+          "compareWithAvg": -3.99,
+          "compareWithLowest": 38.86,
+          "estValue": 0.6622,
           "costAmount": 0.6897
         },
         {
@@ -2162,11 +2162,11 @@ const processedData = {
           "fundName": "易方达中证全指证券公司指数(LOF)A",
           "variety": "证券公司",
           "planUnit": 1,
-          "nav": 1.19,
-          "navDate": "2025-04-10",
+          "nav": 1.1947,
+          "navDate": "2025-04-30",
           "unitValue": 1.0262,
-          "percent": 0.0073,
-          "accProfit": 0.5011,
+          "percent": 0.0072,
+          "accProfit": 0.5025,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2177,9 +2177,9 @@ const processedData = {
             "displayText": "卖出 (2024-11-11)"
           },
           "historicalLow": 0.6991,
-          "compareWithAvg": 15.96,
-          "compareWithLowest": 70.22,
-          "estValue": 1.19,
+          "compareWithAvg": 16.42,
+          "compareWithLowest": 70.89,
+          "estValue": 1.1947,
           "costAmount": 1.0262
         },
         {
@@ -2187,11 +2187,11 @@ const processedData = {
           "fundName": "融通健康产业灵活配置混合A",
           "variety": "融通健康产业",
           "planUnit": 1,
-          "nav": 2.302,
-          "navDate": "2025-04-10",
+          "nav": 2.364,
+          "navDate": "2025-04-30",
           "unitValue": 2.9264,
           "percent": 0.006,
-          "accProfit": 0.089,
+          "accProfit": 0.1102,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2202,9 +2202,9 @@ const processedData = {
             "displayText": "买入 (2023-08-07)"
           },
           "historicalLow": 2.616,
-          "compareWithAvg": -21.34,
-          "compareWithLowest": -12,
-          "estValue": 2.302,
+          "compareWithAvg": -19.22,
+          "compareWithLowest": -9.63,
+          "estValue": 2.364,
           "costAmount": 2.9264
         },
         {
@@ -2212,8 +2212,8 @@ const processedData = {
           "fundName": "易方达创业板ETF联接A",
           "variety": "易方达创业板",
           "planUnit": 0,
-          "nav": 1.9632,
-          "navDate": "2025-04-10",
+          "nav": 2.0186,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.2264,
@@ -2228,8 +2228,8 @@ const processedData = {
           },
           "historicalLow": 1.3342,
           "compareWithAvg": 0,
-          "compareWithLowest": 47.14,
-          "estValue": 1.9632,
+          "compareWithLowest": 51.3,
+          "estValue": 2.0186,
           "costAmount": 0
         },
         {
@@ -2237,8 +2237,8 @@ const processedData = {
           "fundName": "广发信息技术联接A",
           "variety": "信息技术",
           "planUnit": 0,
-          "nav": 1.1065,
-          "navDate": "2025-04-10",
+          "nav": 1.145,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.194,
@@ -2253,8 +2253,8 @@ const processedData = {
           },
           "historicalLow": 0.8734,
           "compareWithAvg": 0,
-          "compareWithLowest": 26.69,
-          "estValue": 1.1065,
+          "compareWithLowest": 31.1,
+          "estValue": 1.145,
           "costAmount": 0
         },
         {
@@ -2262,8 +2262,8 @@ const processedData = {
           "fundName": "易方达信息产业混合A",
           "variety": "易方达信息产业",
           "planUnit": 0,
-          "nav": 2.393,
-          "navDate": "2025-04-10",
+          "nav": 2.511,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.2802,
@@ -2278,8 +2278,8 @@ const processedData = {
           },
           "historicalLow": 2.221,
           "compareWithAvg": 0,
-          "compareWithLowest": 7.74,
-          "estValue": 2.393,
+          "compareWithLowest": 13.06,
+          "estValue": 2.511,
           "costAmount": 0
         },
         {
@@ -2287,8 +2287,8 @@ const processedData = {
           "fundName": "易方达消费行业",
           "variety": "易方达消费行业",
           "planUnit": 0,
-          "nav": 3.521,
-          "navDate": "2025-04-10",
+          "nav": 3.46,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.6059,
@@ -2303,8 +2303,8 @@ const processedData = {
           },
           "historicalLow": 1.713,
           "compareWithAvg": 0,
-          "compareWithLowest": 105.55,
-          "estValue": 3.521,
+          "compareWithLowest": 101.98,
+          "estValue": 3.46,
           "costAmount": 0
         },
         {
@@ -2312,8 +2312,8 @@ const processedData = {
           "fundName": "华夏沪深300ETF联接C",
           "variety": "沪深300C",
           "planUnit": 0,
-          "nav": 1.3546,
-          "navDate": "2025-04-10",
+          "nav": 1.3684,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.1608,
@@ -2328,8 +2328,8 @@ const processedData = {
           },
           "historicalLow": 1.2451,
           "compareWithAvg": 0,
-          "compareWithLowest": 8.79,
-          "estValue": 1.3546,
+          "compareWithLowest": 9.9,
+          "estValue": 1.3684,
           "costAmount": 0
         },
         {
@@ -2337,8 +2337,8 @@ const processedData = {
           "fundName": "广发中证500ETF联接C",
           "variety": "中证500C类",
           "planUnit": 0,
-          "nav": 1.0314,
-          "navDate": "2025-04-10",
+          "nav": 1.0472,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.5706,
@@ -2353,8 +2353,8 @@ const processedData = {
           },
           "historicalLow": 0.7602,
           "compareWithAvg": 0,
-          "compareWithLowest": 35.67,
-          "estValue": 1.0314,
+          "compareWithLowest": 37.75,
+          "estValue": 1.0472,
           "costAmount": 0
         }
       ]
@@ -2362,10 +2362,10 @@ const processedData = {
     {
       "className": "现金",
       "classCode": "CASH",
-      "unit": 30,
+      "unit": 32,
       "profitRate": 0,
       "accProfitRate": 0,
-      "percent": 0.2388,
+      "percent": 0.2517,
       "isCash": true,
       "latestOperation": {
         "timestamp": 0,
@@ -2375,23 +2375,23 @@ const processedData = {
         {
           "isCash": true,
           "variety": "现金",
-          "planUnit": 30,
-          "accProfit": 0.3144,
-          "percent": 0.2388
+          "planUnit": 32,
+          "accProfit": 0.3156,
+          "percent": 0.2517
         }
       ]
     },
     {
       "className": "海外新兴市场股票",
       "classCode": "OVERSEA_STOCK_EMERGING",
-      "unit": 21,
+      "unit": 19,
       "profitRate": 0,
-      "accProfitRate": 0.1731,
-      "percent": 0.137,
+      "accProfitRate": 0.2314,
+      "percent": 0.1268,
       "isCash": false,
       "latestOperation": {
-        "timestamp": 1743955200000,
-        "formattedDate": "2025-04-07"
+        "timestamp": 1745510400000,
+        "formattedDate": "2025-04-25"
       },
       "funds": [
         {
@@ -2399,11 +2399,11 @@ const processedData = {
           "fundName": "华夏恒生ETF联接A",
           "variety": "恒生指数",
           "planUnit": 10,
-          "nav": 1.2887,
-          "navDate": "2025-04-10",
+          "nav": 1.3755,
+          "navDate": "2025-04-30",
           "unitValue": 1.1937,
-          "percent": 0.0635,
-          "accProfit": 0.2449,
+          "percent": 0.0666,
+          "accProfit": 0.3009,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2414,46 +2414,46 @@ const processedData = {
             "displayText": "卖出 (2025-02-20)"
           },
           "historicalLow": 0.939,
-          "compareWithAvg": 7.96,
-          "compareWithLowest": 37.24,
-          "estValue": 1.2887,
+          "compareWithAvg": 15.23,
+          "compareWithLowest": 46.49,
+          "estValue": 1.3755,
           "costAmount": 11.937
         },
         {
           "fundCode": "012348",
           "fundName": "天弘恒生科技指数(QDII)A",
           "variety": "恒生科技",
-          "planUnit": 4,
-          "nav": 0.7125,
-          "navDate": "2025-04-10",
-          "unitValue": 0.694,
-          "percent": 0.0326,
-          "accProfit": 0.1331,
+          "planUnit": 3,
+          "nav": 0.7484,
+          "navDate": "2025-04-30",
+          "unitValue": 0.72,
+          "percent": 0.0252,
+          "accProfit": 0.1745,
           "accProfitRate": 0,
           "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2025-04-07",
-            "navDate": 1743955200000,
-            "timestamp": 1743955200000,
-            "tradePrice": 0.6541,
-            "displayText": "买入 (2025-04-07)"
+            "tradeType": "卖出",
+            "operationDate": "2025-04-23",
+            "navDate": 1745337600000,
+            "timestamp": 1745337600000,
+            "tradePrice": 0.7449,
+            "displayText": "卖出 (2025-04-23)"
           },
           "historicalLow": 0.5978,
-          "compareWithAvg": 2.67,
-          "compareWithLowest": 19.19,
-          "estValue": 0.7125,
-          "costAmount": 2.776
+          "compareWithAvg": 3.94,
+          "compareWithLowest": 25.19,
+          "estValue": 0.7484,
+          "costAmount": 2.16
         },
         {
           "fundCode": "164906",
           "fundName": "交银施罗德中证海外中国互联网指数(QDII-LOF)A",
           "variety": "中国海外互联",
           "planUnit": 4,
-          "nav": 1.0811,
-          "navDate": "2025-04-09",
+          "nav": 1.1453,
+          "navDate": "2025-04-29",
           "unitValue": 1.5822,
-          "percent": 0.0191,
-          "accProfit": 0.0296,
+          "percent": 0.0198,
+          "accProfit": 0.0702,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2464,46 +2464,46 @@ const processedData = {
             "displayText": "买入 (2021-10-22)"
           },
           "historicalLow": 1.114,
-          "compareWithAvg": -31.67,
-          "compareWithLowest": -2.95,
-          "estValue": 1.0811,
+          "compareWithAvg": -27.61,
+          "compareWithLowest": 2.81,
+          "estValue": 1.1453,
           "costAmount": 6.3288
         },
         {
           "fundCode": "014424",
           "fundName": "博时恒生医疗保健ETF发起式联接(QDII)A",
           "variety": "恒生医疗",
-          "planUnit": 2,
-          "nav": 0.69,
-          "navDate": "2025-04-10",
-          "unitValue": 0.7088,
-          "percent": 0.0155,
-          "accProfit": 0.1138,
+          "planUnit": 1,
+          "nav": 0.7777,
+          "navDate": "2025-04-30",
+          "unitValue": 0.9209,
+          "percent": 0.0086,
+          "accProfit": 0.2372,
           "accProfitRate": 0,
           "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2024-08-13",
-            "navDate": 1723478400000,
-            "timestamp": 1723478400000,
-            "tradePrice": 0.5754,
-            "displayText": "买入 (2024-08-13)"
+            "tradeType": "卖出",
+            "operationDate": "2025-04-25",
+            "navDate": 1745510400000,
+            "timestamp": 1745510400000,
+            "tradePrice": 0.7772,
+            "displayText": "卖出 (2025-04-25)"
           },
           "historicalLow": 0.5754,
-          "compareWithAvg": -2.65,
-          "compareWithLowest": 19.92,
-          "estValue": 0.69,
-          "costAmount": 1.4176
+          "compareWithAvg": -15.55,
+          "compareWithLowest": 35.16,
+          "estValue": 0.7777,
+          "costAmount": 0.9209
         },
         {
           "fundCode": "006327",
           "fundName": "易方达中证海外联接人民币A",
           "variety": "易方达中概互联",
           "planUnit": 1,
-          "nav": 0.9734,
-          "navDate": "2025-04-09",
+          "nav": 1.037,
+          "navDate": "2025-04-29",
           "unitValue": 1.0963,
-          "percent": 0.0063,
-          "accProfit": -0.1121,
+          "percent": 0.0066,
+          "accProfit": -0.0541,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2514,9 +2514,9 @@ const processedData = {
             "displayText": "买入 (2021-09-27)"
           },
           "historicalLow": 1.095,
-          "compareWithAvg": -11.21,
-          "compareWithLowest": -11.11,
-          "estValue": 0.9734,
+          "compareWithAvg": -5.41,
+          "compareWithLowest": -5.3,
+          "estValue": 1.037,
           "costAmount": 1.0963
         }
       ]
@@ -2526,8 +2526,8 @@ const processedData = {
       "classCode": "CHINA_BOND",
       "unit": 8,
       "profitRate": 0,
-      "accProfitRate": 0.3419,
-      "percent": 0.0593,
+      "accProfitRate": 0.3429,
+      "percent": 0.0584,
       "isCash": false,
       "latestOperation": {
         "timestamp": 1670428800000,
@@ -2539,11 +2539,11 @@ const processedData = {
           "fundName": "兴全可转债混合",
           "variety": "兴全转债",
           "planUnit": 4,
-          "nav": 1.0555,
-          "navDate": "2025-04-10",
-          "unitValue": 0.7257,
-          "percent": 0.0303,
-          "accProfit": 0.4934,
+          "nav": 1.0318,
+          "navDate": "2025-04-30",
+          "unitValue": 0.7092,
+          "percent": 0.0298,
+          "accProfit": 0.4938,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2554,21 +2554,21 @@ const processedData = {
             "displayText": "卖出 (2022-02-28)"
           },
           "historicalLow": 0.9808,
-          "compareWithAvg": 45.45,
-          "compareWithLowest": 7.62,
-          "estValue": 1.0555,
-          "costAmount": 2.9028
+          "compareWithAvg": 45.49,
+          "compareWithLowest": 5.2,
+          "estValue": 1.0318,
+          "costAmount": 2.8368
         },
         {
           "fundCode": "110027",
           "fundName": "易方达安心债券A",
           "variety": "易方达安心回报债",
           "planUnit": 3,
-          "nav": 2.0211,
-          "navDate": "2025-04-10",
+          "nav": 2.0278,
+          "navDate": "2025-04-30",
           "unitValue": 1.4859,
-          "percent": 0.0207,
-          "accProfit": 0.3389,
+          "percent": 0.0204,
+          "accProfit": 0.3414,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2579,9 +2579,9 @@ const processedData = {
             "displayText": "卖出 (2022-04-14)"
           },
           "historicalLow": 1.554,
-          "compareWithAvg": 36.02,
-          "compareWithLowest": 30.06,
-          "estValue": 2.0211,
+          "compareWithAvg": 36.47,
+          "compareWithLowest": 30.49,
+          "estValue": 2.0278,
           "costAmount": 4.4577
         },
         {
@@ -2589,11 +2589,11 @@ const processedData = {
           "fundName": "广发中债7-10年国开债指数A",
           "variety": "7-10国开债",
           "planUnit": 1,
-          "nav": 1.3376,
-          "navDate": "2025-04-10",
+          "nav": 1.342,
+          "navDate": "2025-04-30",
           "unitValue": 1.1418,
-          "percent": 0.0083,
-          "accProfit": 0.1369,
+          "percent": 0.0082,
+          "accProfit": 0.1374,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2604,9 +2604,9 @@ const processedData = {
             "displayText": "买入 (2022-12-08)"
           },
           "historicalLow": 0.928,
-          "compareWithAvg": 17.15,
-          "compareWithLowest": 44.14,
-          "estValue": 1.3376,
+          "compareWithAvg": 17.53,
+          "compareWithLowest": 44.61,
+          "estValue": 1.342,
           "costAmount": 1.1418
         },
         {
@@ -2614,8 +2614,8 @@ const processedData = {
           "fundName": "博时信用债纯债债券A",
           "variety": "博时信用债",
           "planUnit": 0,
-          "nav": 1.1315,
-          "navDate": "2025-04-10",
+          "nav": 1.1287,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.086,
@@ -2630,8 +2630,8 @@ const processedData = {
           },
           "historicalLow": 1.072,
           "compareWithAvg": 0,
-          "compareWithLowest": 5.55,
-          "estValue": 1.1315,
+          "compareWithLowest": 5.29,
+          "estValue": 1.1287,
           "costAmount": 0
         },
         {
@@ -2639,8 +2639,8 @@ const processedData = {
           "fundName": "广发纯债债券A",
           "variety": "广发纯债",
           "planUnit": 0,
-          "nav": 1.2588,
-          "navDate": "2025-04-10",
+          "nav": 1.2488,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.1364,
@@ -2655,8 +2655,8 @@ const processedData = {
           },
           "historicalLow": 1.18,
           "compareWithAvg": 0,
-          "compareWithLowest": 6.68,
-          "estValue": 1.2588,
+          "compareWithLowest": 5.83,
+          "estValue": 1.2488,
           "costAmount": 0
         },
         {
@@ -2664,8 +2664,8 @@ const processedData = {
           "fundName": "长信可转债债券A",
           "variety": "长信可转债",
           "planUnit": 0,
-          "nav": 1.6075,
-          "navDate": "2025-04-10",
+          "nav": 1.6158,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.19,
@@ -2680,8 +2680,8 @@ const processedData = {
           },
           "historicalLow": 1.2001,
           "compareWithAvg": 0,
-          "compareWithLowest": 33.95,
-          "estValue": 1.6075,
+          "compareWithLowest": 34.64,
+          "estValue": 1.6158,
           "costAmount": 0
         },
         {
@@ -2689,8 +2689,8 @@ const processedData = {
           "fundName": "南方通利A",
           "variety": "南方通利纯债",
           "planUnit": 0,
-          "nav": 1.0864,
-          "navDate": "2025-04-10",
+          "nav": 1.0904,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.0527,
@@ -2705,8 +2705,8 @@ const processedData = {
           },
           "historicalLow": 1.0969,
           "compareWithAvg": 0,
-          "compareWithLowest": -0.96,
-          "estValue": 1.0864,
+          "compareWithLowest": -0.59,
+          "estValue": 1.0904,
           "costAmount": 0
         },
         {
@@ -2714,8 +2714,8 @@ const processedData = {
           "fundName": "易方达高等级信用债A",
           "variety": "易方达高等级信用债",
           "planUnit": 0,
-          "nav": 1.2151,
-          "navDate": "2025-04-10",
+          "nav": 1.2149,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.0365,
@@ -2730,8 +2730,8 @@ const processedData = {
           },
           "historicalLow": 1.114,
           "compareWithAvg": 0,
-          "compareWithLowest": 9.08,
-          "estValue": 1.2151,
+          "compareWithLowest": 9.06,
+          "estValue": 1.2149,
           "costAmount": 0
         }
       ]
@@ -2741,8 +2741,8 @@ const processedData = {
       "classCode": "OVERSEA_STOCK_MATURE",
       "unit": 3,
       "profitRate": 0,
-      "accProfitRate": 0.4983,
-      "percent": 0.0263,
+      "accProfitRate": 0.5093,
+      "percent": 0.0264,
       "isCash": false,
       "latestOperation": {
         "timestamp": 1744128000000,
@@ -2754,11 +2754,11 @@ const processedData = {
           "fundName": "博时标普500ETF联接A",
           "variety": "标普500",
           "planUnit": 1,
-          "nav": 4.2589,
-          "navDate": "2025-04-09",
+          "nav": 4.3381,
+          "navDate": "2025-04-29",
           "unitValue": 3.1127,
           "percent": 0.0105,
-          "accProfit": 0.4122,
+          "accProfit": 0.4256,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "卖出",
@@ -2769,46 +2769,21 @@ const processedData = {
             "displayText": "卖出 (2023-08-18)"
           },
           "historicalLow": 1.9434,
-          "compareWithAvg": 36.82,
-          "compareWithLowest": 119.15,
-          "estValue": 4.2589,
+          "compareWithAvg": 39.37,
+          "compareWithLowest": 123.22,
+          "estValue": 4.3381,
           "costAmount": 3.1127
-        },
-        {
-          "fundCode": "270042",
-          "fundName": "广发纳指100ETF联接人民币(QDII)A",
-          "variety": "纳指100",
-          "planUnit": 1,
-          "nav": 5.7643,
-          "navDate": "2025-04-09",
-          "unitValue": 5.7718,
-          "percent": 0.0079,
-          "accProfit": 0.44,
-          "accProfitRate": 0,
-          "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2025-04-09",
-            "navDate": 1744128000000,
-            "timestamp": 1744128000000,
-            "tradePrice": 5.7643,
-            "displayText": "买入 (2025-04-09)"
-          },
-          "historicalLow": 3.2713,
-          "compareWithAvg": -0.13,
-          "compareWithLowest": 76.21,
-          "estValue": 5.7643,
-          "costAmount": 5.7718
         },
         {
           "fundCode": "000369",
           "fundName": "广发全球医疗保健(QDII)(人民币)A",
           "variety": "全球医疗保健",
           "planUnit": 1,
-          "nav": 2.26,
-          "navDate": "2025-04-09",
+          "nav": 2.333,
+          "navDate": "2025-04-29",
           "unitValue": 2.2419,
-          "percent": 0.0079,
-          "accProfit": 0.0081,
+          "percent": 0.008,
+          "accProfit": 0.0406,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2819,18 +2794,43 @@ const processedData = {
             "displayText": "买入 (2023-12-28)"
           },
           "historicalLow": 2.239,
-          "compareWithAvg": 0.81,
-          "compareWithLowest": 0.94,
-          "estValue": 2.26,
+          "compareWithAvg": 4.06,
+          "compareWithLowest": 4.2,
+          "estValue": 2.333,
           "costAmount": 2.2419
+        },
+        {
+          "fundCode": "270042",
+          "fundName": "广发纳指100ETF联接人民币(QDII)A",
+          "variety": "纳指100",
+          "planUnit": 1,
+          "nav": 5.8668,
+          "navDate": "2025-04-29",
+          "unitValue": 5.7718,
+          "percent": 0.0079,
+          "accProfit": 0.4489,
+          "accProfitRate": 0,
+          "latestOperation": {
+            "tradeType": "买入",
+            "operationDate": "2025-04-09",
+            "navDate": 1744128000000,
+            "timestamp": 1744128000000,
+            "tradePrice": 5.7643,
+            "displayText": "买入 (2025-04-09)"
+          },
+          "historicalLow": 3.2713,
+          "compareWithAvg": 1.65,
+          "compareWithLowest": 79.34,
+          "estValue": 5.8668,
+          "costAmount": 5.7718
         },
         {
           "fundCode": "000614",
           "fundName": "华安德国(DAX)ETF联接A",
           "variety": "德国DAX",
           "planUnit": 0,
-          "nav": 1.6302,
-          "navDate": "2025-04-09",
+          "nav": 1.9032,
+          "navDate": "2025-04-29",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.2769,
@@ -2845,8 +2845,8 @@ const processedData = {
           },
           "historicalLow": 0.913,
           "compareWithAvg": 0,
-          "compareWithLowest": 78.55,
-          "estValue": 1.6302,
+          "compareWithLowest": 108.46,
+          "estValue": 1.9032,
           "costAmount": 0
         },
         {
@@ -2854,8 +2854,8 @@ const processedData = {
           "fundName": "广发生物科技指数(QDII)A",
           "variety": "纳斯达克生物科技",
           "planUnit": 0,
-          "nav": 1.073,
-          "navDate": "2025-04-09",
+          "nav": 1.134,
+          "navDate": "2025-04-29",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.1142,
@@ -2870,8 +2870,8 @@ const processedData = {
           },
           "historicalLow": 1.006,
           "compareWithAvg": 0,
-          "compareWithLowest": 6.66,
-          "estValue": 1.073,
+          "compareWithLowest": 12.72,
+          "estValue": 1.134,
           "costAmount": 0
         }
       ]
@@ -2881,8 +2881,8 @@ const processedData = {
       "classCode": "OVERSEA_BOND",
       "unit": 3,
       "profitRate": 0,
-      "accProfitRate": 0.0637,
-      "percent": 0.0242,
+      "accProfitRate": 0.0727,
+      "percent": 0.024,
       "isCash": false,
       "latestOperation": {
         "timestamp": 1730304000000,
@@ -2890,65 +2890,15 @@ const processedData = {
       },
       "funds": [
         {
-          "fundCode": "100050",
-          "fundName": "富国全球债券(QDII)人民币A",
-          "variety": "富国全球债A",
-          "planUnit": 1,
-          "nav": 1.2862,
-          "navDate": "2025-04-09",
-          "unitValue": 1.2503,
-          "percent": 0.0081,
-          "accProfit": 0.0287,
-          "accProfitRate": 0,
-          "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2024-10-25",
-            "navDate": 1729785600000,
-            "timestamp": 1729785600000,
-            "tradePrice": 1.2876,
-            "displayText": "买入 (2024-10-25)"
-          },
-          "historicalLow": 1.2876,
-          "compareWithAvg": 2.87,
-          "compareWithLowest": -0.11,
-          "estValue": 1.2862,
-          "costAmount": 1.2503
-        },
-        {
-          "fundCode": "019518",
-          "fundName": "富国全球债券(QDII)人民币C",
-          "variety": "富国全球债C",
-          "planUnit": 1,
-          "nav": 1.2808,
-          "navDate": "2025-04-09",
-          "unitValue": 1.2463,
-          "percent": 0.0081,
-          "accProfit": 0.0277,
-          "accProfitRate": 0,
-          "latestOperation": {
-            "tradeType": "买入",
-            "operationDate": "2024-10-31",
-            "navDate": 1730304000000,
-            "timestamp": 1730304000000,
-            "tradePrice": 1.2846,
-            "displayText": "买入 (2024-10-31)"
-          },
-          "historicalLow": 1.2846,
-          "compareWithAvg": 2.77,
-          "compareWithLowest": -0.3,
-          "estValue": 1.2808,
-          "costAmount": 1.2463
-        },
-        {
           "fundCode": "004419",
           "fundName": "汇添富美元债债券人民币A",
           "variety": "汇添富美元债",
           "planUnit": 1,
-          "nav": 1.0451,
-          "navDate": "2025-04-09",
+          "nav": 1.0593,
+          "navDate": "2025-04-29",
           "unitValue": 1.0548,
           "percent": 0.008,
-          "accProfit": -0.0092,
+          "accProfit": 0.0042,
           "accProfitRate": 0,
           "latestOperation": {
             "tradeType": "买入",
@@ -2959,18 +2909,68 @@ const processedData = {
             "displayText": "买入 (2024-09-09)"
           },
           "historicalLow": 1.054,
-          "compareWithAvg": -0.92,
-          "compareWithLowest": -0.84,
-          "estValue": 1.0451,
+          "compareWithAvg": 0.43,
+          "compareWithLowest": 0.5,
+          "estValue": 1.0593,
           "costAmount": 1.0548
+        },
+        {
+          "fundCode": "100050",
+          "fundName": "富国全球债券(QDII)人民币A",
+          "variety": "富国全球债A",
+          "planUnit": 1,
+          "nav": 1.3005,
+          "navDate": "2025-04-29",
+          "unitValue": 1.2503,
+          "percent": 0.008,
+          "accProfit": 0.0401,
+          "accProfitRate": 0,
+          "latestOperation": {
+            "tradeType": "买入",
+            "operationDate": "2024-10-25",
+            "navDate": 1729785600000,
+            "timestamp": 1729785600000,
+            "tradePrice": 1.2876,
+            "displayText": "买入 (2024-10-25)"
+          },
+          "historicalLow": 1.2876,
+          "compareWithAvg": 4.02,
+          "compareWithLowest": 1,
+          "estValue": 1.3005,
+          "costAmount": 1.2503
+        },
+        {
+          "fundCode": "019518",
+          "fundName": "富国全球债券(QDII)人民币C",
+          "variety": "富国全球债C",
+          "planUnit": 1,
+          "nav": 1.2948,
+          "navDate": "2025-04-29",
+          "unitValue": 1.2463,
+          "percent": 0.008,
+          "accProfit": 0.0389,
+          "accProfitRate": 0,
+          "latestOperation": {
+            "tradeType": "买入",
+            "operationDate": "2024-10-31",
+            "navDate": 1730304000000,
+            "timestamp": 1730304000000,
+            "tradePrice": 1.2846,
+            "displayText": "买入 (2024-10-31)"
+          },
+          "historicalLow": 1.2846,
+          "compareWithAvg": 3.89,
+          "compareWithLowest": 0.79,
+          "estValue": 1.2948,
+          "costAmount": 1.2463
         },
         {
           "fundCode": "001061",
           "fundName": "华夏海外收益债券A",
           "variety": "海外收益债",
           "planUnit": 0,
-          "nav": 1.4369,
-          "navDate": "2025-04-09",
+          "nav": 1.4663,
+          "navDate": "2025-04-29",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.0519,
@@ -2985,8 +2985,8 @@ const processedData = {
           },
           "historicalLow": 1.181,
           "compareWithAvg": 0,
-          "compareWithLowest": 21.67,
-          "estValue": 1.4369,
+          "compareWithLowest": 24.16,
+          "estValue": 1.4663,
           "costAmount": 0
         }
       ]
@@ -3009,8 +3009,8 @@ const processedData = {
           "fundName": "华安标普石油指数A",
           "variety": "石油基金",
           "planUnit": 0,
-          "nav": 1.5297,
-          "navDate": "2025-04-09",
+          "nav": 1.5983,
+          "navDate": "2025-04-29",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.2789,
@@ -3025,8 +3025,8 @@ const processedData = {
           },
           "historicalLow": 0.767,
           "compareWithAvg": 0,
-          "compareWithLowest": 99.44,
-          "estValue": 1.5297,
+          "compareWithLowest": 108.38,
+          "estValue": 1.5983,
           "costAmount": 0
         },
         {
@@ -3034,8 +3034,8 @@ const processedData = {
           "fundName": "华宝标普石油指数A",
           "variety": "华宝油气",
           "planUnit": 0,
-          "nav": 0.6493,
-          "navDate": "2025-04-09",
+          "nav": 0.6499,
+          "navDate": "2025-04-29",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.2681,
@@ -3050,8 +3050,8 @@ const processedData = {
           },
           "historicalLow": 0.467,
           "compareWithAvg": 0,
-          "compareWithLowest": 39.04,
-          "estValue": 0.6493,
+          "compareWithLowest": 39.16,
+          "estValue": 0.6499,
           "costAmount": 0
         },
         {
@@ -3059,8 +3059,8 @@ const processedData = {
           "fundName": "南方原油A",
           "variety": "南方原油",
           "planUnit": 0,
-          "nav": 1.0741,
-          "navDate": "2025-04-09",
+          "nav": 1.1395,
+          "navDate": "2025-04-29",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.2126,
@@ -3075,8 +3075,8 @@ const processedData = {
           },
           "historicalLow": 0.7162,
           "compareWithAvg": 0,
-          "compareWithLowest": 49.97,
-          "estValue": 1.0741,
+          "compareWithLowest": 59.1,
+          "estValue": 1.1395,
           "costAmount": 0
         }
       ]
@@ -3099,8 +3099,8 @@ const processedData = {
           "fundName": "华安黄金易ETF联接A",
           "variety": "黄金",
           "planUnit": 0,
-          "nav": 2.5839,
-          "navDate": "2025-04-10",
+          "nav": 2.7224,
+          "navDate": "2025-04-30",
           "unitValue": 0,
           "percent": 0,
           "accProfit": 0.3866,
@@ -3115,8 +3115,8 @@ const processedData = {
           },
           "historicalLow": 1.029,
           "compareWithAvg": 0,
-          "compareWithLowest": 151.11,
-          "estValue": 2.5839,
+          "compareWithLowest": 164.57,
+          "estValue": 2.7224,
           "costAmount": 0
         }
       ]
@@ -3132,8 +3132,8 @@ const processedData = {
       "formattedDate": "2024-10-31"
     },
     "海外新兴市场股票": {
-      "timestamp": 1743955200000,
-      "formattedDate": "2025-04-07"
+      "timestamp": 1745510400000,
+      "formattedDate": "2025-04-25"
     },
     "海外成熟市场股票": {
       "timestamp": 1744128000000,
@@ -3156,40 +3156,40 @@ const processedData = {
       "formattedDate": "2022-04-22"
     }
   },
-  "lastUpdated": "2025-04-26T15:20:02.094Z",
+  "lastUpdated": "2025-05-05T16:48:30.007Z",
   "summary": {
     "totalUnit": 150,
-    "totalProfit": 43.6258,
+    "totalProfit": 46.202,
     "assetDistribution": {
       "A股": {
         "unit": 85,
-        "percent": 0.5144,
-        "accProfitRate": 0.3075
+        "percent": 0.5127,
+        "accProfitRate": 0.3202
       },
       "现金": {
-        "unit": 30,
-        "percent": 0.2388,
-        "accProfitRate": 0.3144
+        "unit": 32,
+        "percent": 0.2517,
+        "accProfitRate": 0.3156
       },
       "海外新兴市场股票": {
-        "unit": 21,
-        "percent": 0.137,
-        "accProfitRate": 0.1731
+        "unit": 19,
+        "percent": 0.1268,
+        "accProfitRate": 0.2314
       },
       "境内债券": {
         "unit": 8,
-        "percent": 0.0593,
-        "accProfitRate": 0.3419
+        "percent": 0.0584,
+        "accProfitRate": 0.3429
       },
       "海外成熟市场股票": {
         "unit": 3,
-        "percent": 0.0263,
-        "accProfitRate": 0.4983
+        "percent": 0.0264,
+        "accProfitRate": 0.5093
       },
       "海外债券": {
         "unit": 3,
-        "percent": 0.0242,
-        "accProfitRate": 0.0637
+        "percent": 0.024,
+        "accProfitRate": 0.0727
       },
       "原油": {
         "unit": 0,
@@ -3202,7 +3202,7 @@ const processedData = {
         "accProfitRate": 0.3866
       }
     },
-    "avgProfitRate": 0.29083866666666663
+    "avgProfitRate": 0.3080133333333333
   },
   "assetRankings": {
     "byUnit": [
@@ -3210,43 +3210,43 @@ const processedData = {
         "className": "A股",
         "classCode": "CHINA_STOCK",
         "unit": 85,
-        "percent": 0.5144,
-        "accProfitRate": 0.3075
+        "percent": 0.5127,
+        "accProfitRate": 0.3202
       },
       {
         "className": "现金",
         "classCode": "CASH",
-        "unit": 30,
-        "percent": 0.2388,
-        "accProfitRate": 0.3144
+        "unit": 32,
+        "percent": 0.2517,
+        "accProfitRate": 0.3156
       },
       {
         "className": "海外新兴市场股票",
         "classCode": "OVERSEA_STOCK_EMERGING",
-        "unit": 21,
-        "percent": 0.137,
-        "accProfitRate": 0.1731
+        "unit": 19,
+        "percent": 0.1268,
+        "accProfitRate": 0.2314
       },
       {
         "className": "境内债券",
         "classCode": "CHINA_BOND",
         "unit": 8,
-        "percent": 0.0593,
-        "accProfitRate": 0.3419
+        "percent": 0.0584,
+        "accProfitRate": 0.3429
       },
       {
         "className": "海外成熟市场股票",
         "classCode": "OVERSEA_STOCK_MATURE",
         "unit": 3,
-        "percent": 0.0263,
-        "accProfitRate": 0.4983
+        "percent": 0.0264,
+        "accProfitRate": 0.5093
       },
       {
         "className": "海外债券",
         "classCode": "OVERSEA_BOND",
         "unit": 3,
-        "percent": 0.0242,
-        "accProfitRate": 0.0637
+        "percent": 0.024,
+        "accProfitRate": 0.0727
       },
       {
         "className": "原油",
@@ -3268,43 +3268,43 @@ const processedData = {
         "className": "A股",
         "classCode": "CHINA_STOCK",
         "unit": 85,
-        "percent": 0.5144,
-        "accProfitRate": 0.3075
+        "percent": 0.5127,
+        "accProfitRate": 0.3202
       },
       {
         "className": "现金",
         "classCode": "CASH",
-        "unit": 30,
-        "percent": 0.2388,
-        "accProfitRate": 0.3144
+        "unit": 32,
+        "percent": 0.2517,
+        "accProfitRate": 0.3156
       },
       {
         "className": "海外新兴市场股票",
         "classCode": "OVERSEA_STOCK_EMERGING",
-        "unit": 21,
-        "percent": 0.137,
-        "accProfitRate": 0.1731
+        "unit": 19,
+        "percent": 0.1268,
+        "accProfitRate": 0.2314
       },
       {
         "className": "境内债券",
         "classCode": "CHINA_BOND",
         "unit": 8,
-        "percent": 0.0593,
-        "accProfitRate": 0.3419
+        "percent": 0.0584,
+        "accProfitRate": 0.3429
       },
       {
         "className": "海外成熟市场股票",
         "classCode": "OVERSEA_STOCK_MATURE",
         "unit": 3,
-        "percent": 0.0263,
-        "accProfitRate": 0.4983
+        "percent": 0.0264,
+        "accProfitRate": 0.5093
       },
       {
         "className": "海外债券",
         "classCode": "OVERSEA_BOND",
         "unit": 3,
-        "percent": 0.0242,
-        "accProfitRate": 0.0637
+        "percent": 0.024,
+        "accProfitRate": 0.0727
       },
       {
         "className": "原油",
@@ -3326,8 +3326,8 @@ const processedData = {
         "className": "海外成熟市场股票",
         "classCode": "OVERSEA_STOCK_MATURE",
         "unit": 3,
-        "percent": 0.0263,
-        "accProfitRate": 0.4983
+        "percent": 0.0264,
+        "accProfitRate": 0.5093
       },
       {
         "className": "黄金",
@@ -3340,22 +3340,22 @@ const processedData = {
         "className": "境内债券",
         "classCode": "CHINA_BOND",
         "unit": 8,
-        "percent": 0.0593,
-        "accProfitRate": 0.3419
-      },
-      {
-        "className": "现金",
-        "classCode": "CASH",
-        "unit": 30,
-        "percent": 0.2388,
-        "accProfitRate": 0.3144
+        "percent": 0.0584,
+        "accProfitRate": 0.3429
       },
       {
         "className": "A股",
         "classCode": "CHINA_STOCK",
         "unit": 85,
-        "percent": 0.5144,
-        "accProfitRate": 0.3075
+        "percent": 0.5127,
+        "accProfitRate": 0.3202
+      },
+      {
+        "className": "现金",
+        "classCode": "CASH",
+        "unit": 32,
+        "percent": 0.2517,
+        "accProfitRate": 0.3156
       },
       {
         "className": "原油",
@@ -3367,16 +3367,16 @@ const processedData = {
       {
         "className": "海外新兴市场股票",
         "classCode": "OVERSEA_STOCK_EMERGING",
-        "unit": 21,
-        "percent": 0.137,
-        "accProfitRate": 0.1731
+        "unit": 19,
+        "percent": 0.1268,
+        "accProfitRate": 0.2314
       },
       {
         "className": "海外债券",
         "classCode": "OVERSEA_BOND",
         "unit": 3,
-        "percent": 0.0242,
-        "accProfitRate": 0.0637
+        "percent": 0.024,
+        "accProfitRate": 0.0727
       }
     ]
   }
