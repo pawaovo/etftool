@@ -1,5 +1,5 @@
 {
-  "routes": [
+  "rewrites": [
     { "src": "/", "dest": "/150plan.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
