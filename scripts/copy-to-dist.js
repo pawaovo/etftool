@@ -125,6 +125,9 @@ function build() {
   copySingleFile(path.join(publicDir, 'asset-distribution-chart.js'), path.join(distDir, 'asset-distribution-chart.js'));
   copyDirectory(path.join(gridDir, 'js'), path.join(distDir, 'grid', 'js'));
   copySingleFile(path.join(srcJsDir, 'processed-data.js'), path.join(distDir, 'processed-data.js'));
+  // -- 添加调试步骤：将处理后的数据复制为 txt 文件，方便在线查看 --
+  copySingleFile(path.join(srcJsDir, 'processed-data.js'), path.join(distDir, 'debug', 'processed-data.txt'));
+  // -- 调试步骤结束 --
 
   // 4. 复制原始数据文件 (从 src/data/ 到 dist/data/)
   console.log("\\n--- 复制原始数据文件 ---");
