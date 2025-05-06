@@ -1471,32 +1471,28 @@ function updateEtfCardsWithProcessedData(processedAssets) {
                 return;
             }
             
-            // 更新最后操作信息
-            const operationRow = card.querySelector('.fund-data-row:first-child');
-            if (operationRow) {
-                const valueElement = operationRow.querySelector('.fund-value');
-                if (valueElement) {
-                    if (matchedFund.latestOperation) {
-                        // 对于已清仓基金，强制设置操作类型为"卖出"
-                        if (isDisabled && matchedFund.latestOperation.tradeType) {
-                            matchedFund.latestOperation.tradeType = "卖出";
-                        }
-                        
-                        // 使用displayText字段或者生成文本
-                        const displayText = matchedFund.latestOperation.displayText || 
-                                          `${matchedFund.latestOperation.tradeType} (${matchedFund.latestOperation.operationDate})`;
-                        console.log(`更新基金[${fundCode}]的最后操作信息: ${displayText}`);
-                        valueElement.textContent = displayText;
-                        
-                        // 将操作时间作为数据属性存储在卡片上，用于排序
-                        if (matchedFund.latestOperation.navDate) {
-                            card.dataset.operationDate = matchedFund.latestOperation.navDate;
-                        }
-                    } else {
-                        valueElement.textContent = "暂无记录";
-                    }
-                }
+            // --- REMOVED old logic that manually updated the first row ---
+            // const operationRow = card.querySelector('.fund-data-row:first-child');
+            // if (operationRow) { ... }
+
+            // --- ADDED call to updateOperationInfo --- 
+            // Prepare operationInfo object expected by updateOperationInfo
+            let operationInfoForUpdate = null;
+            if (matchedFund.latestOperation) {
+                // For disabled (cleared) funds, force type to '卖出'
+                const type = isDisabled ? "卖出" : matchedFund.latestOperation.tradeType;
+                operationInfoForUpdate = {
+                    type: type,
+                    shares: matchedFund.latestOperation.shares, // Ensure 'shares' field exists in processedData or adjust accordingly
+                    date: matchedFund.latestOperation.navDate // Use the timestamp
+                };
+                 // Set data attribute for sorting
+                card.dataset.operationDate = matchedFund.latestOperation.navDate;
             }
+
+            // Call the refined function to update operation details
+            updateOperationInfo(card, operationInfoForUpdate);
+            // -------------------------------------------
             
             // 创建用于updateFundCard的基金信息对象
             const fundInfo = {
@@ -1945,7 +1941,7 @@ function createFundCard(fund) {
         <div class="fund-data">
             <div class="fund-data-row">
                 <span class="fund-label">最后操作</span>
-                <span class="fund-value">数据加载中...</span>
+                <span class="fund-value operation-details">数据加载中...</span>
             </div>
     `;
     
