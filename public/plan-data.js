@@ -23,121 +23,7 @@
  * - updateFundStatusDouble: 更新资金状况显示
  */
 
-/**
- * 计划数据页面JavaScript
- * 用于处理ETF计划数据展示、交互和数据加载
- */
-
-// 全局变量，用于存储调整数据
-let adjustData = [];
-
-// 添加内联的日期工具函数作为备份，确保在找不到dateUtils.js文件时也能正常工作
-const inlineDateUtils = {
-    /**
-     * 将毫秒时间戳转换为标准日期格式（YYYY-MM-DD）
-     * @param {number} timestamp - 毫秒级时间戳
-     * @returns {string} 格式化的日期字符串
-     */
-    convertTimestampToDate: function(timestamp) {
-        try {
-            // 确保timestamp是数字
-            timestamp = parseInt(timestamp);
-            if (isNaN(timestamp)) {
-                console.warn('时间戳格式无效:', timestamp);
-                return '--';
-            }
-            
-            // 创建Date对象
-            const date = new Date(timestamp);
-            
-            // 获取中国时区(UTC+8)的年、月、日
-            // 使用toLocaleDateString，指定中文区域和Asia/Shanghai时区
-            const options = { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit',
-                timeZone: 'Asia/Shanghai'
-            };
-            
-            // 尝试使用toLocaleDateString
-            try {
-                return date.toLocaleDateString('zh-CN', options).replace(/\//g, '-');
-            } catch (e) {
-                console.warn('toLocaleDateString出错，使用替代方法:', e);
-                
-                // 备用方案：手动提取日期
-                // 注意：这种方法可能不会正确处理时区
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            }
-        } catch (error) {
-            console.error('日期转换错误:', error);
-            return '--';
-        }
-    }
-};
-
-// 确保全局dateUtils对象存在，如果不存在则使用内联版本
-if (typeof window.dateUtils === 'undefined') {
-    window.dateUtils = inlineDateUtils;
-    console.log('未找到dateUtils.js，使用内联版本');
-}
-
-// 页面加载时检查dateUtils.js是否已加载
-document.addEventListener('DOMContentLoaded', function() {
-    // 尝试加载dateUtils.js如果还没加载
-    if (typeof window.dateUtils === 'undefined' || window.dateUtils === inlineDateUtils) {
-        console.log('尝试动态加载dateUtils.js...');
-        
-        const script = document.createElement('script');
-        script.src = 'dateUtils.js';
-        script.onload = function() {
-            console.log('dateUtils.js 加载成功');
-        };
-        script.onerror = function() {
-            console.warn('无法加载dateUtils.js，继续使用内联版本');
-        };
-        document.head.appendChild(script);
-    } else {
-        console.log('dateUtils.js 已加载');
-    }
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // 加载dateUtils.js
-    loadDateUtilsScript().then(() => {
-        console.log('日期工具已加载');
-        
-        // 1. Basic page setup (needs DOM ready)
-        initPlanPage(); 
-        
-        // 2. Create the asset group and card STRUCTURE (needs processedData, generates DOM)
-        // Assuming loadAssetInfo uses processedData synchronously after initPlanPage:
-        loadAssetInfo();
-
-        // 3. Load additional data for headers (async OK)
-        loadAssetLatestOperationTime();
-        
-        // 4. NOW load data to UPDATE the existing card elements (needs DOM structure from step 2 and dateUtils)
-        loadEtfCardData(); // This should call updateEtfCardsWithProcessedData
-
-        // 5. Apply colors after cards are created and potentially updated
-        setTimeout(setupFundCardColors, 1500); // Slightly longer delay might be needed
-
-    }).catch(error => {
-        console.error('日期工具加载失败:', error);
-        // 如果 dateUtils 加载失败，显示错误信息，阻止进一步执行依赖它的代码
-        alert('关键日期工具加载失败，页面功能可能不完整！请检查网络连接或刷新重试。');
-        // 移除依赖 dateUtils 的调用
-        // initPlanPage();
-        // setupFundCardColors();
-        // loadAssetInfo();
-        // loadAssetLatestOperationTime();
-        // loadEtfCardData();
-    });
-});
+// --- Function Definitions Start ---
 
 /**
  * 加载dateUtils.js脚本
@@ -146,14 +32,21 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadDateUtilsScript() {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = 'dateUtils.js';
+        script.src = 'dateUtils.js'; // 确保路径相对于 HTML 文件
         script.onload = () => {
             console.log('dateUtils.js 加载成功');
-            resolve();
+            // 假设 dateUtils.js 将其功能附加到 window.dateUtils
+            if (typeof window.dateUtils !== 'undefined') {
+                resolve();
+            } else {
+                console.warn('dateUtils.js 已加载，但 window.dateUtils 未定义');
+                // 仍然 resolve，让后续逻辑使用内联备份
+                resolve(); 
+            }
         };
         script.onerror = (err) => {
             console.error('dateUtils.js 加载失败:', err);
-            reject(err);
+            reject(err); // reject Promise 让 catch 处理
         };
         document.head.appendChild(script);
     });
@@ -177,51 +70,16 @@ function initPlanPage() {
     if (typeof processedData !== 'undefined') {
         console.log('找到预处理数据，将使用它来更新UI');
         
-        // 设置一个短暂的延迟，确保DOM已完全加载
-        setTimeout(() => {
-            // 网格策略页面不需要更新资金状况和资产排名等内容
-            if (!isGridPlan) {
-                // 更新资金状况双行显示
-                updateFundStatusDouble(processedData);
-                
-                // 如果有预处理好的资产排名数据，使用它来更新UI
-                if (processedData.assetRankings && processedData.assetRankings.byUnit) {
-                    // 更新每个资产项的数据
-                    processedData.assetRankings.byUnit.forEach(asset => {
-                        // 更新资产项
-                        updateAssetRankingItem(
-                            asset.className,
-                            asset.unit,
-                            asset.percent * 100, // 转换为百分比
-                            asset.accProfitRate * 100 // 转换为百分比
-                        );
-                    });
-                } else {
-                    // 如果没有assetRankings，fallback到原来的方法
-                    console.log('未找到预处理的资产排名数据，使用assetDistribution');
-                    const assetDistribution = processedData.summary.assetDistribution;
-                    
-                    // 遍历所有大类资产，更新资产排名列表
-                    for (const className in assetDistribution) {
-                        const assetData = assetDistribution[className];
-                        updateAssetRankingItem(
-                            className, 
-                            assetData.unit, 
-                            assetData.percent * 100, 
-                            assetData.accProfitRate * 100
-                        );
-                    }
-                }
-            }
-            
-            // 所有页面都需要加载ETF卡片数据
-            loadEtfCardData();
-            
-            // 设置基金卡片颜色
-            setTimeout(setupFundCardColors, 500);
-        }, 100);
+        // 网格策略页面不需要更新资金状况和资产排名等内容
+        if (!isGridPlan) {
+            // 更新资金状况双行显示
+            updateFundStatusDouble(processedData);
+            // 更新资产排名的逻辑已移至 loadAssetInfo()
+        }
+        // ETF 卡片数据加载和颜色设置已移至 DOMContentLoaded
     } else {
         console.warn('未找到预处理数据，将尝试通过fetch或XHR加载数据');
+        // 实际数据加载应在 DOMContentLoaded 中触发
     }
 
     // 设置计划标签切换
@@ -235,9 +93,6 @@ function initPlanPage() {
         // 设置资产项点击
         setupAssetItems();
     }
-    
-    // 加载初始数据 (移除，因为数据应来自 processed-data.js)
-    // loadPlanData();
 }
 
 /**
@@ -317,212 +172,6 @@ function setupAssetItems() {
 }
 
 /**
- * 加载计划数据 (此函数可能不再需要，因为数据应来自 processed-data.js)
- */
-async function loadPlanData() {
-    console.log('加载计划数据');
-    
-    try {
-        // 首先检查localStorage中是否有更新的数据
-        const storedData = localStorage.getItem('fundData');
-        let fundData;
-        
-        if (storedData) {
-            console.log('使用localStorage中的数据');
-            fundData = JSON.parse(storedData);
-        } else {
-            // 如果没有，则从文件加载
-            console.log('从文件加载数据');
-            const response = await fetch('data/fund-data.json');
-            fundData = await response.json();
-        }
-        
-        // 更新UI以显示数据
-        updateFundStatus(fundData.fundStatus, fundData.lastUpdate);
-        
-        // 获取排序方式
-        const sortBy = getSortParam();
-        updateAssetList(fundData.assets, sortBy);
-        
-        // 获取选中的资产类型，如果有
-        const selectedAssetType = getSelectedAssetType();
-        if (selectedAssetType) {
-            // 找到相应的资产数据
-            const selectedAsset = fundData.assets.find(asset => asset.type === selectedAssetType);
-            if (selectedAsset) {
-                loadAssetDetails(selectedAsset);
-            }
-        }
-        
-        console.log('数据加载完成');
-    } catch (error) {
-        console.error('加载数据失败:', error);
-    }
-}
-
-/**
- * 更新资金状况区域
- */
-function updateFundStatus(fundStatus, lastUpdate) {
-    // 更新资金数据
-    document.querySelector('.invested-amount').textContent = `¥${fundStatus.invested.toLocaleString()}`;
-    document.querySelector('.cash-amount').textContent = `¥${fundStatus.cash.toLocaleString()}`;
-    document.querySelector('.ratio-value').textContent = `${fundStatus.ratio}%`;
-    
-    // 更新最后更新时间
-    const dateElem = document.querySelector('.update-date');
-    if (dateElem) {
-        dateElem.textContent = `数据更新：${lastUpdate}`;
-    }
-}
-
-/**
- * 更新资产列表
- */
-function updateAssetList(assets, sortBy = 'shares') {
-    console.log(`按${sortBy}排序资产列表`);
-    
-    // 对资产进行排序
-    const sortedAssets = [...assets].sort((a, b) => {
-        if (sortBy === 'shares') {
-            return b.shares - a.shares; // 份数降序
-        } else {
-            return b.profit - a.profit; // 收益率降序
-        }
-    });
-    
-    // 获取资产列表容器
-    const assetList = document.querySelector('.asset-list');
-    if (!assetList) return;
-    
-    // 清空现有内容
-    assetList.innerHTML = '';
-    
-    // 添加新的资产项
-    sortedAssets.forEach(asset => {
-        const assetItem = document.createElement('div');
-        assetItem.className = 'asset-item';
-        assetItem.dataset.type = asset.type;
-        
-        // 根据收益率设置样式
-        const profitClass = asset.profit >= 0 ? 'positive' : 'negative';
-        
-        assetItem.innerHTML = `
-            <div class="asset-icon ${asset.icon}"></div>
-            <div class="asset-info">
-                <div class="asset-name">${asset.name}</div>
-                <div class="asset-data">
-                    <span class="asset-shares">${asset.shares}份</span>
-                    <span class="asset-ratio">${asset.ratio}%</span>
-                </div>
-            </div>
-            <div class="asset-profit ${profitClass}">${asset.profit}%</div>
-        `;
-        
-        // 添加点击事件
-        assetItem.addEventListener('click', () => {
-            // 移除之前选中的项
-            document.querySelectorAll('.asset-item.selected').forEach(item => {
-                item.classList.remove('selected');
-            });
-            
-            // 标记当前项为选中
-            assetItem.classList.add('selected');
-            
-            // 加载资产详情
-            loadAssetDetails(asset);
-            
-            // 更新URL参数
-            updateUrlParams('asset', asset.type);
-        });
-        
-        assetList.appendChild(assetItem);
-    });
-    
-    // 如果URL中有选定的资产，选中它
-    const selectedAssetType = getSelectedAssetType();
-    if (selectedAssetType) {
-        const selectedItem = assetList.querySelector(`.asset-item[data-type="${selectedAssetType}"]`);
-        if (selectedItem) {
-            selectedItem.classList.add('selected');
-        }
-    }
-}
-
-/**
- * 加载资产详情
- */
-function loadAssetDetails(asset) {
-    console.log(`加载资产[${asset.name}]详情`);
-    
-    // 更新资产详情容器标题
-    const detailTitle = document.querySelector('.asset-detail-title');
-    if (detailTitle) {
-        detailTitle.innerHTML = `
-            <span class="asset-icon ${asset.icon}"></span>
-            <h3>${asset.name} <span class="detail-shares">${asset.shares}份</span></h3>
-        `;
-    }
-    
-    // 更新资产详情容器内容
-    const detailContent = document.querySelector('.asset-detail-content');
-    if (!detailContent) return;
-    
-    // 清空现有内容
-    detailContent.innerHTML = '';
-    
-    // 添加每个基金的卡片
-    asset.funds.forEach(fund => {
-        // 根据预估价格差设置样式
-        const priceClass = fund.priceDiff >= 0 ? 'positive' : 'negative';
-        const headerClass = fund.priceDiff >= 0 ? 'positive' : 'negative';
-        const priceSignChar = fund.priceDiff >= 0 ? '+' : '';
-        
-        // 确保基金代码始终显示为 6 位数字
-        const fundCode = String(fund.code).padStart(6, '0');
-        
-        const fundCard = document.createElement('div');
-        fundCard.className = 'fund-card';
-        fundCard.innerHTML = `
-            <div class="fund-header ${headerClass}">
-                <div class="fund-title-group">
-                    <span class="fund-title">${fund.name}</span>
-                    <span class="fund-code">${fundCode}</span>
-                </div>
-            </div>
-            <div class="fund-data">
-                <div class="fund-data-row">
-                    <span class="fund-label">场内参考代码</span>
-                    <span class="fund-value">${fund.inMarketCode || '无'}</span>
-                </div>
-                <div class="fund-data-row">
-                    <span class="fund-label">E大平均持有价格</span>
-                    <span class="fund-value">${fund.avgPrice}</span>
-                </div>
-                <div class="fund-data-row">
-                    <span class="fund-label">E大持仓份数</span>
-                    <span class="fund-value">${fund.shares}</span>
-                </div>
-                <div class="fund-data-row">
-                    <span class="fund-label">持仓占比</span>
-                    <span class="fund-value">${fund.ratio}%</span>
-                </div>
-                <div class="fund-data-row">
-                    <span class="fund-label">预估净值</span>
-                    <span class="fund-value">${fund.estValue}</span>
-                </div>
-                <div class="fund-data-row">
-                    <span class="fund-label">预估价格差</span>
-                    <span class="fund-value ${priceClass}">${priceSignChar}${fund.priceDiff}%</span>
-                </div>
-            </div>
-        `;
-        
-        detailContent.appendChild(fundCard);
-    });
-}
-
-/**
  * 从URL获取选定的资产类型
  */
 function getSelectedAssetType() {
@@ -578,25 +227,18 @@ function sortAssets(sortType) {
         console.log(`使用预处理的排序结果，共${sortedAssets.length}项`);
         
         // 清空当前资产列表的选中状态
-        const assetItems = Array.from(document.querySelectorAll('.asset-item'));
+        const assetItems = Array.from(assetList.querySelectorAll('.asset-item'));
         assetItems.forEach(item => item.classList.remove('active'));
         
         // 遍历排序后的资产，更新资产排名列表
         sortedAssets.forEach(asset => {
             const assetType = getAssetTypeFromClassName(asset.className);
-            const assetItem = document.querySelector(`.asset-item[data-asset-type="${assetType}"]`);
+            const assetItem = assetList.querySelector(`.asset-item[data-asset-type="${assetType}"]`);
             
             if (assetItem) {
                 // 将该项移动到列表末尾，实现排序
                 assetList.appendChild(assetItem);
-                
-                // 更新份数和占比显示
-                updateAssetRankingItem(
-                    asset.className,
-                    asset.unit,
-                    asset.percent * 100, // 转换为百分比
-                    asset.accProfitRate * 100 // 转换为百分比
-                );
+                // 数据更新由 loadAssetInfo 负责
             }
         });
         
@@ -605,7 +247,7 @@ function sortAssets(sortType) {
         if (firstAssetItem) {
             firstAssetItem.classList.add('active');
             const firstAssetType = firstAssetItem.getAttribute('data-asset-type');
-            showAssetDetails(firstAssetType);
+            showAssetDetails(firstAssetType); // 触发滚动
         }
         
         // 更新URL参数
@@ -614,60 +256,37 @@ function sortAssets(sortType) {
         // 兼容旧代码：如果没有预处理数据，使用原来的DOM操作方式排序
         console.warn('未找到预处理的资产排名数据，使用DOM操作排序');
         
-        // 获取所有资产项
         const assetList = document.querySelector('.asset-list');
-        const assetItems = Array.from(document.querySelectorAll('.asset-item'));
+        const assetItems = Array.from(assetList.querySelectorAll('.asset-item'));
         
         // 根据排序方式进行排序
         if (sortType === 'shares') {
-            // 按份数排序
             assetItems.sort((a, b) => {
-                const aShares = a.querySelector('.asset-shares').textContent;
-                const bShares = b.querySelector('.asset-shares').textContent;
-                
-                // 提取数字部分，排除"份"和"%"
+                const aShares = a.querySelector('.asset-shares')?.textContent || '0份';
+                const bShares = b.querySelector('.asset-shares')?.textContent || '0份';
                 const aMatch = aShares.match(/(\d+)份/);
                 const bMatch = bShares.match(/(\d+)份/);
-                
-                // 已清仓的项目放最后
-                if (aShares.includes('已清仓')) return 1;
-                if (bShares.includes('已清仓')) return -1;
-                
                 return bMatch && aMatch ? parseInt(bMatch[1]) - parseInt(aMatch[1]) : 0;
             });
         } else if (sortType === 'profit') {
-            // 按收益率排序
             assetItems.sort((a, b) => {
-                const aProfit = a.querySelector('.asset-profit').textContent;
-                const bProfit = b.querySelector('.asset-profit').textContent;
-                
-                // 提取数字部分，包括"+"或"-"符号
-                const aMatch = aProfit.match(/([\+\-]\d+\.\d+)%/);
-                const bMatch = bProfit.match(/([\+\-]\d+\.\d+)%/);
-                
+                const aProfit = a.querySelector('.asset-profit')?.textContent || '+0.00%';
+                const bProfit = b.querySelector('.asset-profit')?.textContent || '+0.00%';
+                const aMatch = aProfit.match(/([+\-]?\d+(\.\d+)?)%/);
+                const bMatch = bProfit.match(/([+\-]?\d+(\.\d+)?)%/);
                 return bMatch && aMatch ? parseFloat(bMatch[1]) - parseFloat(aMatch[1]) : 0;
             });
         }
         
-        // 重新添加排序后的资产项
-        assetItems.forEach(item => {
-            assetList.appendChild(item);
-        });
+        assetItems.forEach(item => assetList.appendChild(item));
         
-        // 更新展示的详情，选中第一个资产
         if (assetItems.length > 0) {
-            // 移除所有active类
             assetItems.forEach(item => item.classList.remove('active'));
-            
-            // 给第一个添加active类
             assetItems[0].classList.add('active');
-            
-            // 获取第一个资产的类型并显示其详情
             const firstAssetType = assetItems[0].getAttribute('data-asset-type');
-            showAssetDetails(firstAssetType);
+            showAssetDetails(firstAssetType); // 触发滚动
         }
         
-        // 更新URL参数
         updateUrlParams('sort', sortType);
     }
 }
@@ -683,13 +302,11 @@ function sortAssets(sortType) {
  * @param {string} assetType - 资产类型
  */
 function showAssetDetails(assetType) {
-    // 如果是现金资产，不做任何操作
     if (assetType === 'cash') {
         console.log('现金资产无详情可显示，已跳过操作');
         return;
     }
     
-    // 标记选中的资产项
     const assetItems = document.querySelectorAll('.asset-item');
     assetItems.forEach(item => {
         if (item.dataset.assetType === assetType) {
@@ -699,10 +316,7 @@ function showAssetDetails(assetType) {
         }
     });
     
-    // 滚动到对应的资产组
     scrollToAssetGroup(assetType);
-    
-    // 更新URL参数
     updateUrlParams('asset', assetType);
 }
 
@@ -711,411 +325,88 @@ function showAssetDetails(assetType) {
  * @param {string} assetType - 资产类型
  */
 function scrollToAssetGroup(assetType) {
-    // 如果是现金资产，不执行滚动
     if (assetType === 'cash') {
         return;
     }
     
     console.log(`尝试滚动到资产组: ${assetType}`);
     
-    // 获取所有资产组
-    const assetGroups = document.querySelectorAll('.asset-group');
-    let targetGroup = null;
+    // 优先使用 data-asset-type 属性查找
+    const targetGroup = document.querySelector(`.asset-group[data-asset-type="${assetType}"]`);
     
-    // 遍历所有资产组，查找匹配的资产类型
-    for (const group of assetGroups) {
-        const assetIcon = group.querySelector('.asset-icon');
-        if (assetIcon && assetIcon.classList.contains(assetType)) {
-            targetGroup = group;
-            console.log(`找到匹配的资产组: ${assetType}`);
-            break;
-        }
-    }
-    
-    // 如果未找到匹配的资产组，尝试使用特殊处理
-    if (!targetGroup && assetType === 'cn-bond') {
-        console.log('使用特殊处理查找境内债券资产组');
-        // 查找标题中包含"境内债券"的资产组
-        for (const group of assetGroups) {
-            const title = group.querySelector('.asset-group-header h4');
-            if (title && title.textContent.includes('境内债券')) {
-                targetGroup = group;
-                console.log('找到境内债券资产组');
-                break;
-            }
-        }
-    }
-    
-    // 如果找到目标资产组，滚动到其位置
     if (targetGroup) {
+        console.log(`找到匹配的资产组: ${assetType}`);
         targetGroup.scrollIntoView({ behavior: 'smooth', block: 'start' });
         console.log(`已滚动到资产组: ${assetType}`);
     } else {
         console.warn(`未找到资产组: ${assetType}`);
+        // 可以添加后备查找逻辑（例如通过图标或标题），但优先确保 data-asset-type 正确设置
     }
 }
 
 /**
  * 设置基金卡片颜色
- * 根据现值对比平均单价设置卡片标题栏的颜色
+ * 根据现值对比平均单价设置卡片标题栏的颜色 (现在基于 compareWithAvg)
  */
 function setupFundCardColors() {
-    console.log('设置基金卡片颜色');
-    // 查找所有基金卡片
+    console.log('设置基金卡片颜色 (基于 compareWithAvg)');
     const fundCards = document.querySelectorAll('.fund-card');
     
     fundCards.forEach(card => {
-        // 查找卡片中的"现值对比平均单价"元素
-        const priceChangeElements = card.querySelectorAll('.fund-data-row .fund-label');
-        let priceChangeElement = null;
-        
-        // 查找包含"现值对比平均单价"文本的标签元素
-        for (let i = 0; i < priceChangeElements.length; i++) {
-            if (priceChangeElements[i].textContent.includes('现值对比平均单价')) {
-                // 获取对应的值元素
-                priceChangeElement = priceChangeElements[i].nextElementSibling;
-                break;
-            }
-        }
-        
-        // 如果找到了"现值对比平均单价"元素
-        if (priceChangeElement) {
-            // 获取卡片的标题元素
-            const fundHeader = card.querySelector('.fund-header');
-            
-            // 从文本中提取百分比值
-            const percentText = priceChangeElement.textContent;
-            const percentMatch = percentText.match(/([+-]?\d+(\.\d+)?)%/);
-            
-            if (percentMatch) {
-                const percentValue = parseFloat(percentMatch[1]);
-                
-                // 根据百分比的正负值设置对应的类名
-                if (percentValue >= 0) {
-                fundHeader.classList.add('positive');
-                fundHeader.classList.remove('negative');
-                } else {
-                fundHeader.classList.add('negative');
-                fundHeader.classList.remove('positive');
-                }
-            }
+        const fundHeader = card.querySelector('.fund-header');
+        if (!fundHeader) return;
+
+        // 颜色应由 createFundCard 根据 compareWithAvg 直接设置
+        // 此函数可作为后备或移除
+        if (!(fundHeader.classList.contains('positive') || fundHeader.classList.contains('negative'))) {
+            console.warn(`卡片 ${card.dataset.fundCode} 缺少颜色类，createFundCard可能未正确设置`);
+            // 可选：添加基于DOM的后备颜色设置逻辑，但不推荐
         }
     });
 }
 
 /**
- * 更新HTML中各大类资产的最后操作日期
- */
-function updateAssetOperationDates(assetOperationTimes) {
-    const assetGroups = document.querySelectorAll('.asset-group');
-    
-    assetGroups.forEach(group => {
-        const titleElement = group.querySelector('.asset-group-header h4');
-        if (!titleElement) return;
-        
-        // 提取标题中的资产类型
-        let assetType = titleElement.textContent.split(' ')[0];
-        
-        // 处理特殊情况
-        if (assetType === '现金(未投入部分)') {
-            assetType = '现金';
-        } else if (assetType.includes('境内')) {
-            assetType = '境内债券';
-        }
-        
-        // 如果找到匹配的资产类型，更新日期
-        if (assetOperationTimes.hasOwnProperty(assetType)) {
-            const dateElement = group.querySelector('.detail-date');
-            if (dateElement) {
-                dateElement.textContent = assetOperationTimes[assetType];
-            }
-        }
-    });
-}
-
-/**
- * 加载大类资产的最后操作时间
- * 通过分析调整记录来确定各个大类资产的最后操作时间
- */
-async function loadAssetLatestOperationTime() {
-    try {
-        let adjustmentData;
-        
-        // 尝试通过fetch加载数据
-        try {
-            // 从adjust.json获取调整记录
-            const response = await fetch('/data/adjust.json', { // 修改路径
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json'
-              }
-            });
-            adjustmentData = await response.json();
-        } catch (fetchError) {
-            console.warn('通过fetch加载调整数据失败，尝试使用内联数据:', fetchError);
-            
-            // 如果fetch失败（可能是因为CORS限制），使用内联数据或备用方法
-            if (window.adjustData) {
-                // 如果loadEtfCardData已经加载了数据
-                console.log('使用window.adjustData数据');
-                adjustmentData = window.adjustData;
-            } else {
-                try {
-                    // 使用XMLHttpRequest加载
-                    const result = await loadAdjustDataWithXHR();
-                    adjustmentData = result;
-                } catch (xhrError) {
-                    console.error('备用数据加载方法也失败:', xhrError);
-                    throw new Error('无法加载调整数据：' + xhrError.message);
-                }
-            }
-        }
-        
-        // 定义大类资产及其最新操作时间
-        const assetOperationTimes = {
-            'A股': 0,
-            '海外债券': 0,
-            '海外新兴市场股票': 0,
-            '海外成熟市场股票': 0,
-            '境内债券': 0,
-            '现金': 0,
-            '黄金': 0,
-            '原油': 0
-        };
-        
-        // 遍历所有调整记录
-        if (adjustmentData && Array.isArray(adjustmentData)) {
-            adjustmentData.forEach(adjustment => {
-                // 确保orders字段存在且是数组
-                if (adjustment.orders && Array.isArray(adjustment.orders)) {
-                    // 遍历每个调整中的所有订单
-                    adjustment.orders.forEach(order => {
-                        const largeClass = order.largeClass;
-                        const navDate = order.navDate || adjustment.adjustTxnDate;
-                        
-                        // 如果这个大类资产存在且操作时间更新，则更新最新操作时间
-                        if (largeClass && assetOperationTimes.hasOwnProperty(largeClass)) {
-                            if (navDate > assetOperationTimes[largeClass]) {
-                                assetOperationTimes[largeClass] = navDate;
-                            }
-                        }
-                    });
-                }
-            });
-        } else {
-            console.error('调整数据格式不正确');
-        }
-        
-        // 将时间戳转换为可读日期
-        for (const assetType in assetOperationTimes) {
-            if (assetOperationTimes[assetType] > 0) {
-                assetOperationTimes[assetType] = convertNavdataToDate(assetOperationTimes[assetType]);
-            } else {
-                assetOperationTimes[assetType] = '暂无操作';
-            }
-        }
-        
-        // 更新HTML中的日期信息
-        updateAssetOperationDates(assetOperationTimes);
-        
-        console.log('资产最后操作时间加载完成', assetOperationTimes);
-    } catch (error) {
-        console.error('获取资产最后操作时间失败:', error);
-    }
-}
-
-/**
- * 使用XMLHttpRequest加载调整数据
- */
-function loadAdjustDataWithXHR() {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.overrideMimeType("application/json");
-        xhr.open('GET', 'adjust.json', true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try {
-                        const data = JSON.parse(xhr.responseText);
-                        resolve(data);
-                    } catch (error) {
-                        reject(new Error('调整数据解析失败: ' + error.message));
-                    }
-                } else {
-                    reject(new Error('加载调整数据失败: ' + xhr.status));
-                }
-            }
-        };
-        xhr.send(null);
-    });
-}
-
-// 将adjustTxnDate数值转换为可读的日期格式
-function convertNavdataToDate(timestamp) {
-    if (!timestamp) return '未知日期';
-    
-    // 创建日期对象
-    const date = new Date(timestamp);
-    
-    // 检查日期是否有效
-    if (isNaN(date.getTime())) {
-        return '无效日期';
-    }
-    
-    // 格式化为YYYY-MM-DD
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}`;
-}
-
-/**
- * 加载资产信息
- * 从etf.json中获取各大类资产的信息并更新界面显示
+ * 加载资产信息 (简化)
+ * 主要功能变为更新左侧资产排名列表。
  */
 async function loadAssetInfo() {
-    try {
-        let etfData;
-        
-        // 尝试通过fetch加载数据
-        try {
-            // 从etf.json获取ETF数据
-            const response = await fetch('/data/etf.json', { // 修改路径
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json'
-              }
-            });
-            etfData = await response.json();
-        } catch (fetchError) {
-            console.warn('通过fetch加载ETF数据失败，尝试使用内联数据:', fetchError);
-            
-            // 如果fetch失败（可能是因为CORS限制），使用内联数据或备用方法
-            if (window.etfData) {
-                // 如果已经有加载好的ETF数据
-                console.log('使用window.etfData数据');
-                etfData = window.etfData;
-            } else {
-                try {
-                    // 使用XMLHttpRequest加载
-                    const result = await loadEtfDataWithXHR();
-                    etfData = result;
-                } catch (xhrError) {
-                    console.error('备用数据加载方法也失败:', xhrError);
-                    throw new Error('无法加载ETF数据：' + xhrError.message);
-                }
-            }
-        }
-        
-        if (!etfData || !etfData.composition) {
-            console.error('ETF数据格式不正确');
-            return;
-        }
-        
-        // 将ETF数据保存到全局变量，供其他函数使用
-        window.etfData = etfData;
-        
-        // 检查页面结构
-        const assetRankingList = document.querySelector('.asset-list');
-        const fundCardsContainer = document.querySelector('.fund-cards-container');
-        
-        if (!assetRankingList) {
-            console.error('未找到.asset-list元素，无法更新资产排名');
-        }
-        
-        if (!fundCardsContainer) {
-            console.error('未找到.fund-cards-container元素，无法更新资产详情');
-        }
-        
-        // 更新左侧资产排名列表
-        if (assetRankingList) {
-            // 清空现有内容（可选，如果你想完全重建）
-            // assetRankingList.innerHTML = '';
-            
-            // 遍历所有大类资产
-            etfData.composition.forEach(assetClass => {
-                const className = assetClass.className;
-                const unit = assetClass.unit;
-                const percent = assetClass.percent;
-                
-                // 获取累计收益率
-                let accProfitRate = assetClass.accProfitRate;
-                
-                // 特殊处理现金类资产，从compList中获取accProfit
-                if (assetClass.isCash && className === '现金' && 
-                    assetClass.compList && assetClass.compList.length > 0) {
-                    // 使用现金compList中的accProfit
-                    accProfitRate = assetClass.compList[0].accProfit || 0;
-                }
-                
-                // 更新左侧资产排名列表 - 确保乘以100
-                updateAssetRankingItem(className, unit, percent * 100, accProfitRate * 100);
-            });
-        }
-        
-        // 完全动态生成右侧资产详情部分
-        if (fundCardsContainer) {
-            // 使用新的方法动态生成资产组HTML
-            generateAssetGroupsHTML(etfData);
-        } else {
-            // 如果还是想保留原来的更新逻辑作为备选
-            console.warn('使用旧方法更新资产详情...');
-            
-            // 遍历所有大类资产
-            etfData.composition.forEach(assetClass => {
-                const className = assetClass.className;
-                const unit = assetClass.unit;
-                const percent = assetClass.percent;
-                const accProfitRate = assetClass.accProfitRate;
-                
-                // 更新右侧资产详情部分 - 确保乘以100
-                updateAssetDetailHeader(className, unit, percent * 100, accProfitRate * 100);
-            });
-        }
-        
-        console.log('资产信息加载完成');
-    } catch (error) {
-        console.error('获取资产信息失败:', error);
+    if (typeof processedData === 'undefined' || !processedData.summary || !processedData.assetRankings) {
+        console.warn('loadAssetInfo: 预处理数据不完整，无法更新左侧排名列表');
+        return;
     }
-}
 
-/**
- * 使用XMLHttpRequest加载ETF数据
- */
-function loadEtfDataWithXHR() {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.overrideMimeType("application/json");
-        xhr.open('GET', 'etf.json', true);
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try {
-                        const data = JSON.parse(xhr.responseText);
-                        resolve(data);
-                    } catch (error) {
-                        reject(new Error('ETF数据解析失败: ' + error.message));
-                    }
-                } else {
-                    reject(new Error('加载ETF数据失败: ' + xhr.status));
-                }
-            }
-        };
-        xhr.send(null);
-    });
+    console.log('loadAssetInfo: 使用预处理数据更新左侧资产排名列表');
+    
+    const assetRankingList = document.querySelector('.asset-list');
+    if (!assetRankingList) {
+        console.error('未找到.asset-list元素，无法更新资产排名');
+        return;
+    }
+    
+    // 使用排名数据更新左侧列表项
+    const rankingData = processedData.assetRankings.byUnit; // 或者根据当前排序选择
+    if (rankingData) {
+        rankingData.forEach(asset => {
+            updateAssetRankingItem(
+                asset.className,
+                asset.unit,
+                asset.percent * 100, // 转换为百分比
+                asset.accProfitRate * 100 // 转换为百分比
+            );
+        });
+    } else {
+        console.warn('未在预处理数据中找到 assetRankings.byUnit，无法更新左侧排名');
+    }
+    
+    console.log('左侧资产排名列表更新完成');
 }
 
 /**
  * 更新左侧资产排名列表中的项
  */
 function updateAssetRankingItem(className, unit, percent, accProfitRate) {
-    // --- DEBUGGING: Log input values ---
-    console.log(`updateAssetRankingItem for ${className}: unit=${unit}, percent=${percent}, accProfitRate=${accProfitRate}`);
-    // ----------------------------------
-
-    // 根据资产名称找到对应的元素
-    let assetType = getAssetTypeFromClassName(className);
+    // console.log(`updateAssetRankingItem for ${className}: unit=${unit}, percent=${percent}, accProfitRate=${accProfitRate}`);
+    const assetType = getAssetTypeFromClassName(className);
     const assetItem = document.querySelector(`.asset-item[data-asset-type="${assetType}"]`);
     
     if (!assetItem) {
@@ -1123,59 +414,34 @@ function updateAssetRankingItem(className, unit, percent, accProfitRate) {
         return;
     }
     
-    // 更新份数和占比
     const sharesElem = assetItem.querySelector('.asset-shares');
-    if (sharesElem) {
-        // 确保percent是以小数形式传入的，直接格式化为百分比显示
-        sharesElem.textContent = `${unit}份 (${percent.toFixed(2)}%)`;
-    }
-    
-    // 更新累计收益率
+    const ratioElem = assetItem.querySelector('.asset-ratio');
     const profitElem = assetItem.querySelector('.asset-profit');
+    
+    if (sharesElem) sharesElem.textContent = `${unit}份`;
+    if (ratioElem) ratioElem.textContent = `(${percent.toFixed(2)}%)`;
     if (profitElem) {
-        // 确保accProfitRate是以小数形式传入的，直接格式化为百分比显示
-        profitElem.textContent = `+${accProfitRate.toFixed(2)}%`;
+        profitElem.textContent = `${accProfitRate >= 0 ? '+' : ''}${accProfitRate.toFixed(2)}%`;
         profitElem.className = `asset-profit ${accProfitRate >= 0 ? 'positive' : 'negative'}`;
     }
 }
 
 /**
- * 更新右侧资产详情头部
+ * 更新右侧资产详情头部 (现在由 generateAssetGroupsHTML 处理)
  */
-function updateAssetDetailHeader(className, unit, percent, accProfitRate) {
-    // 找到对应的资产组
-    const assetGroupHeaders = document.querySelectorAll('.asset-group-header');
-    
-    assetGroupHeaders.forEach(header => {
-        const titleElem = header.querySelector('h4');
-        if (!titleElem) return;
-        
-        // 判断是否是当前处理的资产类别
-        let currentTitle = titleElem.textContent.split(' ')[0];
-        if ((className === '现金' && currentTitle.includes('现金')) ||
-            (className === '境内债券' && currentTitle.includes('境内')) ||
-            (currentTitle === className)) {
-            
-            // 输出日志用于调试
-            console.log(`更新${className}资产详情头部，份数:${unit}, 占比:${percent}, 收益率:${accProfitRate}`);
-            
-            // 更新份数和占比
-            const sharesElem = header.querySelector('.detail-shares');
-            if (sharesElem) {
-                // 确保percent是以小数形式传入的，直接格式化为百分比显示
-                sharesElem.textContent = `${unit}份 (${percent.toFixed(2)}%)`;
-            }
-            
-            // 更新累计收益率
-            const profitElem = header.querySelector('.detail-profit');
-            if (profitElem) {
-                // 确保accProfitRate是以小数形式传入的，直接格式化为百分比显示
-                profitElem.textContent = `累计收益率 +${accProfitRate.toFixed(2)}%`;
-                profitElem.className = `detail-profit ${accProfitRate >= 0 ? 'positive' : 'negative'}`;
-            }
-        }
-    });
-}
+// function updateAssetDetailHeader(className, unit, percent, accProfitRate) { ... }
+
+// 资产类型映射 (辅助)
+const assetTypeMap = {
+    'A股': 'a-stock',
+    '海外新兴市场股票': 'hk-stock',
+    '海外债券': 'global-bond',
+    '海外成熟市场股票': 'global-market',
+    '境内债券': 'cn-bond',
+    '现金': 'cash',
+    '黄金': 'gold',
+    '原油': 'oil'
+};
 
 /**
  * 获取资产类型标识符
@@ -1185,559 +451,164 @@ function updateAssetDetailHeader(className, unit, percent, accProfitRate) {
  * 必须确保HTML中的资产类型标识(data-asset-type)与此函数返回的值保持一致。
  * 
  * 特别注意：
- * - 境内债券统一使用 'cn-bond'，不要在HTML中使用 'domestic-bond'
- * - 若添加新的资产类型，需要在此函数中添加对应的映射关系
- * - 同时需要在CSS中添加对应的颜色样式
+ * - 境内债券统一使用 'cn-bond'
+ * - 若添加新的资产类型，需要在此函数和CSS中添加对应的映射关系和样式
  * 
  * @param {string} className - 大类资产名称
  * @returns {string} 对应的资产类型标识符
  */
 function getAssetTypeFromClassName(className) {
-    switch (className) {
-        case 'A股': return 'a-stock';
-        case '海外新兴市场股票': return 'hk-stock';
-        case '海外债券': return 'global-bond';
-        case '海外成熟市场股票': return 'global-market';
-        case '境内债券': return 'cn-bond';
-        case '现金': return 'cash';
-        case '黄金': return 'gold';
-        case '原油': return 'oil';
-        default: return className.toLowerCase().replace(/\s/g, '-');
-    }
+    return assetTypeMap[className] || className.toLowerCase().replace(/\s/g, '-');
 }
 
 /**
- * 加载ETF卡片数据
- * 从etf.json和adjust.json获取ETF基金的详细信息，更新卡片显示
+ * 加载并更新ETF卡片的操作信息 (简化)
+ * 现在主要负责调用 updateOperationInfo 来填充最后操作，并进行排序。
  */
 async function loadEtfCardData() {
-    try {
-        let etfData, adjustData;
-        
-        // 检查是否有预处理数据
-        if (typeof processedData !== 'undefined') {
-            console.log('使用预处理数据更新ETF卡片');
-            etfData = processedData.originalData;
-            updateEtfCardsWithProcessedData(processedData.assets);
-            
-            // 在更新完成后对卡片进行排序
-            sortFundCardsByOperationDate();
-            return;
-        }
-        
-        // 如果没有预处理数据，使用原始的加载方法
-        console.warn('未找到预处理数据，尝试通过fetch或XHR加载数据');
-        
-        // 尝试通过fetch加载数据
+    if (typeof processedData === 'undefined' || !processedData.assets) {
+        console.warn('loadEtfCardData: 预处理数据不完整，无法更新操作信息。');
+        return;
+    }
+    console.log('loadEtfCardData: 开始更新ETF卡片操作信息并排序');
+
+    const allFundCards = document.querySelectorAll('.fund-card');
+    
+    if (allFundCards.length === 0) {
+        console.warn('loadEtfCardData: 未找到任何ETF卡片元素。generateAssetGroupsHTML 是否已正确执行？');
+        return;
+    }
+    console.log(`loadEtfCardData: 找到 ${allFundCards.length} 个ETF卡片，准备更新操作信息...`);
+
+    allFundCards.forEach((card, index) => {
         try {
-            // 加载ETF数据
-            const etfResponse = await fetch('/data/etf.json', { // 修改路径
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json'
-              }
-            });
-            etfData = await etfResponse.json();
-            
-            // 加载调整数据
-            const adjustResponse = await fetch('/data/adjust.json', { // 修改路径
-              method: 'GET',
-              headers: {
-                'Accept': 'application/json'
-              }
-            });
-            adjustData = await adjustResponse.json(); // 存储到全局变量
-        } catch (fetchError) {
-            console.warn('通过fetch加载数据失败，尝试使用内联数据:', fetchError);
-            
-            // 如果fetch失败（可能是因为CORS限制），使用内联数据
-            try {
-                // 从加载数据的备用方法中获取
-                const data = await loadDataWithXHR();
-                etfData = data.etfData;
-                adjustData = data.adjustData;
-            } catch (xhrError) {
-                console.error('备用数据加载方法也失败:', xhrError);
-                throw new Error('无法加载数据：' + xhrError.message);
+            const fundCode = card.dataset.fundCode;
+            if (!fundCode) {
+                console.warn(`卡片 ${index} 缺少 data-fund-code 属性，跳过更新`);
+                return;
             }
-        }
-        
-        if (!etfData || !etfData.composition || !adjustData) {
-            console.error('数据格式不正确');
-            return;
-        }
-        
-        // 保存到全局变量，供其他函数使用
-        window.adjustData = adjustData;
-        
-        // 确保首先调用了generateAssetGroupsHTML来创建HTML结构
-        // 如果HTML结构还没创建，调用generateAssetGroupsHTML
-        const fundCardsContainer = document.querySelector('.fund-cards-container');
-        if (fundCardsContainer && fundCardsContainer.querySelectorAll('.asset-group').length === 0) {
-            console.log('HTML结构尚未创建，先生成HTML结构');
-            generateAssetGroupsHTML(etfData);
-        }
-        
-        console.log('ETF数据和调整数据加载成功，开始更新卡片...');
-        
-        // 获取所有ETF卡片（包括活跃和已清仓的）
-        const allFundCards = document.querySelectorAll('.fund-card');
-        const activeFundCards = document.querySelectorAll('.fund-card:not(.disabled)');
-        
-        console.log(`找到${activeFundCards.length}个活跃ETF卡片和${allFundCards.length - activeFundCards.length}个已清仓ETF卡片，准备更新数据...`);
-        
-        // 为每个卡片更新数据
-        allFundCards.forEach((card, index) => {
-            try {
-                // 获取ETF名称和代码
-                const fundTitleElement = card.querySelector('.fund-title');
-                const fundCodeElement = card.querySelector('.fund-code');
-                
-                if (!fundTitleElement || !fundCodeElement) {
-                    console.warn('卡片缺少标题或代码元素，跳过更新');
-                    return;
+
+            // 从预处理数据中查找匹配的基金
+            let matchedFund = null;
+            for (const asset of processedData.assets) {
+                if (asset.funds) {
+                    // 使用 .find() 并进行字符串比较（去除前导零）
+                    matchedFund = asset.funds.find(f => String(f.fundCode).replace(/^0+/, '') === String(fundCode).replace(/^0+/, ''));
+                    if (matchedFund) break;
                 }
-                
-                // 提取ETF名称和代码
-                const fundTitle = fundTitleElement.textContent.trim();
-                const fundCode = fundCodeElement.textContent.trim();
-                
-                // 检查是否是已清仓基金
+            }
+
+            if (!matchedFund) {
+                console.warn(`loadEtfCardData: 未在预处理数据中找到基金代码 ${fundCode} 的信息`);
+                return;
+            }
+            
+            // 准备操作信息
+            let operationInfoForUpdate = null;
+            if (matchedFund.latestOperation) {
                 const isDisabled = card.classList.contains('disabled');
-                
-                console.log(`[${index + 1}/${allFundCards.length}] 更新基金卡片: ${fundTitle} (${fundCode})${isDisabled ? ' [已清仓]' : ''}`);
-                
-                // 从ETF数据中查找匹配的基金信息
-                const fundInfo = findFundInfo(etfData, fundTitle, fundCode);
-                if (!fundInfo) {
-                    console.warn(`未找到基金信息: ${fundTitle} (${fundCode})`);
-                    return;
-                }
-                
-                // 从调整数据中查找最近的操作信息
-                const operationInfo = findLatestOperation(adjustData, fundTitle, fundCode);
-                
-                // 即使在本地打开文件的情况下也能更新最后操作信息
-                // 对于已清仓基金，强制设置操作类型为"卖出"
-                if (isDisabled && operationInfo) {
-                    operationInfo.tradeType = "卖出";
-                }
-                
-                updateOperationInfo(card, operationInfo);
-                
-                // 将操作时间作为数据属性存储在卡片上，用于排序
-                if (operationInfo && operationInfo.navDate) {
-                    card.dataset.operationDate = operationInfo.navDate;
-                }
-
-                // 更新卡片的历史最低价格相关信息
-                updateFundCard(card, {
-                    nav: fundInfo.nav,
-                    lowestPrice: findHistoricalLowestPrice(adjustData, fundCode)
-                });
-                
-            } catch (error) {
-                console.error(`更新卡片[${index}]时发生错误:`, error);
-            }
-        });
-        
-        console.log('所有ETF卡片数据更新完成，开始按照最后操作时间排序...');
-        
-        // 对卡片进行排序
-        sortFundCardsByOperationDate();
-        
-        console.log('所有ETF卡片已按最后操作时间排序完成');
-    } catch (error) {
-        console.error('获取ETF数据失败:', error);
-    }
-}
-
-/**
- * 查找基金的历史最低价格
- * @param {Array} adjustData - 调整数据
- * @param {string} fundCode - 基金代码
- * @returns {number|null} - 历史最低价格
- */
-function findHistoricalLowestPrice(adjustData, fundCode) {
-    // 输入验证
-    if (!adjustData || !adjustData.length || !fundCode) {
-        return null;
-    }
-    
-    // 清理基金代码，确保它是字符串形式，不含前导零
-    const cleanedFundCode = String(fundCode).replace(/^0+/, '');
-    
-    let lowestNav = null;
-    
-    // 遍历所有调整记录
-    for (const adjustment of adjustData) {
-        if (!adjustment.orders || !Array.isArray(adjustment.orders)) {
-            continue;
-        }
-        
-        // 遍历该调整中的所有订单
-        for (const order of adjustment.orders) {
-            if (!order.fund || !order.fund.fundCode) continue;
-            
-            // 清理基金数据中的代码
-            const cleanedOrderFundCode = String(order.fund.fundCode).replace(/^0+/, '');
-            
-            // 通过基金代码进行精确匹配
-            if (cleanedOrderFundCode === cleanedFundCode) {
-                // 获取净值
-                const currentNav = order.nav;
-                
-                // 如果有净值并且是新的最低值（或者是第一个值）
-                if (currentNav && (lowestNav === null || currentNav < lowestNav)) {
-                    lowestNav = currentNav;
+                operationInfoForUpdate = {
+                    type: isDisabled ? '卖出' : matchedFund.latestOperation.tradeType,
+                    shares: matchedFund.latestOperation.shares, 
+                    date: matchedFund.latestOperation.navDate // 使用时间戳
+                };
+                // 设置排序用的 data 属性
+                if (operationInfoForUpdate.date) {
+                    card.dataset.operationDate = operationInfoForUpdate.date;
                 }
             }
+
+            // 调用 updateOperationInfo 更新显示
+            updateOperationInfo(card, operationInfoForUpdate);
+            
+        } catch (error) {
+            console.error(`更新卡片[${index}] (代码: ${fundCode}) 的操作信息时发生错误:`, error);
         }
-    }
-    
-    return lowestNav;
+    });
+
+    console.log('所有ETF卡片操作信息更新尝试完成，开始按照最后操作时间排序...');
+        
+    // 对卡片进行排序
+    sortFundCardsByOperationDate();
+        
+    console.log('所有ETF卡片已按最后操作时间排序完成');
 }
 
 /**
  * 对同一大类资产下的ETF卡片按照最后操作时间从近到远排序
- * 并更新资产组标题栏中的最后操作时间
  */
 function sortFundCardsByOperationDate() {
-    // 获取所有资产组
     const assetGroups = document.querySelectorAll('.asset-group');
     
     assetGroups.forEach(group => {
-        // 获取该资产组下的所有fund-cards容器
         const fundCardsContainer = group.querySelector('.fund-cards');
         if (!fundCardsContainer) return;
         
-        // 获取该容器下的所有ETF卡片（活跃的和已清仓的分开处理）
         const activeFundCards = Array.from(fundCardsContainer.querySelectorAll('.fund-card:not(.disabled)'));
         const disabledFundCards = Array.from(fundCardsContainer.querySelectorAll('.fund-card.disabled'));
         
-        const groupTitle = group.querySelector('.asset-group-header h4').textContent.trim();
-        console.log(`开始排序 "${groupTitle}" 下的${activeFundCards.length}张活跃ETF卡片和${disabledFundCards.length}张已清仓ETF卡片`);
+        const groupTitle = group.querySelector('.asset-group-header h4')?.textContent.trim() || '未知资产组';
+        // console.log(`开始排序 "${groupTitle}" 下的${activeFundCards.length}张活跃ETF卡片和${disabledFundCards.length}张已清仓ETF卡片`);
         
-        // 如果没有卡片，无需排序
         if (activeFundCards.length + disabledFundCards.length === 0) return;
         
-        // 按照操作日期排序活跃卡片（近到远）
         if (activeFundCards.length > 1) {
             activeFundCards.sort((a, b) => {
                 const dateA = parseInt(a.dataset.operationDate || '0');
                 const dateB = parseInt(b.dataset.operationDate || '0');
-                
-                // 操作日期从近到远（降序）
-                return dateB - dateA;
+                return dateB - dateA; // 降序
             });
         }
         
-        // 按照操作日期排序已清仓卡片（近到远）
         if (disabledFundCards.length > 1) {
             disabledFundCards.sort((a, b) => {
                 const dateA = parseInt(a.dataset.operationDate || '0');
                 const dateB = parseInt(b.dataset.operationDate || '0');
-                
-                // 操作日期从近到远（降序）
-                return dateB - dateA;
+                return dateB - dateA; // 降序
             });
         }
         
-        // 清空容器
+        // 清空容器，然后按顺序重新添加
         fundCardsContainer.innerHTML = '';
+        activeFundCards.forEach(card => fundCardsContainer.appendChild(card));
+        disabledFundCards.forEach(card => fundCardsContainer.appendChild(card));
         
-        // 先添加活跃卡片（按时间排序）
-        activeFundCards.forEach(card => {
-            fundCardsContainer.appendChild(card);
-        });
-        
-        // 再添加已清仓卡片（按时间排序）
-        disabledFundCards.forEach(card => {
-            fundCardsContainer.appendChild(card);
-        });
-        
-        // 更新资产组标题栏中的最后操作时间
-        // 获取该大类资产下的第一张卡片（无论是活跃还是已清仓）
-        const firstCard = activeFundCards.length > 0 ? activeFundCards[0] : (disabledFundCards.length > 0 ? disabledFundCards[0] : null);
-        
-        if (firstCard) {
-            // 从第一张卡片获取最后操作时间
-            const operationTimeElem = firstCard.querySelector('.fund-data-row:first-child .fund-value');
-            if (operationTimeElem) {
-                const operationTime = operationTimeElem.textContent.trim();
-                // 如果是"数据加载中..."，则跳过
-                if (operationTime !== '数据加载中...' && !operationTime.includes('加载中')) {
-                    // 提取操作日期部分 - 通常格式为"买入 (2023-04-10)"或"卖出 (2023-04-10)"
-                    const dateMatch = operationTime.match(/\(([0-9-]+)\)/);
-                    if (dateMatch && dateMatch[1]) {
-                        // 更新资产组标题栏中的日期
-                        const dateElem = group.querySelector('.detail-date');
-                        if (dateElem) {
-                            dateElem.textContent = dateMatch[1];
-                            console.log(`更新"${groupTitle}"的最后操作时间为: ${dateMatch[1]}`);
-                        }
-                    }
-                }
-            }
-        }
-        
-        console.log(`"${groupTitle}" 下的ETF卡片已按最后操作时间排序完成，活跃卡片在前，已清仓卡片在后`);
+        // console.log(`"${groupTitle}" 下的ETF卡片已按最后操作时间排序完成`);
     });
 }
 
-/**
- * 使用预处理数据更新ETF卡片
- * @param {Array} processedAssets - 预处理后的资产数据
- */
-function updateEtfCardsWithProcessedData(processedAssets) {
-    // 获取所有ETF卡片（包括活跃和已清仓的）
-    const allFundCards = document.querySelectorAll('.fund-card');
-    const activeFundCards = document.querySelectorAll('.fund-card:not(.disabled)');
-    
-    console.log(`找到${activeFundCards.length}个活跃ETF卡片和${allFundCards.length - activeFundCards.length}个已清仓ETF卡片，使用预处理数据更新...`);
-    
-    // 为每个卡片更新数据
-    allFundCards.forEach((card, index) => {
-        try {
-            // 获取ETF名称和代码
-            const fundTitleElement = card.querySelector('.fund-title');
-            const fundCodeElement = card.querySelector('.fund-code');
-            
-            if (!fundTitleElement || !fundCodeElement) {
-                console.warn('卡片缺少标题或代码元素，跳过更新');
-                return;
-            }
-            
-            // 提取ETF名称和代码
-            const fundTitle = fundTitleElement.textContent.trim();
-            const fundCode = fundCodeElement.textContent.trim();
-            
-            // 检查是否是已清仓基金
-            const isDisabled = card.classList.contains('disabled');
-            
-            // 更详细的卡片选择器记录，帮助诊断问题
-            console.log(`[${index + 1}/${allFundCards.length}] 更新基金卡片:`, {
-                卡片位置: index + 1,
-                基金名称: fundTitle,
-                基金代码: fundCode,
-                已清仓: isDisabled,
-                HTML结构: card.outerHTML.substring(0, 150) + '...'
-            });
-            
-            // 从预处理数据中查找匹配的基金
-            let matchedFund = null;
-            
-            // 搜索所有资产类别
-            for (const asset of processedAssets) {
-                if (!asset.funds || !Array.isArray(asset.funds)) continue;
-                
-                // 搜索该资产类别下的所有基金
-                for (const fund of asset.funds) {
-                    // 跳过现金项
-                    if (fund.isCash) continue;
-                    
-                    // 清理基金代码，忽略前导零
-                    const cleanedFundCode = String(fund.fundCode).replace(/^0+/, '');
-                    const cleanedCardCode = String(fundCode).replace(/^0+/, '');
-                    
-                    // 通过基金代码匹配
-                    if (cleanedFundCode === cleanedCardCode) {
-                        matchedFund = fund;
-                        break;
-                    }
-                }
-                
-                if (matchedFund) break;
-            }
-            
-            if (!matchedFund) {
-                console.warn(`未在预处理数据中找到基金: ${fundTitle} (${fundCode})`);
-                return;
-            }
-            
-            // 同时尝试两种方式更新操作信息
-            
-            // 1. 首先尝试使用新的专用函数更新
-            let operationInfoForUpdate = null;
-            if (matchedFund.latestOperation) {
-                // 对于已清仓基金，强制设置操作类型为"卖出"
-                const type = isDisabled ? "卖出" : matchedFund.latestOperation.tradeType;
-                const shares = matchedFund.latestOperation.shares;
-                const date = matchedFund.latestOperation.navDate;
-                
-                operationInfoForUpdate = { type, shares, date };
-                
-                // 将操作时间作为数据属性存储在卡片上，用于排序
-                if (date) {
-                    card.dataset.operationDate = date;
-                }
-                
-                // 调用专用更新函数
-                console.log(`[${fundCode}] 使用updateOperationInfo更新操作信息:`, operationInfoForUpdate);
-                updateOperationInfo(card, operationInfoForUpdate);
-            } else {
-                console.log(`[${fundCode}] 无最后操作记录，使用默认值`);
-                updateOperationInfo(card, null);
-            }
-            
-            // 2. 后备方案：直接查找并更新DOM元素
-            const operationRow = card.querySelector('.fund-data-row:first-child');
-            if (operationRow) {
-                const valueElement = operationRow.querySelector('.fund-value');
-                if (valueElement && !valueElement.classList.contains('operation-details')) {
-                    console.log(`[${fundCode}] 使用直接DOM更新方法（后备方案）`);
-                    
-                    if (matchedFund.latestOperation) {
-                        // 对于已清仓基金，强制设置操作类型为"卖出"
-                        if (isDisabled && matchedFund.latestOperation.tradeType) {
-                            matchedFund.latestOperation.tradeType = "卖出";
-                        }
-                        
-                        // 准备日期字符串
-                        let dateString;
-                        if (typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) {
-                            dateString = dateUtils.convertTimestampToDate(matchedFund.latestOperation.navDate);
-                        } else {
-                            const date = new Date(parseInt(matchedFund.latestOperation.navDate));
-                            const year = date.getFullYear();
-                            const month = String(date.getMonth() + 1).padStart(2, '0');
-                            const day = String(date.getDate()).padStart(2, '0');
-                            dateString = `${year}-${month}-${day}`;
-                        }
-                        
-                        // 构建显示文本
-                        const type = isDisabled ? "卖出" : matchedFund.latestOperation.tradeType;
-                        const shares = matchedFund.latestOperation.shares ? matchedFund.latestOperation.shares + '份' : '';
-                        const displayText = `${type} ${shares} (${dateString})`.trim();
-                        
-                        console.log(`[${fundCode}] 直接更新最后操作信息: ${displayText}`);
-                        valueElement.textContent = displayText;
-                        
-                        // 添加样式
-                        valueElement.classList.remove('buy', 'sell');
-                        if (type === '买入') {
-                            valueElement.classList.add('buy');
-                        } else if (type === '卖出') {
-                            valueElement.classList.add('sell');
-                        }
-                    } else {
-                        valueElement.textContent = "暂无记录";
-                    }
-                }
-            }
-            
-            // 创建用于updateFundCard的基金信息对象
-            const fundInfo = {
-                nav: matchedFund.nav,
-                lowestPrice: matchedFund.historicalLow ? parseFloat(matchedFund.historicalLow) : 0
-            };
-            
-            // 使用updateFundCard更新基金卡片，包括处理历史最低价格相关行
-            updateFundCard(card, fundInfo);
-            
-        } catch (error) {
-            console.error(`更新卡片[${index}]时发生错误:`, error);
-        }
-    });
-    
-    console.log('所有ETF卡片数据从预处理数据更新完成');
-}
 
 /**
  * 更新卡片中的最后操作信息
  */
 function updateOperationInfo(card, operationInfo) {
-    // Find the element where the operation details should be displayed
     const detailsElement = card.querySelector('.operation-details'); 
-
-    // --- DEBUGGING: Log more details ---
-    const fundCodeForLog = card.dataset.fundCode || card.querySelector('.fund-code')?.textContent || 'Unknown';
-    console.log(`[${fundCodeForLog}] updateOperationInfo called. Found detailsElement:`, !!detailsElement, "OpInfo received:", operationInfo);
-    // -------------------------------------------------
+    const fundCodeForLog = card.dataset.fundCode || 'Unknown';
 
     if (!detailsElement) {
-        // 先尝试查找旧版DOM结构中的操作元素
-        const operationRow = card.querySelector('.fund-data-row:first-child');
-        if (operationRow) {
-            const valueElement = operationRow.querySelector('.fund-value');
-            if (valueElement) {
-                console.log(`[${fundCodeForLog}] 找到旧版DOM结构中的操作元素`);
-                
-                if (operationInfo && operationInfo.date) {
-                    // 确保使用正确的日期格式化方法
-                    let dateString;
-                    
-                    // 检查dateUtils全局对象是否可用
-                    if (typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) {
-                        console.log(`[${fundCodeForLog}] 使用dateUtils格式化日期: ${operationInfo.date}`);
-                        dateString = dateUtils.convertTimestampToDate(operationInfo.date);
-                    } else {
-                        // 内联实现日期格式化
-                        console.log(`[${fundCodeForLog}] dateUtils不可用，使用内联格式化: ${operationInfo.date}`);
-                        const date = new Date(parseInt(operationInfo.date));
-                        const year = date.getFullYear();
-                        const month = String(date.getMonth() + 1).padStart(2, '0');
-                        const day = String(date.getDate()).padStart(2, '0');
-                        dateString = `${year}-${month}-${day}`;
-                    }
-                    
-                    // 构建操作文本
-                    const type = operationInfo.type || '';
-                    const shares = operationInfo.shares !== undefined ? operationInfo.shares + '份' : '';
-                    const operationText = `${type} ${shares} (${dateString})`.trim();
-                    
-                    valueElement.textContent = operationText;
-                    console.log(`[${fundCodeForLog}] 更新操作信息为: ${operationText}`);
-                    
-                    // 添加样式
-                    valueElement.classList.remove('buy', 'sell');
-                    if (type === '买入') {
-                        valueElement.classList.add('buy');
-                    } else if (type === '卖出') {
-                        valueElement.classList.add('sell');
-                    }
-                } else {
-                    valueElement.textContent = '暂无操作';
-                }
-                
-                return; // 已处理，退出函数
-            }
+        if (!card.dataset.operationElementNotFound) {
+            console.warn(`[${fundCodeForLog}] 无法找到 .operation-details 元素`);
+            card.dataset.operationElementNotFound = 'true';
         }
-        
-        console.warn(`[${fundCodeForLog}] 无法找到操作信息显示元素`);
         return;
     }
 
-    // 检查是否有效的操作信息和日期格式化工具
     if (operationInfo && operationInfo.date) {
-        // 确保使用正确的日期格式化方法
         let dateString;
         
-        // 检查dateUtils全局对象是否可用
-        if (typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) {
-            console.log(`[${fundCodeForLog}] 使用dateUtils格式化日期: ${operationInfo.date}`);
+        if (typeof dateUtils !== 'undefined' && typeof dateUtils.convertTimestampToDate === 'function') {
             dateString = dateUtils.convertTimestampToDate(operationInfo.date);
         } else {
-            // 内联实现日期格式化
-            console.log(`[${fundCodeForLog}] dateUtils不可用，使用内联格式化: ${operationInfo.date}`);
-            const date = new Date(parseInt(operationInfo.date));
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            dateString = `${year}-${month}-${day}`;
+            console.warn(`[${fundCodeForLog}] dateUtils 不可用或缺少 convertTimestampToDate，使用内联格式化`);
+            dateString = inlineDateUtils.convertTimestampToDate(operationInfo.date);
         }
         
-        // 构建操作文本
         const type = operationInfo.type || '';
         const shares = operationInfo.shares !== undefined ? operationInfo.shares + '份' : '';
         const operationText = `${type} ${shares} (${dateString})`.trim();
         
-        // 更新元素的文本内容，去除首尾空格
         detailsElement.textContent = operationText;
-        console.log(`[${fundCodeForLog}] 更新操作信息为: ${operationText}`);
-
-        // 根据操作类型应用样式类
-        detailsElement.classList.remove('buy', 'sell'); // 先清除现有类
+        detailsElement.classList.remove('buy', 'sell');
         if (type === '买入') {
             detailsElement.classList.add('buy');
         } else if (type === '卖出') {
@@ -1745,512 +616,27 @@ function updateOperationInfo(card, operationInfo) {
         }
 
     } else {
-        // 如果数据缺失或无效，重置为默认占位符
-        detailsElement.textContent = '--'; 
-        detailsElement.classList.remove('buy', 'sell'); // 清除样式类
-        
-        // 如果operationInfo存在但缺少日期或dateUtils不可用，记录警告
+        detailsElement.textContent = '暂无操作'; 
+        detailsElement.classList.remove('buy', 'sell');
         if (operationInfo) {
-            console.warn(`[${fundCodeForLog}] 缺少操作日期或dateUtils.convertTimestampToDate不可用`, operationInfo);
+            console.warn(`[${fundCodeForLog}] 缺少操作日期或日期工具不可用`, operationInfo);
+        } else {
+             // console.log(`[${fundCodeForLog}] 无操作信息提供`);
         }
     }
 }
 
 /**
- * 使用XMLHttpRequest加载数据，可以绕过某些CORS限制
+ * 使用XMLHttpRequest加载数据 (如果还需要)
  */
-function loadDataWithXHR() {
-    return new Promise((resolve, reject) => {
-        let etfData = null;
-        let adjustData = null;
-        let loadCount = 0;
-        
-        // 加载ETF数据
-        const etfXHR = new XMLHttpRequest();
-        etfXHR.overrideMimeType("application/json");
-        etfXHR.open('GET', 'etf.json', true);
-        etfXHR.onreadystatechange = function() {
-            if (etfXHR.readyState === 4) {
-                if (etfXHR.status === 200) {
-                    try {
-                        etfData = JSON.parse(etfXHR.responseText);
-                        loadCount++;
-                        checkComplete();
-                    } catch (error) {
-                        reject(new Error('ETF数据解析失败: ' + error.message));
-                    }
-                } else {
-                    reject(new Error('加载ETF数据失败: ' + etfXHR.status));
-                }
-            }
-        };
-        etfXHR.send(null);
-        
-        // 加载调整数据
-        const adjustXHR = new XMLHttpRequest();
-        adjustXHR.overrideMimeType("application/json");
-        adjustXHR.open('GET', 'adjust.json', true);
-        adjustXHR.onreadystatechange = function() {
-            if (adjustXHR.readyState === 4) {
-                if (adjustXHR.status === 200) {
-                    try {
-                        adjustData = JSON.parse(adjustXHR.responseText);
-                        loadCount++;
-                        checkComplete();
-                    } catch (error) {
-                        reject(new Error('调整数据解析失败: ' + error.message));
-                    }
-                } else {
-                    reject(new Error('加载调整数据失败: ' + adjustXHR.status));
-                }
-            }
-        };
-        adjustXHR.send(null);
-        
-        // 检查是否全部加载完成
-        function checkComplete() {
-            if (loadCount === 2) {
-                resolve({ etfData, adjustData });
-            }
-        }
-    });
-}
+// function loadDataWithXHR() { ... }
 
 /**
- * 从调整数据中查找基金的最近操作信息
- * @param {Array} adjustData - 调整数据
- * @param {string} fundTitle - 基金标题
- * @param {string} fundCode - 基金代码
- * @returns {Object|null} - 最近操作信息
- */
-function findLatestOperation(adjustData, fundTitle, fundCode) {
-    // 输入验证
-    if (!adjustData || !adjustData.length || !fundCode) {
-        console.error('调整数据为空或基金代码为空');
-        return null;
-    }
-    
-    // 清理基金代码，确保它是字符串形式，不含前导零
-    const cleanedFundCode = String(fundCode).replace(/^0+/, '');
-    
-    console.log(`查找基金[${cleanedFundCode}]的最近操作信息`);
-    
-    // 遍历所有调整记录(最新的记录在前)
-    for (const adjustment of adjustData) {
-        // 检查是否有orders字段
-        if (!adjustment.orders || !Array.isArray(adjustment.orders)) {
-            continue;
-        }
-        
-        // 遍历该调整中的所有订单
-        for (const order of adjustment.orders) {
-            if (!order.fund || !order.fund.fundCode) continue;
-            
-            // 清理基金数据中的代码
-            const cleanedOrderFundCode = String(order.fund.fundCode).replace(/^0+/, '');
-            
-            // 通过基金代码进行精确匹配
-            if (cleanedOrderFundCode === cleanedFundCode) {
-                // 获取操作日期
-                const operationDate = order.adjustTxnDate || adjustment.adjustTxnDate;
-                
-                if (!operationDate) {
-                    console.warn(`基金[${cleanedFundCode}]找到匹配记录，但无法获取操作日期`);
-                    continue;
-                }
-                
-                // 确定交易类型
-                let tradeType = "未知";
-                if (order.tradeUnit > 0) {
-                    tradeType = "买入";
-                } else if (order.tradeUnit < 0) {
-                    tradeType = "卖出";
-                } else if (order.orderCode) {
-                    tradeType = order.orderCode === "022" ? "买入" : "卖出";
-                }
-                
-                // 转换日期格式
-                const formattedDate = convertNavdataToDate(operationDate);
-                
-                const result = {
-                    tradeType: tradeType,
-                    operationDate: formattedDate,
-                    navDate: operationDate
-                };
-                
-                console.log(`找到基金[${cleanedFundCode}]的操作记录：${tradeType} (${formattedDate})`);
-                
-                // 返回第一个匹配的记录（即最后一次操作）
-                return result;
-            }
-        }
-    }
-    
-    console.log(`未找到基金[${cleanedFundCode}]的操作记录`);
-    return null;
-}
-
-/**
- * 从ETF数据中查找匹配的基金信息
- * @param {Object} etfData - ETF数据对象
- * @param {string} fundTitle - 基金标题
- * @param {string} fundCode - 基金代码
- * @returns {Object|null} - 匹配的基金信息
- */
-function findFundInfo(etfData, fundTitle, fundCode) {
-    // 清理基金代码，确保它是字符串形式，不含前导零
-    const cleanedFundCode = String(fundCode).replace(/^0+/, '');
-    
-    // 从基金标题中提取品种和基金名称（如果有格式为"品种-基金名称"）
-    let fundVariety = '';
-    let cleanedFundTitle = fundTitle;
-    
-    const titleParts = fundTitle.split('-');
-    if (titleParts.length >= 2) {
-        fundVariety = titleParts[0].trim();
-        cleanedFundTitle = titleParts.slice(1).join('-').trim();
-    }
-    
-    console.log(`尝试查找基金: ${cleanedFundTitle} (${cleanedFundCode}), 品种: ${fundVariety}`);
-    
-    // 遍历所有资产类别
-    for (const assetClass of etfData.composition || []) {
-        // 遍历该资产类别中的所有基金
-        for (const fund of assetClass.compList || []) {
-            if (!fund.fund) continue;
-            
-            // 清理基金数据中的代码
-            const cleanedDataFundCode = String(fund.fund.fundCode).replace(/^0+/, '');
-            
-            // 匹配逻辑：
-            // 1. 基金代码匹配（忽略前导零）
-            // 2. 完整基金名称匹配
-            // 3. 基金标题包含基金名称
-            // 4. 基金品种匹配（如果有）
-            if (cleanedDataFundCode === cleanedFundCode || 
-                fund.fund.fundName === cleanedFundTitle ||
-                cleanedFundTitle.includes(fund.fund.fundName) ||
-                (fundVariety && fund.variety === fundVariety)) {
-                
-                console.log(`找到匹配基金: ${cleanedFundCode} - ${fund.fund.fundName}`);
-                
-                return {
-                    planUnit: fund.planUnit,
-                    percent: fund.percent,
-                    accProfit: fund.accProfit,
-                    unitValue: fund.unitValue,
-                    nav: fund.nav,
-                    fundInfo: fund
-                };
-            }
-        }
-    }
-    
-    console.log(`未找到匹配基金: ${fundTitle} (${fundCode})`);
-    return null;
-}
-
-/**
- * 更新基金卡片数据
- * @param {Element} card - 基金卡片元素
- * @param {Object} fundInfo - 基金信息对象
- */
-function updateFundCard(card, fundInfo) {
-    // --- DEBUGGING: Log inside updateFundCard ---
-    const fundCodeForLog = card.dataset.fundCode || card.querySelector('.fund-code')?.textContent || 'Unknown';
-    console.log(`[${fundCodeForLog}] updateFundCard called. FundInfo received:`, fundInfo);
-    // ------------------------------------------
-    if (!card || !fundInfo) return;
-    
-    // 检查卡片是否已禁用（清仓）
-    const isDisabled = card.classList.contains('disabled');
-    
-    // 更新各个数据行
-    const dataRows = card.querySelectorAll('.fund-data-row');
-    
-    // 历史低价相关行
-    let historicalLowRow = null;
-    let valueCompareToLowRow = null;
-    
-    dataRows.forEach(row => {
-        const label = row.querySelector('.fund-label');
-        const value = row.querySelector('.fund-value');
-        
-        if (!label || !value) return;
-        
-        const labelText = label.textContent.trim();
-        
-        // 找到历史最低单价行和现值对比历史最低单价行
-        if (labelText.includes('E大历史最低单价')) {
-            historicalLowRow = row;
-        } else if (labelText.includes('现值对比历史最低单价')) {
-            valueCompareToLowRow = row;
-        }
-        
-        // 其他数据更新...
-    });
-    
-    // 处理历史最低单价行
-    if (historicalLowRow) {
-        const value = historicalLowRow.querySelector('.fund-value');
-        if (value) {
-            // --- DEBUGGING: Check condition for historicalLowRow ---
-            console.log(`[${fundCodeForLog}] Checking historicalLowRow: lowestPrice=${fundInfo.lowestPrice}`);
-            // -----------------------------------------------------
-            // 如果历史最低价大于0，显示它；否则隐藏整行
-            if (fundInfo.lowestPrice && fundInfo.lowestPrice > 0) {
-                value.textContent = fundInfo.lowestPrice.toFixed(4);
-                historicalLowRow.style.display = 'flex'; // 确保显示
-            } else {
-                historicalLowRow.style.display = 'none'; // 隐藏整行
-            }
-        }
-    }
-    
-    // 处理现值对比历史最低单价行
-    if (valueCompareToLowRow) {
-        const value = valueCompareToLowRow.querySelector('.fund-value');
-        if (value) {
-             // --- DEBUGGING: Check condition for valueCompareToLowRow ---
-             console.log(`[${fundCodeForLog}] Checking valueCompareToLowRow: lowestPrice=${fundInfo.lowestPrice}, nav=${fundInfo.nav}`);
-             // ---------------------------------------------------------
-            // 如果历史最低价大于0，计算并显示比较；否则隐藏整行
-            if (fundInfo.lowestPrice && fundInfo.lowestPrice > 0 && fundInfo.nav) {
-                const percentage = ((fundInfo.nav - fundInfo.lowestPrice) / fundInfo.lowestPrice * 100).toFixed(2);
-                value.textContent = percentage >= 0 ? `+${percentage}%` : `${percentage}%`;
-                value.className = 'fund-value ' + (percentage >= 0 ? 'positive' : 'negative');
-                valueCompareToLowRow.style.display = 'flex'; // 确保显示
-            } else {
-                valueCompareToLowRow.style.display = 'none'; // 隐藏整行
-            }
-        }
-    }
-}
-
-/**
- * 完全动态生成资产组HTML结构，移除对硬编码HTML的依赖
- * 
- * 重要说明：
- * 1. 此函数负责生成右侧"大类资产详情"区域的所有HTML内容
- * 2. 现金资产不会在右侧详情中显示，而是被跳过处理
- * 3. 境内债券使用'cn-bond'标识，与getAssetTypeFromClassName一致
- * 
- * @param {Object} etfData - ETF数据
- */
-function generateAssetGroupsHTML(etfData) {
-    console.log('开始动态生成资产组HTML结构');
-    
-    // 检查数据有效性
-    if (!etfData || !etfData.composition || !Array.isArray(etfData.composition)) {
-        console.error('ETF数据格式不正确，无法生成资产组HTML');
-        return;
-    }
-    
-    // 获取fund-cards-container容器
-    const fundCardsContainer = document.querySelector('.fund-cards-container');
-    if (!fundCardsContainer) {
-        console.error('未找到fund-cards-container容器，无法生成资产组HTML');
-        return;
-    }
-    
-    // 清空容器内容
-    fundCardsContainer.innerHTML = '';
-    
-    // 构建资产分类映射
-    const assetGroups = {};
-    
-    // 遍历所有资产
-    etfData.composition.forEach(assetClass => {
-        // 确保有基金列表
-        if (!assetClass.compList || !Array.isArray(assetClass.compList)) return;
-        
-        // 跳过现金资产 - 不在"大类资产详情"中显示现金
-        if (assetClass.isCash || assetClass.className === '现金') {
-            console.log('跳过现金资产 - 不在"大类资产详情"中显示现金');
-            return;
-        }
-        
-        // 创建资产组HTML
-        const className = assetClass.className;
-        const assetTypeCode = getAssetTypeFromClassName(className);
-        const unit = assetClass.unit || 0;
-        const percent = assetClass.percent || 0;
-        
-        // 获取累计收益率
-        let accProfitRate = assetClass.accProfitRate;
-        
-        // 确保百分比格式一致 - 使用小数形式进行计算，显示时才转换为百分比
-        // 这样可以保证与左侧资产排名一致
-        
-        // 创建资产组元素
-        const assetGroupDiv = document.createElement('div');
-        assetGroupDiv.className = 'asset-group';
-        assetGroupDiv.innerHTML = `
-            <div class="asset-group-header">
-                <div class="title-section">
-                    <span class="asset-icon ${assetTypeCode}"></span>
-                    <h4>${className} <span class="detail-shares">${unit}份 (${(percent * 100).toFixed(2)}%)</span></h4>
-                </div>
-                <div class="detail-info">
-                    <span class="detail-profit ${accProfitRate >= 0 ? 'positive' : 'negative'}" style="color: #e74c3c; font-weight: 500;">累计收益率 +${(accProfitRate * 100).toFixed(2)}%</span>
-                    <span class="detail-date">加载中...</span>
-                </div>
-            </div>
-            <div class="fund-cards"></div>
-        `;
-        
-        // 将资产组添加到容器
-        fundCardsContainer.appendChild(assetGroupDiv);
-        
-        // 获取刚刚创建的fund-cards容器
-        const fundCardsDiv = assetGroupDiv.querySelector('.fund-cards');
-        
-        // 构建基金卡片
-        assetClass.compList.forEach(fund => {
-            // 跳过现金
-            if (fund.isCash) return;
-            
-            // 创建基金卡片
-            const fundCard = createFundCard(fund);
-            if (fundCard) {
-                fundCardsDiv.appendChild(fundCard);
-            }
-        });
-    });
-    
-    console.log('资产组HTML结构生成完成');
-}
-
-/**
- * 创建单个基金卡片
- * @param {Object} fund - 基金数据
- * @returns {Element} - 基金卡片DOM元素
- */
-function createFundCard(fund) {
-    // --- DEBUGGING: Log inside createFundCard ---
-    console.log(`[${fund?.fund?.fundCode || 'Unknown'}] createFundCard called. isActive: ${fund?.planUnit > 0}. Fund data received:`, fund);
-    // -------------------------------------------
-
-    // 验证基金数据
-    if (!fund || !fund.fund) return null;
-    
-    const fundInfo = fund.fund;
-    const planUnit = fund.planUnit || 0;
-    const isActive = planUnit > 0;
-    
-    // 创建基金卡片元素
-    const cardDiv = document.createElement('div');
-    cardDiv.className = `fund-card${!isActive ? ' disabled' : ''}`;
-    
-    // 确定卡片标题是否需要positive/negative类
-    const navDiff = fund.nav && fund.unitValue ? ((fund.nav - fund.unitValue) / fund.unitValue) : 0;
-    const headerClass = navDiff >= 0 ? 'positive' : 'negative';
-    
-    // 构建卡片内容HTML
-    let innerHtml = `
-        <div class="fund-header${isActive ? ' ' + headerClass : ''}">
-            <div class="fund-title-group">
-                <span class="fund-title">${fund.variety ? fund.variety + '-' : ''}${fundInfo.fundName}</span>
-                <span class="fund-code">${fundInfo.fundCode}</span>
-            </div>
-        </div>
-        <div class="fund-data">
-            <div class="fund-data-row">
-                <span class="fund-label">最后操作</span>
-                <span class="fund-value operation-details">数据加载中...</span>
-            </div>
-    `;
-    
-    // 份数和占比行
-    if (isActive) {
-        innerHtml += `
-            <div class="fund-data-row">
-                <span class="fund-label">份数/占比</span>
-                <span class="fund-value">${planUnit}份/${(fund.percent * 100).toFixed(2)}%</span>
-            </div>
-        `;
-    } else {
-        innerHtml += `
-            <div class="fund-data-row">
-                <span class="fund-label">份数/占比</span>
-                <span class="fund-value">已清仓/0%</span>
-            </div>
-        `;
-    }
-    
-    // 累计收益率行
-    const accProfit = fund.accProfit || 0;
-    const accProfitClass = accProfit >= 0 ? 'positive' : 'negative';
-    innerHtml += `
-        <div class="fund-data-row">
-            <span class="fund-label">累计收益率</span>
-            <span class="fund-value ${accProfitClass}">${accProfit >= 0 ? '+' : ''}${(accProfit * 100).toFixed(2)}%</span>
-        </div>
-    `;
-    
-    // 对于活跃基金，添加额外信息
-    if (isActive) {
-        innerHtml += `
-            <div class="fund-data-row">
-                <span class="fund-label">E大平均持有单价</span>
-                <span class="fund-value">${fund.unitValue ? fund.unitValue.toFixed(4) : '无数据'}</span>
-            </div>
-        `;
-        
-        // 历史最低单价会在updateFundCard中动态添加或更新
-        innerHtml += `
-            <div class="fund-data-row" style="display: none;">
-                <span class="fund-label">E大历史最低单价</span>
-                <span class="fund-value">加载中...</span>
-            </div>
-        `;
-    }
-    
-    // 最新净值行
-    innerHtml += `
-        <div class="fund-data-row">
-            <span class="fund-label">最新净值</span>
-            <span class="fund-value">${fund.nav ? fund.nav.toFixed(4) : '无数据'}</span>
-        </div>
-    `;
-    
-    // 对于活跃基金，添加对比信息
-    if (isActive && fund.unitValue && fund.nav) {
-        const percentDiff = ((fund.nav - fund.unitValue) / fund.unitValue * 100).toFixed(2);
-        const diffClass = percentDiff >= 0 ? 'positive' : 'negative';
-        
-        innerHtml += `
-            <div class="fund-data-row">
-                <span class="fund-label">现值对比平均单价</span>
-                <span class="fund-value ${diffClass}">${percentDiff >= 0 ? '+' : ''}${percentDiff}%</span>
-            </div>
-        `;
-        
-        // 历史最低单价对比会在updateFundCard中动态添加或更新
-        innerHtml += `
-            <div class="fund-data-row" style="display: none;">
-                <span class="fund-label">现值对比历史最低单价</span>
-                <span class="fund-value">加载中...</span>
-            </div>
-        `;
-    }
-    
-    innerHtml += `</div>`;
-    cardDiv.innerHTML = innerHtml;
-    
-    return cardDiv;
-}
-
-/**
- * 更新资金状况单行显示
+ * 更新资金状况双行显示
  * 
  * 重要说明：
  * 1. 此函数负责计算并显示页面顶部的持仓和现金信息
- * 2. 计算逻辑：
- *    - 持仓份数 = 所有非现金资产份数之和
- *    - 现金份数 = 现金资产份数
- *    - 百分比 = 份数 / 150 * 100 (150是150计划的总份数)
- * 3. 依赖HTML中的四个元素ID: 
+ * 2. 依赖HTML中的四个元素ID: 
  *    - total-position-units, total-position-percent
  *    - total-cash-units, total-cash-percent
  * 
@@ -2262,7 +648,6 @@ function updateFundStatusDouble(data) {
         return;
     }
     
-    // 获取显示元素
     const positionUnitsElem = document.getElementById('total-position-units');
     const positionPercentElem = document.getElementById('total-position-percent');
     const cashUnitsElem = document.getElementById('total-cash-units');
@@ -2273,33 +658,368 @@ function updateFundStatusDouble(data) {
         return;
     }
     
-    // 计算持仓总份数（除现金外的所有资产份数之和）
     let totalPositionUnits = 0;
     let cashUnits = 0;
-    const totalUnits = 150; // 150计划总份数固定为150份
+    const totalUnits = 150; // 150计划总份数
     
-    // 获取所有资产数据
     const assetDistribution = data.summary.assetDistribution;
     
-    // 遍历所有资产，计算持仓总份数和现金份数
     for (const className in assetDistribution) {
         const assetData = assetDistribution[className];
-        if (className === '现金' || assetData.isCash) {
+        if (className === '现金') {
             cashUnits = assetData.unit;
         } else {
             totalPositionUnits += assetData.unit;
         }
     }
     
-    // 计算百分比
     const positionPercent = (totalPositionUnits / totalUnits * 100).toFixed(2);
     const cashPercent = (cashUnits / totalUnits * 100).toFixed(2);
     
-    // 更新显示
     positionUnitsElem.textContent = totalPositionUnits;
     positionPercentElem.textContent = positionPercent + '%';
     cashUnitsElem.textContent = cashUnits;
     cashPercentElem.textContent = cashPercent + '%';
     
     console.log(`更新资金状况: 持仓${totalPositionUnits}份(${positionPercent}%), 现金${cashUnits}份(${cashPercent}%)`);
-} 
+}
+
+/**
+ * 完全动态生成资产组HTML结构
+ * @param {Array} processedAssets - 预处理后的资产数据数组
+ */
+function generateAssetGroupsHTML(processedAssets) {
+    console.log('开始动态生成资产组HTML结构 (使用预处理数据)');
+    
+    if (!processedAssets || !Array.isArray(processedAssets)) {
+        console.error('预处理资产数据格式不正确，无法生成资产组HTML');
+        return;
+    }
+    
+    const fundCardsContainer = document.querySelector('.fund-cards-container');
+    if (!fundCardsContainer) {
+        console.error('未找到fund-cards-container容器，无法生成资产组HTML');
+        return;
+    }
+    
+    fundCardsContainer.innerHTML = '';
+    
+    processedAssets.forEach(assetClass => {
+        if (!assetClass.funds || !Array.isArray(assetClass.funds)) return;
+        if (assetClass.className === '现金') {
+            // console.log('跳过现金资产 - 不在"大类资产详情"中显示现金');
+            return;
+        }
+        
+        const className = assetClass.className;
+        const assetTypeCode = getAssetTypeFromClassName(className);
+        const unit = assetClass.unit || 0;
+        const percent = assetClass.percent || 0;
+        const accProfitRate = assetClass.accProfitRate || 0;
+        
+        // 查找最后操作日期 (如果有)
+        console.log(`[${className}] Checking latestOperation:`, assetClass.latestOperation); // Log the operation object
+        let latestOpDateStr = '暂无操作';
+        if (assetClass.latestOperation && assetClass.latestOperation.timestamp) { 
+            const timestamp = assetClass.latestOperation.timestamp;
+            console.log(`[${className}] Found timestamp: ${timestamp}`); // Log the timestamp
+            if (typeof dateUtils !== 'undefined' && typeof dateUtils.convertTimestampToDate === 'function') {
+                latestOpDateStr = dateUtils.convertTimestampToDate(timestamp);
+                console.log(`[${className}] Converted via dateUtils: ${latestOpDateStr}`); // Log conversion result
+            } else {
+                latestOpDateStr = inlineDateUtils.convertTimestampToDate(timestamp);
+                console.log(`[${className}] Converted via inlineDateUtils: ${latestOpDateStr}`); // Log conversion result
+            }
+        } else {
+            console.log(`[${className}] No valid latestOperation.timestamp found.`); // Log if no timestamp
+        }
+
+        const assetGroupDiv = document.createElement('div');
+        assetGroupDiv.className = 'asset-group';
+        assetGroupDiv.dataset.assetType = assetTypeCode;
+        assetGroupDiv.innerHTML = `
+            <div class="asset-group-header">
+                <div class="title-section">
+                    <span class="asset-icon ${assetTypeCode}"></span>
+                    <h4>${className} <span class="detail-shares">${unit}份 (${(percent * 100).toFixed(2)}%)</span></h4>
+                </div>
+                <div class="detail-info">
+                    <span class="detail-profit ${accProfitRate >= 0 ? 'positive' : 'negative'}">累计收益率 ${accProfitRate >= 0 ? '+' : ''}${(accProfitRate * 100).toFixed(2)}%</span>
+                    <span class="detail-date">最后操作：${latestOpDateStr}</span> 
+                </div>
+            </div>
+            <div class="fund-cards"></div>
+        `;
+        
+        fundCardsContainer.appendChild(assetGroupDiv);
+        
+        const fundCardsDiv = assetGroupDiv.querySelector('.fund-cards');
+        
+        assetClass.funds.forEach(fund => {
+            if (fund.isCash) return;
+            const fundCard = createFundCard(fund);
+            if (fundCard) {
+                fundCardsDiv.appendChild(fundCard);
+            }
+        });
+    });
+    
+    console.log('资产组HTML结构生成完成 (使用预处理数据)');
+}
+
+/**
+ * 创建单个基金卡片 (使用预处理数据)
+ * @param {Object} fund - 预处理后的基金数据对象
+ * @returns {Element|null} - 基金卡片DOM元素或null
+ */
+function createFundCard(fund) {
+    // console.log(`[${fund?.fundCode || 'Unknown'}] createFundCard called. Fund data:`, fund);
+    if (!fund || !fund.fundCode) {
+        console.warn('[createFundCard] 无效的基金数据输入:', fund);
+        return null;
+    }
+    
+    const planUnit = fund.planUnit || 0;
+    const isActive = planUnit > 0;
+    
+    const cardDiv = document.createElement('div');
+    cardDiv.className = `fund-card${!isActive ? ' disabled' : ''}`;
+    cardDiv.dataset.fundCode = fund.fundCode;
+    
+    let headerClass = ''; // Default to no color class
+    if (isActive && fund.compareWithAvg !== undefined && fund.compareWithAvg !== null) {
+        const compareAvg = fund.compareWithAvg; // 已经是百分比
+        headerClass = compareAvg >= 0 ? 'positive' : 'negative';
+    } else if (isActive) {
+        // console.warn(`[${fund.fundCode}] compareWithAvg is missing or invalid:`, fund.compareWithAvg, ". Header color not set.");
+    }
+
+    const fundName = (fund.variety ? fund.variety + '-' : '') + fund.fundName;
+    const navDateStr = fund.navDate || ''; // 预处理数据中 navDate 已经是 YYYY-MM-DD
+
+    let innerHtml = `
+        <div class="fund-header${headerClass ? ' ' + headerClass : ''}">
+            <div class="fund-title-group">
+                <span class="fund-title" title="${fundName}">${fundName}</span>
+                <span class="fund-code">${fund.fundCode}</span>
+            </div>
+        </div>
+        <div class="fund-data">
+            <div class="fund-data-row">
+                <span class="fund-label">最后操作</span>
+                <span class="fund-value operation-details">--</span> 
+            </div>
+    `;
+    
+    innerHtml += `
+        <div class="fund-data-row">
+            <span class="fund-label">份数/占比</span>
+            <span class="fund-value">${isActive ? planUnit + '份 / ' + (fund.percent * 100).toFixed(2) + '%' : '已清仓 / 0%'}</span>
+        </div>
+    `;
+    
+    const accProfit = fund.accProfit || 0;
+    const accProfitClass = accProfit >= 0 ? 'positive' : 'negative';
+    innerHtml += `
+        <div class="fund-data-row">
+            <span class="fund-label">累计收益率</span>
+            <span class="fund-value ${accProfitClass}">${accProfit >= 0 ? '+' : ''}${(accProfit * 100).toFixed(2)}%</span>
+        </div>
+    `;
+    
+    if (isActive) {
+        innerHtml += `
+            <div class="fund-data-row">
+                <span class="fund-label">平均持有单价</span>
+                <span class="fund-value">${fund.unitValue ? fund.unitValue.toFixed(4) : '--'}</span>
+            </div>
+        `;
+        
+        if (fund.historicalLow && fund.historicalLow > 0) {
+            innerHtml += `
+                <div class="fund-data-row">
+                    <span class="fund-label">历史最低单价</span>
+                    <span class="fund-value">${fund.historicalLow.toFixed(4)}</span>
+                </div>
+            `;
+        } else {
+             // 不显示此行
+        }
+    }
+    
+    innerHtml += `
+        <div class="fund-data-row">
+            <span class="fund-label">最新净值</span>
+            <span class="fund-value">${fund.nav ? parseFloat(fund.nav).toFixed(4) : '--'} ${navDateStr ? '(' + navDateStr + ')' : ''}</span>
+        </div>
+    `;
+    
+    if (isActive) {
+        if (fund.compareWithAvg !== undefined && fund.unitValue) {
+            const percentDiff = fund.compareWithAvg; // 已经是百分比
+            const diffClass = percentDiff >= 0 ? 'positive' : 'negative';
+            innerHtml += `
+                <div class="fund-data-row">
+                    <span class="fund-label">现值对比平均单价</span>
+                    <span class="fund-value ${diffClass}">${percentDiff >= 0 ? '+' : ''}${percentDiff.toFixed(2)}%</span>
+                </div>
+            `;
+        }
+        
+        if (fund.compareWithLowest !== undefined && fund.historicalLow) {
+            const percentDiffLow = fund.compareWithLowest; // 已经是百分比
+            const diffClassLow = percentDiffLow >= 0 ? 'positive' : 'negative';
+            innerHtml += `
+                <div class="fund-data-row">
+                    <span class="fund-label">现值对比历史最低单价</span>
+                    <span class="fund-value ${diffClassLow}">${percentDiffLow >= 0 ? '+' : ''}${percentDiffLow.toFixed(2)}%</span>
+                </div>
+            `;
+        } else if (fund.historicalLow) {
+             // 不显示此行
+        }
+    }
+    
+    innerHtml += `</div>`;
+    cardDiv.innerHTML = innerHtml;
+
+    return cardDiv;
+}
+
+// --- Function Definitions End ---
+
+
+// --- Global Variables and Initial Setup Start ---
+
+// 全局变量 (如果需要)
+let adjustData = []; // 可能不再需要全局，取决于是否还有旧代码依赖
+
+// 添加内联的日期工具函数作为备份
+const inlineDateUtils = {
+    /**
+     * 将毫秒时间戳转换为标准日期格式（YYYY-MM-DD）
+     * @param {number} timestamp - 毫秒级时间戳
+     * @returns {string} 格式化的日期字符串
+     */
+    convertTimestampToDate: function(timestamp) {
+        try {
+            timestamp = parseInt(timestamp);
+            if (isNaN(timestamp)) {
+                // console.warn('时间戳格式无效:', timestamp);
+                return '--';
+            }
+            const date = new Date(timestamp);
+            // 尝试使用Intl确保时区正确性
+            try {
+                 const formatter = new Intl.DateTimeFormat('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    timeZone: 'Asia/Shanghai' // 明确指定中国时区
+                });
+                return formatter.format(date).replace(/\//g, '-');
+            } catch (e) {
+                 console.warn('Intl.DateTimeFormat 不可用或出错，使用 Date 方法替代:', e);
+                 // 使用 getFullYear, getMonth, getDate - 注意这可能受浏览器本地时区影响
+                 const year = date.getFullYear();
+                 const month = String(date.getMonth() + 1).padStart(2, '0');
+                 const day = String(date.getDate()).padStart(2, '0');
+                 return `${year}-${month}-${day}`;
+            }
+           
+        } catch (error) {
+            console.error('日期转换错误:', error);
+            return '--';
+        }
+    }
+};
+
+// 确保全局dateUtils对象存在，如果不存在则使用内联版本
+// 这段逻辑现在移动到 DOMContentLoaded 内部，以处理异步加载
+// if (typeof window.dateUtils === 'undefined') {
+//     window.dateUtils = inlineDateUtils;
+//     console.log('初始设置：未找到dateUtils.js，使用内联版本');
+// }
+
+// --- Global Variables and Initial Setup End ---
+
+
+// --- DOMContentLoaded Event Listener Start ---
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 优先使用内联日期工具，然后尝试加载外部脚本并替换（如果成功）
+    if (typeof window.dateUtils === 'undefined') {
+        window.dateUtils = inlineDateUtils;
+        console.log('初始设置：使用内联日期工具');
+    }
+
+    // 尝试异步加载 dateUtils.js
+    loadDateUtilsScript().then(() => {
+        // 加载成功（或者脚本认为已加载但未定义 window.dateUtils）
+        // 如果 dateUtils.js 正确加载并定义了 window.dateUtils，它将覆盖内联版本
+        console.log('dateUtils.js 加载尝试完成');
+        initializePageContent(); // 调用核心初始化逻辑
+    }).catch(error => {
+        // 加载失败
+        console.error('dateUtils.js 加载失败，将完全依赖内联日期工具:', error);
+        // 仍然继续初始化，因为 window.dateUtils 已经是内联版本
+        initializePageContent(); // 调用核心初始化逻辑
+    });
+});
+
+/**
+ * 页面核心初始化逻辑
+ * 在 DOMContentLoaded 和 dateUtils 加载尝试后调用
+ */
+function initializePageContent() {
+    // 检查预处理数据
+    if (typeof processedData !== 'undefined' && processedData.assets) {
+        console.log('预处理数据可用，开始初始化页面内容');
+
+        // 1. Basic page setup (needs DOM ready)
+        initPlanPage(); // Sets up tabs, sort controls etc.
+
+        // 2. Generate Asset Groups and Fund Cards using PROCESSED data
+        generateAssetGroupsHTML(processedData.assets);
+
+        // 3. Update asset ranking list on the left (uses processedData)
+        loadAssetInfo(); // Now primarily updates the left ranking list
+        
+        // 4. Update operation details in cards and sort
+        loadEtfCardData(); // Simplified: focuses on updateOperationInfo and sorting
+
+        // 5. Apply colors after cards are created and data populated
+        // setTimeout(setupFundCardColors, 100); // 短暂延迟可能有助于确保DOM更新
+        setupFundCardColors(); // 尝试立即应用
+        
+        // 6. Apply initial sort based on URL or default
+        const initialSort = getSortParam();
+        sortAssets(initialSort);
+
+        // 7. Select initial asset based on URL or default (first item)
+        const initialAsset = getSelectedAssetType();
+        if (initialAsset) {
+            showAssetDetails(initialAsset);
+        } else {
+            // Select the first asset in the sorted list if none specified
+            const firstAssetItem = document.querySelector('.asset-list .asset-item');
+            if (firstAssetItem) {
+                const firstAssetType = firstAssetItem.dataset.assetType;
+                if (firstAssetType !== 'cash') { // Don't auto-select cash
+                    showAssetDetails(firstAssetType);
+                }
+            }
+        }
+        
+    } else {
+         console.error('预处理数据 (processedData) 未定义或无效，页面无法完全初始化！');
+         // Consider showing a user-friendly error message on the page
+         const container = document.querySelector('.fund-cards-container');
+         if (container) {
+             container.innerHTML = '<p style="color: red; text-align: center; margin-top: 20px;">关键数据加载失败，无法显示内容。请检查 processed-data.js 文件或联系管理员。</p>';
+         }
+         // alert('关键数据加载失败...'); // Avoid alert if possible
+    }
+}
+
+// --- DOMContentLoaded Event Listener End --- 

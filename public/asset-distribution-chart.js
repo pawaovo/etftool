@@ -20,7 +20,7 @@ const colorMapping = {
 };
 
 // 资产类型代码到中文名称的映射
-const assetTypeMap = {
+const assetCodeToNameMap = { // Renamed from assetTypeMap
     'CHINA_STOCK': 'A股',
     'CHINA_BOND': '境内债券',
     'OVERSEA_STOCK_EMERGING': '海外新兴市场股票',
@@ -525,7 +525,7 @@ function drawHorizontalTrendChart(chartGroup, width, height, minDate, maxDate) {
     if (numPoints === 0) return;
     
     // 资产类型列表
-    const assetTypes = Object.keys(assetTypeMap);
+    const assetTypes = Object.keys(assetCodeToNameMap);
     
     // 计算时间比例尺（时间在X轴）- 使用传入的日期范围或默认范围
     const effectiveMinDate = minDate || assetDistributionData[0].compDate;
@@ -1437,7 +1437,7 @@ function updateTooltip(tooltipElement, dataPoint, mouseX, mouseY) {
         }
         
         // 更新各资产占比
-        const assetTypes = Object.keys(assetTypeMap);
+        const assetTypes = Object.keys(assetCodeToNameMap);
         
         // 按占比从大到小排序资产类型
         const sortedAssetTypes = [...assetTypes].sort((a, b) => {
@@ -1460,7 +1460,7 @@ function updateTooltip(tooltipElement, dataPoint, mouseX, mouseY) {
                 // 只显示数值大于0的资产类型
                 if (value > 0.0001) {  // 使用0.0001作为阈值，避免舍入误差
                     const percent = (value * 100).toFixed(2);
-                    const assetName = assetTypeMap[type] || type;
+                    const assetName = assetCodeToNameMap[type] || type;
                     const color = colorMapping[type] || '#999';
                     
                     const itemElement = document.createElement('div');
@@ -1594,10 +1594,10 @@ function addInteractiveLegend() {
     const hiddenAssets = {};
     
     // 资产类型列表
-    const assetTypes = Object.keys(assetTypeMap);
+    const assetTypes = Object.keys(assetCodeToNameMap);
     
     // 为每种资产类型创建图例项
-    Object.entries(assetTypeMap).forEach(([type, name]) => {
+    Object.entries(assetCodeToNameMap).forEach(([type, name]) => {
         // 创建图例项
         const legendItem = document.createElement('div');
         legendItem.className = 'legend-item';
@@ -1684,7 +1684,7 @@ function addInteractiveLegend() {
         if (!verticalChart) return;
         
         // 处理所有资产类型
-        Object.keys(assetTypeMap).forEach(assetType => {
+        Object.keys(assetCodeToNameMap).forEach(assetType => {
             const isHidden = hiddenAssets[assetType];
             
             // 获取与该资产类型相关的所有路径
@@ -2041,7 +2041,7 @@ function drawVerticalTrendChart(chartGroup, width, height, minDate, maxDate) {
     console.log(`绘制垂直趋势图，数据点数量: ${assetDistributionData.length}`);
     
     // 资产类型列表
-    const assetTypes = Object.keys(assetTypeMap);
+    const assetTypes = Object.keys(assetCodeToNameMap);
     
     // 计算时间比例尺（时间在Y轴）
     const effectiveMinDate = minDate || assetDistributionData[0].compDate;
@@ -2405,10 +2405,10 @@ function addHorizontalLegend(legendContainer) {
     legendContainer.innerHTML = '';
     
     // 资产类型列表
-    const assetTypes = Object.keys(assetTypeMap);
+    const assetTypes = Object.keys(assetCodeToNameMap);
     
     // 为每种资产类型创建图例项
-    Object.entries(assetTypeMap).forEach(([type, name]) => {
+    Object.entries(assetCodeToNameMap).forEach(([type, name]) => {
         // 创建图例项
         const legendItem = document.createElement('div');
         legendItem.className = 'legend-item';

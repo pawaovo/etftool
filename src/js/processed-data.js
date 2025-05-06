@@ -1,6 +1,6 @@
 /**
  * 预处理后的ETF数据
- * 自动生成于 2025/5/6 15:15:21
+ * 自动生成于 2025/5/6 16:13:56
  * 请勿手动修改此文件
  */
 
@@ -3156,7 +3156,7 @@ const processedData = {
       "formattedDate": "2022-04-22"
     }
   },
-  "lastUpdated": "2025-05-06T07:15:21.039Z",
+  "lastUpdated": "2025-05-06T08:13:56.944Z",
   "summary": {
     "totalUnit": 150,
     "totalProfit": 46.202,

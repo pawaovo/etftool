@@ -1,8 +1,9 @@
 {
-  
-  "routes": [
-    { "src": "/", "dest": "/150plan.html" },
-    { "src": "/(.*)", "dest": "/$1" }
+  "rewrites": [
+    {
+      "source": "/((?!api/|favicon\\.ico|_next/|static/|.+\\.[a-zA-Z0-9]+$).*)",
+      "destination": "/150plan.html"
+    }
   ],
   "outputDirectory": "dist",
   "github": {
@@ -12,7 +13,7 @@
     {
       "src": "package.json",
       "use": "@vercel/static-build",
-      "config": { 
+      "config": {
         "distDir": "dist",
         "buildCommand": "npm run vercel-build"
       }
