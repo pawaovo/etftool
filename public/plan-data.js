@@ -1035,6 +1035,7 @@ function loadEtfDataWithXHR() {
 function updateAssetRankingItem(className, unit, percent, accProfitRate) {
     const assetType = getAssetTypeFromClassName(className);
     const assetItem = document.querySelector(`.asset-item[data-asset-type="${assetType}"]`);
+    console.log(`[updateAssetRankingItem] Processing: ${className}, Unit: ${unit}, Percent Input: ${percent}`); // DEBUG
     if (assetItem) {
         const nameElement = assetItem.querySelector('.asset-name');
         if (nameElement) nameElement.textContent = className;
@@ -1042,7 +1043,11 @@ function updateAssetRankingItem(className, unit, percent, accProfitRate) {
         const sharesElement = assetItem.querySelector('.asset-shares');
         if (sharesElement) {
             // 更新份数和格式化后的百分比
-            sharesElement.textContent = `${unit}份 (${percent.toFixed(2)}%)`; 
+            const formattedPercent = percent.toFixed(2);
+            const newText = `${unit}份 (${formattedPercent}%)`; 
+            console.log(`[updateAssetRankingItem] Setting shares text for ${className} to: "${newText}"`); // DEBUG
+            sharesElement.textContent = newText; 
+            console.log(`[updateAssetRankingItem] Actual textContent after set: "${sharesElement.textContent}"`); // DEBUG
         }
         
         const profitElement = assetItem.querySelector('.asset-profit');
