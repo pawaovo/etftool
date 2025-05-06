@@ -31,6 +31,80 @@
 // 全局变量，用于存储调整数据
 let adjustData = [];
 
+// 添加内联的日期工具函数作为备份，确保在找不到dateUtils.js文件时也能正常工作
+const inlineDateUtils = {
+    /**
+     * 将毫秒时间戳转换为标准日期格式（YYYY-MM-DD）
+     * @param {number} timestamp - 毫秒级时间戳
+     * @returns {string} 格式化的日期字符串
+     */
+    convertTimestampToDate: function(timestamp) {
+        try {
+            // 确保timestamp是数字
+            timestamp = parseInt(timestamp);
+            if (isNaN(timestamp)) {
+                console.warn('时间戳格式无效:', timestamp);
+                return '--';
+            }
+            
+            // 创建Date对象
+            const date = new Date(timestamp);
+            
+            // 获取中国时区(UTC+8)的年、月、日
+            // 使用toLocaleDateString，指定中文区域和Asia/Shanghai时区
+            const options = { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                timeZone: 'Asia/Shanghai'
+            };
+            
+            // 尝试使用toLocaleDateString
+            try {
+                return date.toLocaleDateString('zh-CN', options).replace(/\//g, '-');
+            } catch (e) {
+                console.warn('toLocaleDateString出错，使用替代方法:', e);
+                
+                // 备用方案：手动提取日期
+                // 注意：这种方法可能不会正确处理时区
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+        } catch (error) {
+            console.error('日期转换错误:', error);
+            return '--';
+        }
+    }
+};
+
+// 确保全局dateUtils对象存在，如果不存在则使用内联版本
+if (typeof window.dateUtils === 'undefined') {
+    window.dateUtils = inlineDateUtils;
+    console.log('未找到dateUtils.js，使用内联版本');
+}
+
+// 页面加载时检查dateUtils.js是否已加载
+document.addEventListener('DOMContentLoaded', function() {
+    // 尝试加载dateUtils.js如果还没加载
+    if (typeof window.dateUtils === 'undefined' || window.dateUtils === inlineDateUtils) {
+        console.log('尝试动态加载dateUtils.js...');
+        
+        const script = document.createElement('script');
+        script.src = 'dateUtils.js';
+        script.onload = function() {
+            console.log('dateUtils.js 加载成功');
+        };
+        script.onerror = function() {
+            console.warn('无法加载dateUtils.js，继续使用内联版本');
+        };
+        document.head.appendChild(script);
+    } else {
+        console.log('dateUtils.js 已加载');
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // 加载dateUtils.js
     loadDateUtilsScript().then(() => {
@@ -1441,7 +1515,14 @@ function updateEtfCardsWithProcessedData(processedAssets) {
             // 检查是否是已清仓基金
             const isDisabled = card.classList.contains('disabled');
             
-            console.log(`[${index + 1}/${allFundCards.length}] 更新基金卡片: ${fundTitle} (${fundCode})${isDisabled ? ' [已清仓]' : ''}`);
+            // 更详细的卡片选择器记录，帮助诊断问题
+            console.log(`[${index + 1}/${allFundCards.length}] 更新基金卡片:`, {
+                卡片位置: index + 1,
+                基金名称: fundTitle,
+                基金代码: fundCode,
+                已清仓: isDisabled,
+                HTML结构: card.outerHTML.substring(0, 150) + '...'
+            });
             
             // 从预处理数据中查找匹配的基金
             let matchedFund = null;
@@ -1474,32 +1555,76 @@ function updateEtfCardsWithProcessedData(processedAssets) {
                 return;
             }
             
-            // --- REMOVED old logic that manually updated the first row ---
-            // const operationRow = card.querySelector('.fund-data-row:first-child');
-            // if (operationRow) { ... }
-
-            // --- ADDED call to updateOperationInfo --- 
-            // Prepare operationInfo object expected by updateOperationInfo
+            // 同时尝试两种方式更新操作信息
+            
+            // 1. 首先尝试使用新的专用函数更新
             let operationInfoForUpdate = null;
             if (matchedFund.latestOperation) {
-                // For disabled (cleared) funds, force type to '卖出'
+                // 对于已清仓基金，强制设置操作类型为"卖出"
                 const type = isDisabled ? "卖出" : matchedFund.latestOperation.tradeType;
-                operationInfoForUpdate = {
-                    type: type,
-                    shares: matchedFund.latestOperation.shares, // Ensure 'shares' field exists in processedData or adjust accordingly
-                    date: matchedFund.latestOperation.navDate // Use the timestamp
-                };
-                 // Set data attribute for sorting
-                card.dataset.operationDate = matchedFund.latestOperation.navDate;
+                const shares = matchedFund.latestOperation.shares;
+                const date = matchedFund.latestOperation.navDate;
+                
+                operationInfoForUpdate = { type, shares, date };
+                
+                // 将操作时间作为数据属性存储在卡片上，用于排序
+                if (date) {
+                    card.dataset.operationDate = date;
+                }
+                
+                // 调用专用更新函数
+                console.log(`[${fundCode}] 使用updateOperationInfo更新操作信息:`, operationInfoForUpdate);
+                updateOperationInfo(card, operationInfoForUpdate);
+            } else {
+                console.log(`[${fundCode}] 无最后操作记录，使用默认值`);
+                updateOperationInfo(card, null);
             }
-
-            // Call the refined function to update operation details
-            // --- DEBUGGING: Log data before calling updateOperationInfo ---
-            console.log(`[${fundCode}] Matched Fund Latest Op:`, matchedFund.latestOperation);
-            console.log(`[${fundCode}] Prepared Op Info for Update:`, operationInfoForUpdate);
-            // -------------------------------------------------------------
-            updateOperationInfo(card, operationInfoForUpdate);
-            // -------------------------------------------
+            
+            // 2. 后备方案：直接查找并更新DOM元素
+            const operationRow = card.querySelector('.fund-data-row:first-child');
+            if (operationRow) {
+                const valueElement = operationRow.querySelector('.fund-value');
+                if (valueElement && !valueElement.classList.contains('operation-details')) {
+                    console.log(`[${fundCode}] 使用直接DOM更新方法（后备方案）`);
+                    
+                    if (matchedFund.latestOperation) {
+                        // 对于已清仓基金，强制设置操作类型为"卖出"
+                        if (isDisabled && matchedFund.latestOperation.tradeType) {
+                            matchedFund.latestOperation.tradeType = "卖出";
+                        }
+                        
+                        // 准备日期字符串
+                        let dateString;
+                        if (typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) {
+                            dateString = dateUtils.convertTimestampToDate(matchedFund.latestOperation.navDate);
+                        } else {
+                            const date = new Date(parseInt(matchedFund.latestOperation.navDate));
+                            const year = date.getFullYear();
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
+                            const day = String(date.getDate()).padStart(2, '0');
+                            dateString = `${year}-${month}-${day}`;
+                        }
+                        
+                        // 构建显示文本
+                        const type = isDisabled ? "卖出" : matchedFund.latestOperation.tradeType;
+                        const shares = matchedFund.latestOperation.shares ? matchedFund.latestOperation.shares + '份' : '';
+                        const displayText = `${type} ${shares} (${dateString})`.trim();
+                        
+                        console.log(`[${fundCode}] 直接更新最后操作信息: ${displayText}`);
+                        valueElement.textContent = displayText;
+                        
+                        // 添加样式
+                        valueElement.classList.remove('buy', 'sell');
+                        if (type === '买入') {
+                            valueElement.classList.add('buy');
+                        } else if (type === '卖出') {
+                            valueElement.classList.add('sell');
+                        }
+                    } else {
+                        valueElement.textContent = "暂无记录";
+                    }
+                }
+            }
             
             // 创建用于updateFundCard的基金信息对象
             const fundInfo = {
@@ -1525,43 +1650,108 @@ function updateOperationInfo(card, operationInfo) {
     // Find the element where the operation details should be displayed
     const detailsElement = card.querySelector('.operation-details'); 
 
-    // --- DEBUGGING: Log inside updateOperationInfo ---
+    // --- DEBUGGING: Log more details ---
     const fundCodeForLog = card.dataset.fundCode || card.querySelector('.fund-code')?.textContent || 'Unknown';
     console.log(`[${fundCodeForLog}] updateOperationInfo called. Found detailsElement:`, !!detailsElement, "OpInfo received:", operationInfo);
     // -------------------------------------------------
 
     if (!detailsElement) {
-        // Log an error if the target element is not found in the card structure
-        console.warn(`Could not find .operation-details element in card for fund ${card.dataset.fundCode}`);
+        // 先尝试查找旧版DOM结构中的操作元素
+        const operationRow = card.querySelector('.fund-data-row:first-child');
+        if (operationRow) {
+            const valueElement = operationRow.querySelector('.fund-value');
+            if (valueElement) {
+                console.log(`[${fundCodeForLog}] 找到旧版DOM结构中的操作元素`);
+                
+                if (operationInfo && operationInfo.date) {
+                    // 确保使用正确的日期格式化方法
+                    let dateString;
+                    
+                    // 检查dateUtils全局对象是否可用
+                    if (typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) {
+                        console.log(`[${fundCodeForLog}] 使用dateUtils格式化日期: ${operationInfo.date}`);
+                        dateString = dateUtils.convertTimestampToDate(operationInfo.date);
+                    } else {
+                        // 内联实现日期格式化
+                        console.log(`[${fundCodeForLog}] dateUtils不可用，使用内联格式化: ${operationInfo.date}`);
+                        const date = new Date(parseInt(operationInfo.date));
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        dateString = `${year}-${month}-${day}`;
+                    }
+                    
+                    // 构建操作文本
+                    const type = operationInfo.type || '';
+                    const shares = operationInfo.shares !== undefined ? operationInfo.shares + '份' : '';
+                    const operationText = `${type} ${shares} (${dateString})`.trim();
+                    
+                    valueElement.textContent = operationText;
+                    console.log(`[${fundCodeForLog}] 更新操作信息为: ${operationText}`);
+                    
+                    // 添加样式
+                    valueElement.classList.remove('buy', 'sell');
+                    if (type === '买入') {
+                        valueElement.classList.add('buy');
+                    } else if (type === '卖出') {
+                        valueElement.classList.add('sell');
+                    }
+                } else {
+                    valueElement.textContent = '暂无操作';
+                }
+                
+                return; // 已处理，退出函数
+            }
+        }
+        
+        console.warn(`[${fundCodeForLog}] 无法找到操作信息显示元素`);
         return;
     }
 
-    // Check if we have valid operation info and the date formatting utility is available
-    if (operationInfo && operationInfo.date && typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) { // Correct function name
-        // Construct the text string: "Type Shares份 (YYYY-MM-DD)"
-        // Handle cases where type or shares might be missing gracefully
-        const operationText = 
-            `${operationInfo.type || ''} ${operationInfo.shares !== undefined ? operationInfo.shares + '份' : ''} (${dateUtils.convertTimestampToDate(operationInfo.date)})`; // Correct function call
+    // 检查是否有效的操作信息和日期格式化工具
+    if (operationInfo && operationInfo.date) {
+        // 确保使用正确的日期格式化方法
+        let dateString;
         
-        // Update the text content of the element, removing leading/trailing spaces
-        detailsElement.textContent = operationText.trim();
+        // 检查dateUtils全局对象是否可用
+        if (typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) {
+            console.log(`[${fundCodeForLog}] 使用dateUtils格式化日期: ${operationInfo.date}`);
+            dateString = dateUtils.convertTimestampToDate(operationInfo.date);
+        } else {
+            // 内联实现日期格式化
+            console.log(`[${fundCodeForLog}] dateUtils不可用，使用内联格式化: ${operationInfo.date}`);
+            const date = new Date(parseInt(operationInfo.date));
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            dateString = `${year}-${month}-${day}`;
+        }
+        
+        // 构建操作文本
+        const type = operationInfo.type || '';
+        const shares = operationInfo.shares !== undefined ? operationInfo.shares + '份' : '';
+        const operationText = `${type} ${shares} (${dateString})`.trim();
+        
+        // 更新元素的文本内容，去除首尾空格
+        detailsElement.textContent = operationText;
+        console.log(`[${fundCodeForLog}] 更新操作信息为: ${operationText}`);
 
-        // Optional: Apply styling classes based on the operation type
-        detailsElement.classList.remove('buy', 'sell'); // Clear existing classes first
-        if (operationInfo.type === '买入') {
+        // 根据操作类型应用样式类
+        detailsElement.classList.remove('buy', 'sell'); // 先清除现有类
+        if (type === '买入') {
             detailsElement.classList.add('buy');
-        } else if (operationInfo.type === '卖出') {
+        } else if (type === '卖出') {
             detailsElement.classList.add('sell');
         }
 
     } else {
-        // If data is missing or invalid, reset to the default placeholder
+        // 如果数据缺失或无效，重置为默认占位符
         detailsElement.textContent = '--'; 
-        detailsElement.classList.remove('buy', 'sell'); // Clear styling classes
+        detailsElement.classList.remove('buy', 'sell'); // 清除样式类
         
-        // Log a warning if operationInfo exists but lacks a date or dateUtils is unavailable
+        // 如果operationInfo存在但缺少日期或dateUtils不可用，记录警告
         if (operationInfo) {
-             console.warn(`Missing operation date or dateUtils.convertTimestampToDate unavailable for fund ${fundCodeForLog}`, operationInfo); // Update warning message
+            console.warn(`[${fundCodeForLog}] 缺少操作日期或dateUtils.convertTimestampToDate不可用`, operationInfo);
         }
     }
 }
