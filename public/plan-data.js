@@ -972,8 +972,8 @@ async function loadAssetInfo() {
                     accProfitRate = assetClass.compList[0].accProfit || 0;
                 }
                 
-                // 更新左侧资产排名列表
-                updateAssetRankingItem(className, unit, percent, accProfitRate);
+                // 更新左侧资产排名列表 - 确保乘以100
+                updateAssetRankingItem(className, unit, percent * 100, accProfitRate * 100);
             });
         }
         
@@ -992,8 +992,8 @@ async function loadAssetInfo() {
                 const percent = assetClass.percent;
                 const accProfitRate = assetClass.accProfitRate;
                 
-                // 更新右侧资产详情部分
-                updateAssetDetailHeader(className, unit, percent, accProfitRate);
+                // 更新右侧资产详情部分 - 确保乘以100
+                updateAssetDetailHeader(className, unit, percent * 100, accProfitRate * 100);
             });
         }
         
