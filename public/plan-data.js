@@ -1491,6 +1491,10 @@ function updateEtfCardsWithProcessedData(processedAssets) {
             }
 
             // Call the refined function to update operation details
+            // --- DEBUGGING: Log data before calling updateOperationInfo ---
+            console.log(`[${fundCode}] Matched Fund Latest Op:`, matchedFund.latestOperation);
+            console.log(`[${fundCode}] Prepared Op Info for Update:`, operationInfoForUpdate);
+            // -------------------------------------------------------------
             updateOperationInfo(card, operationInfoForUpdate);
             // -------------------------------------------
             
@@ -1517,6 +1521,11 @@ function updateEtfCardsWithProcessedData(processedAssets) {
 function updateOperationInfo(card, operationInfo) {
     // Find the element where the operation details should be displayed
     const detailsElement = card.querySelector('.operation-details'); 
+
+    // --- DEBUGGING: Log inside updateOperationInfo ---
+    const fundCodeForLog = card.dataset.fundCode || card.querySelector('.fund-code')?.textContent || 'Unknown';
+    console.log(`[${fundCodeForLog}] updateOperationInfo called. Found detailsElement:`, !!detailsElement, "OpInfo received:", operationInfo);
+    // -------------------------------------------------
 
     if (!detailsElement) {
         // Log an error if the target element is not found in the card structure
