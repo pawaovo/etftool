@@ -1,6 +1,6 @@
 {
   
-  "rewrites": [
+  "routes": [
     { "src": "/", "dest": "/150plan.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
@@ -11,8 +11,11 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
     }
-  ]
-} 
+  ],
+  "git": {
+    "submodules": false
+  }
+}

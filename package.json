@@ -9,6 +9,7 @@
     "build": "node scripts/process-data.js && node scripts/copy-to-dist.js",
     "start": "node scripts/serve.js",
     "dev": "npm run build && npm run start",
+    "vercel-build": "npm run build",
     "update-netvalues": "node scripts/updateNetValues.js",
     "update-netvalues-mock": "node scripts/updateNetValues.js --mock",
     "update-netvalues-python": "node scripts/python-api-bridge.js",
