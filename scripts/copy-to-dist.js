@@ -145,7 +145,7 @@ function build() {
   // 修复 dist/grid/grid.html
   modifyFileContent(path.join(distDir, 'grid', 'grid.html'), [
     { find: 'href="../styles/etf-cards.css"', replace: 'href="../styles/etf-cards.css"' }, // 确认指向 dist/styles/etf-cards.css
-    // { find: 'href="../public/150plan.html"', replace: 'href="../150plan.html"' } // 注释掉这行无效的替换
+    { find: 'href="../public/150plan.html"', replace: 'href="../150plan.html"' }
   ]);
 
   // 修复 dist/grid/grid-detail.html (相对路径应该不用改)

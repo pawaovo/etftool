@@ -1033,32 +1033,28 @@ function loadEtfDataWithXHR() {
  * 更新左侧资产排名列表中的项
  */
 function updateAssetRankingItem(className, unit, percent, accProfitRate) {
-    const assetType = getAssetTypeFromClassName(className);
+    // 根据资产名称找到对应的元素
+    let assetType = getAssetTypeFromClassName(className);
     const assetItem = document.querySelector(`.asset-item[data-asset-type="${assetType}"]`);
-    console.log(`[updateAssetRankingItem] Processing: ${className}, Unit: ${unit}, Percent Input: ${percent}`); // DEBUG
-    if (assetItem) {
-        const nameElement = assetItem.querySelector('.asset-name');
-        if (nameElement) nameElement.textContent = className;
-        
-        const sharesElement = assetItem.querySelector('.asset-shares');
-        if (sharesElement) {
-            // 更新份数和格式化后的百分比
-            const formattedPercent = percent.toFixed(2);
-            const newText = `${unit}份 (${formattedPercent}%)`; 
-            console.log(`[updateAssetRankingItem] Setting shares text for ${className} to: "${newText}"`); // DEBUG
-            sharesElement.textContent = newText; 
-            console.log(`[updateAssetRankingItem] Actual textContent after set: "${sharesElement.textContent}"`); // DEBUG
-        }
-        
-        const profitElement = assetItem.querySelector('.asset-profit');
-        if (profitElement) {
-            const profitText = `${accProfitRate >= 0 ? '+' : ''}${accProfitRate.toFixed(2)}%`;
-            profitElement.textContent = profitText;
-            profitElement.classList.toggle('positive', accProfitRate >= 0);
-            profitElement.classList.toggle('negative', accProfitRate < 0);
-        }
-    } else {
-        console.warn(`未找到资产项: ${className} (类型: ${assetType})`);
+    
+    if (!assetItem) {
+        console.warn(`未找到资产项: ${className} (${assetType})`);
+        return;
+    }
+    
+    // 更新份数和占比
+    const sharesElem = assetItem.querySelector('.asset-shares');
+    if (sharesElem) {
+        // 确保percent是以小数形式传入的，直接格式化为百分比显示
+        sharesElem.textContent = `${unit}份 (${percent.toFixed(2)}%)`;
+    }
+    
+    // 更新累计收益率
+    const profitElem = assetItem.querySelector('.asset-profit');
+    if (profitElem) {
+        // 确保accProfitRate是以小数形式传入的，直接格式化为百分比显示
+        profitElem.textContent = `+${accProfitRate.toFixed(2)}%`;
+        profitElem.className = `asset-profit ${accProfitRate >= 0 ? 'positive' : 'negative'}`;
     }
 }
 
