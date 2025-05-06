@@ -36,29 +36,34 @@ document.addEventListener('DOMContentLoaded', function() {
     loadDateUtilsScript().then(() => {
         console.log('日期工具已加载');
         
-    // 初始化页面
-    initPlanPage();
-    
-    // 设置基金卡片颜色
-    setupFundCardColors();
+        // 初始化页面
+        initPlanPage(); // initPlanPage now relies on processedData, call it first
+        
+        // 设置基金卡片颜色 - 可以稍后调用
+        // setupFundCardColors(); 
 
-    // 加载大类资产信息
-    loadAssetInfo();
+        // 加载大类资产信息 - 依赖 processedData 或 fetch, 可以在 initPlanPage 后
+        loadAssetInfo();
 
-    // 加载大类资产信息和最后操作时间
-    loadAssetLatestOperationTime();
-    
-    // 加载ETF卡片数据
-    loadEtfCardData();
+        // 加载大类资产信息和最后操作时间 - 依赖 adjust.json, 可以在 initPlanPage 后
+        loadAssetLatestOperationTime();
+        
+        // 加载ETF卡片数据 - ***必须在 dateUtils 加载后执行***
+        loadEtfCardData(); 
+
+        // 将颜色设置移到数据加载后，确保卡片已生成
+        setTimeout(setupFundCardColors, 1000); // Increase delay slightly if needed
+
     }).catch(error => {
         console.error('日期工具加载失败:', error);
-        
-        // 即使dateUtils加载失败，也继续初始化页面
-        initPlanPage();
-        setupFundCardColors();
-        loadAssetInfo();
-        loadAssetLatestOperationTime();
-        loadEtfCardData();
+        // 如果 dateUtils 加载失败，显示错误信息，阻止进一步执行依赖它的代码
+        alert('关键日期工具加载失败，页面功能可能不完整！请检查网络连接或刷新重试。');
+        // 移除依赖 dateUtils 的调用
+        // initPlanPage();
+        // setupFundCardColors();
+        // loadAssetInfo();
+        // loadAssetLatestOperationTime();
+        // loadEtfCardData();
     });
 });
 
@@ -1534,11 +1539,11 @@ function updateOperationInfo(card, operationInfo) {
     }
 
     // Check if we have valid operation info and the date formatting utility is available
-    if (operationInfo && operationInfo.date && typeof dateUtils !== 'undefined' && dateUtils.formatDate) {
+    if (operationInfo && operationInfo.date && typeof dateUtils !== 'undefined' && dateUtils.convertTimestampToDate) { // Correct function name
         // Construct the text string: "Type Shares份 (YYYY-MM-DD)"
         // Handle cases where type or shares might be missing gracefully
         const operationText = 
-            `${operationInfo.type || ''} ${operationInfo.shares !== undefined ? operationInfo.shares + '份' : ''} (${dateUtils.formatDate(operationInfo.date)})`;
+            `${operationInfo.type || ''} ${operationInfo.shares !== undefined ? operationInfo.shares + '份' : ''} (${dateUtils.convertTimestampToDate(operationInfo.date)})`; // Correct function call
         
         // Update the text content of the element, removing leading/trailing spaces
         detailsElement.textContent = operationText.trim();
@@ -1558,7 +1563,7 @@ function updateOperationInfo(card, operationInfo) {
         
         // Log a warning if operationInfo exists but lacks a date or dateUtils is unavailable
         if (operationInfo) {
-             console.warn(`Missing operation date or dateUtils unavailable for fund ${card.dataset.fundCode}`, operationInfo);
+             console.warn(`Missing operation date or dateUtils.convertTimestampToDate unavailable for fund ${fundCodeForLog}`, operationInfo); // Update warning message
         }
     }
 }
