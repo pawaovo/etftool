@@ -1033,6 +1033,10 @@ function loadEtfDataWithXHR() {
  * 更新左侧资产排名列表中的项
  */
 function updateAssetRankingItem(className, unit, percent, accProfitRate) {
+    // --- DEBUGGING: Log input values ---
+    console.log(`updateAssetRankingItem for ${className}: unit=${unit}, percent=${percent}, accProfitRate=${accProfitRate}`);
+    // ----------------------------------
+
     // 根据资产名称找到对应的元素
     let assetType = getAssetTypeFromClassName(className);
     const assetItem = document.querySelector(`.asset-item[data-asset-type="${assetType}"]`);
@@ -1515,39 +1519,41 @@ function updateEtfCardsWithProcessedData(processedAssets) {
  * 更新卡片中的最后操作信息
  */
 function updateOperationInfo(card, operationInfo) {
-    // 获取最后操作信息元素
-    const operationElem = card.querySelector('.fund-data-row:first-child .fund-value');
-    if (!operationElem) return;
-    
-    if (!operationInfo) {
-        operationElem.textContent = '无操作记录';
+    // Find the element where the operation details should be displayed
+    const detailsElement = card.querySelector('.operation-details'); 
+
+    if (!detailsElement) {
+        // Log an error if the target element is not found in the card structure
+        console.warn(`Could not find .operation-details element in card for fund ${card.dataset.fundCode}`);
         return;
     }
-    
-    // 更新最后操作信息
-    operationElem.textContent = operationInfo.displayText || `${operationInfo.tradeType} (${operationInfo.operationDate})`;
-    
-    // 根据操作类型设置样式
-    if (operationInfo.tradeType === '买入') {
-        operationElem.classList.add('buy');
-        operationElem.classList.remove('sell');
-    } else if (operationInfo.tradeType === '卖出') {
-        operationElem.classList.add('sell');
-        operationElem.classList.remove('buy');
-    }
-    
-    // 查找该卡片所在的资产组
-    const assetGroup = card.closest('.asset-group');
-    if (assetGroup) {
-        // 检查该卡片是否是资产组中的第一张卡片
-        const firstCard = assetGroup.querySelector('.fund-card');
-        if (firstCard === card) {
-            // 更新资产组标题栏中的最后操作时间
-            const dateElem = assetGroup.querySelector('.detail-date');
-            if (dateElem && operationInfo.operationDate) {
-                dateElem.textContent = operationInfo.operationDate;
-                console.log(`通过updateOperationInfo更新最后操作时间为: ${operationInfo.operationDate}`);
-            }
+
+    // Check if we have valid operation info and the date formatting utility is available
+    if (operationInfo && operationInfo.date && typeof dateUtils !== 'undefined' && dateUtils.formatDate) {
+        // Construct the text string: "Type Shares份 (YYYY-MM-DD)"
+        // Handle cases where type or shares might be missing gracefully
+        const operationText = 
+            `${operationInfo.type || ''} ${operationInfo.shares !== undefined ? operationInfo.shares + '份' : ''} (${dateUtils.formatDate(operationInfo.date)})`;
+        
+        // Update the text content of the element, removing leading/trailing spaces
+        detailsElement.textContent = operationText.trim();
+
+        // Optional: Apply styling classes based on the operation type
+        detailsElement.classList.remove('buy', 'sell'); // Clear existing classes first
+        if (operationInfo.type === '买入') {
+            detailsElement.classList.add('buy');
+        } else if (operationInfo.type === '卖出') {
+            detailsElement.classList.add('sell');
+        }
+
+    } else {
+        // If data is missing or invalid, reset to the default placeholder
+        detailsElement.textContent = '--'; 
+        detailsElement.classList.remove('buy', 'sell'); // Clear styling classes
+        
+        // Log a warning if operationInfo exists but lacks a date or dateUtils is unavailable
+        if (operationInfo) {
+             console.warn(`Missing operation date or dateUtils unavailable for fund ${card.dataset.fundCode}`, operationInfo);
         }
     }
 }
