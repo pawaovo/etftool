@@ -1,0 +1,24 @@
+{
+  
+  "routes": [
+    { "src": "/", "dest": "/150plan.html" },
+    { "src": "/(.*)", "dest": "/$1" }
+  ],
+  "outputDirectory": "dist",
+  "github": {
+    "silent": true
+  },
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { 
+        "distDir": "dist",
+        "buildCommand": "npm run vercel-build"
+      }
+    }
+  ],
+  "git": {
+    "submodules": false
+  }
+}

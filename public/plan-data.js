@@ -1768,6 +1768,10 @@ function findFundInfo(etfData, fundTitle, fundCode) {
  * @param {Object} fundInfo - 基金信息对象
  */
 function updateFundCard(card, fundInfo) {
+    // --- DEBUGGING: Log inside updateFundCard ---
+    const fundCodeForLog = card.dataset.fundCode || card.querySelector('.fund-code')?.textContent || 'Unknown';
+    console.log(`[${fundCodeForLog}] updateFundCard called. FundInfo received:`, fundInfo);
+    // ------------------------------------------
     if (!card || !fundInfo) return;
     
     // 检查卡片是否已禁用（清仓）
@@ -1802,6 +1806,9 @@ function updateFundCard(card, fundInfo) {
     if (historicalLowRow) {
         const value = historicalLowRow.querySelector('.fund-value');
         if (value) {
+            // --- DEBUGGING: Check condition for historicalLowRow ---
+            console.log(`[${fundCodeForLog}] Checking historicalLowRow: lowestPrice=${fundInfo.lowestPrice}`);
+            // -----------------------------------------------------
             // 如果历史最低价大于0，显示它；否则隐藏整行
             if (fundInfo.lowestPrice && fundInfo.lowestPrice > 0) {
                 value.textContent = fundInfo.lowestPrice.toFixed(4);
@@ -1816,6 +1823,9 @@ function updateFundCard(card, fundInfo) {
     if (valueCompareToLowRow) {
         const value = valueCompareToLowRow.querySelector('.fund-value');
         if (value) {
+             // --- DEBUGGING: Check condition for valueCompareToLowRow ---
+             console.log(`[${fundCodeForLog}] Checking valueCompareToLowRow: lowestPrice=${fundInfo.lowestPrice}, nav=${fundInfo.nav}`);
+             // ---------------------------------------------------------
             // 如果历史最低价大于0，计算并显示比较；否则隐藏整行
             if (fundInfo.lowestPrice && fundInfo.lowestPrice > 0 && fundInfo.nav) {
                 const percentage = ((fundInfo.nav - fundInfo.lowestPrice) / fundInfo.lowestPrice * 100).toFixed(2);
@@ -1929,6 +1939,10 @@ function generateAssetGroupsHTML(etfData) {
  * @returns {Element} - 基金卡片DOM元素
  */
 function createFundCard(fund) {
+    // --- DEBUGGING: Log inside createFundCard ---
+    console.log(`[${fund?.fund?.fundCode || 'Unknown'}] createFundCard called. isActive: ${fund?.planUnit > 0}. Fund data received:`, fund);
+    // -------------------------------------------
+
     // 验证基金数据
     if (!fund || !fund.fund) return null;
     
