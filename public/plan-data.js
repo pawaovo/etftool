@@ -36,23 +36,21 @@ document.addEventListener('DOMContentLoaded', function() {
     loadDateUtilsScript().then(() => {
         console.log('日期工具已加载');
         
-        // 初始化页面
-        initPlanPage(); // initPlanPage now relies on processedData, call it first
+        // 1. Basic page setup (needs DOM ready)
+        initPlanPage(); 
         
-        // 设置基金卡片颜色 - 可以稍后调用
-        // setupFundCardColors(); 
-
-        // 加载大类资产信息 - 依赖 processedData 或 fetch, 可以在 initPlanPage 后
+        // 2. Create the asset group and card STRUCTURE (needs processedData, generates DOM)
+        // Assuming loadAssetInfo uses processedData synchronously after initPlanPage:
         loadAssetInfo();
 
-        // 加载大类资产信息和最后操作时间 - 依赖 adjust.json, 可以在 initPlanPage 后
+        // 3. Load additional data for headers (async OK)
         loadAssetLatestOperationTime();
         
-        // 加载ETF卡片数据 - ***必须在 dateUtils 加载后执行***
-        loadEtfCardData(); 
+        // 4. NOW load data to UPDATE the existing card elements (needs DOM structure from step 2 and dateUtils)
+        loadEtfCardData(); // This should call updateEtfCardsWithProcessedData
 
-        // 将颜色设置移到数据加载后，确保卡片已生成
-        setTimeout(setupFundCardColors, 1000); // Increase delay slightly if needed
+        // 5. Apply colors after cards are created and potentially updated
+        setTimeout(setupFundCardColors, 1500); // Slightly longer delay might be needed
 
     }).catch(error => {
         console.error('日期工具加载失败:', error);
