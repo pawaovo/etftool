@@ -4,7 +4,7 @@
   "description": "ETF数据处理工具",
   "main": "index.js",
   "scripts": {
-    "clean": "rimraf dist/*",
+    "clean": "node scripts/clean.js",
     "prebuild": "npm run clean",
     "build": "node scripts/process-data.js && node scripts/copy-to-dist.js",
     "start": "node scripts/serve.js",
