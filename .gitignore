@@ -51,4 +51,21 @@ __pycache__/
 # Cursor specific files
 .cursor/*
 !.cursor/rules/
-!.cursor/settings.json 
+!.cursor/settings.json
+
+# Added by Claude Task Master
+dev-debug.log
+# Dependency directories
+node_modules/
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+# Task files
+tasks.json
+tasks/ 

@@ -287,6 +287,79 @@
             }
         }
     </style>
+    <style>
+        .usage-notice-button {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 9999; /* Ensure it's above most other content */
+            font-size: 14px;
+        }
+
+        .usage-notice-button:hover {
+            background-color: #0056b3;
+        }
+
+        .modal-overlay {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* Dimmed background */
+            z-index: 10000; /* Ensure it's on top of everything */
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            text-align: left;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #aaa;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-close-button:hover {
+            color: #333;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .modal-content p {
+            margin-bottom: 12px;
+        }
+    </style>
 </head>
 <body>
     <main class="plan-container">
@@ -367,6 +440,17 @@
         </div>
     </main>
 
+    <button id="usageNoticeBtn" class="usage-notice-button">使用须知</button>
+
+    <div id="usageModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="usageModalCloseBtn" class="modal-close-button">&times;</button>
+            <h3>使用须知</h3>
+            <p><strong>150计划</strong>——对应E大的"长赢指数投资计划-150份"，可查看各大类资产的占比和其所属ETF基金的具体情况。通过对比E大的历史交易，结合目前各ETF基金现状，辅助交易决策。如某基金目前现值已跌破E大历史低位，或低于E大上次交易价格，则可考虑买进。</p>
+            <p><strong>网格策略</strong>——对应E大华宝证券的"ETF网格策略"，可查看各网格策略的历史操作，搭配网格压力测试，可制定自己的网格交易策略。（网格策略内容仅供参考）</p>
+        </div>
+    </div>
+
     <script src="js/script.js"></script>
     <script src="js/grid-data.js"></script>
     
@@ -390,6 +474,32 @@
                 });
             });
         });
+    </script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const usageNoticeBtn = document.getElementById('usageNoticeBtn');
+        const usageModalOverlay = document.getElementById('usageModalOverlay');
+        const usageModalCloseBtn = document.getElementById('usageModalCloseBtn');
+
+        if (usageNoticeBtn && usageModalOverlay && usageModalCloseBtn) {
+            usageNoticeBtn.addEventListener('click', function() {
+                usageModalOverlay.style.display = 'flex';
+            });
+
+            usageModalCloseBtn.addEventListener('click', function() {
+                usageModalOverlay.style.display = 'none';
+            });
+
+            // Optional: Close modal if user clicks outside the modal content
+            usageModalOverlay.addEventListener('click', function(event) {
+                if (event.target === usageModalOverlay) { // Clicked on the overlay itself
+                    usageModalOverlay.style.display = 'none';
+                }
+            });
+        } else {
+            console.warn('Usage notice elements not found. Ensure IDs are correct.');
+        }
+    });
     </script>
 </body>
 </html> 

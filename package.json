@@ -1,6 +1,6 @@
 {
   "name": "etftool",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "ETF数据处理工具",
   "main": "index.js",
   "scripts": {
@@ -26,6 +26,7 @@
     "@modelcontextprotocol/server-github": "^2025.4.8",
     "axios": "^1.6.7",
     "node-cron": "^3.0.3",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "semver": "^7.7.1"
   }
 }

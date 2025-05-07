@@ -400,10 +400,30 @@ function showExpandedChartModal() {
     
     console.log('准备初始化横向图表，容器和工具提示已准备好');
     
+    // 保存当前竖向图表的时间范围和缩放状态，供横向图表使用
+    let currentTimeRangeState = null;
+    if (window.timeRangeState) {
+        // 深拷贝当前状态，避免引用问题
+        currentTimeRangeState = JSON.parse(JSON.stringify(window.timeRangeState));
+        console.log('已保存当前竖向图表的时间范围状态:', currentTimeRangeState);
+    }
+    
+    // 读取当前竖向图表的图例可见性状态
+    const verticalChartLegendState = {};
+    const verticalLegendItems = document.querySelectorAll('.chart-legend .legend-item');
+    verticalLegendItems.forEach(item => {
+        const assetType = item.dataset.assetType;
+        verticalChartLegendState[assetType] = !item.classList.contains('hidden');
+    });
+    console.log('已保存当前竖向图表的图例状态:', verticalChartLegendState);
+    
     // 立即初始化图表，不使用延迟
     try {
-        // 初始化横向图表
-        initHorizontalChart(horizontalChartContainer, modalTooltip, legendContainer);
+        // 初始化横向图表，传递当前状态
+        initHorizontalChart(horizontalChartContainer, modalTooltip, legendContainer, {
+            timeRangeState: currentTimeRangeState,
+            legendState: verticalChartLegendState
+        });
         console.log('横向图表初始化完成');
     } catch (error) {
         console.error('横向图表初始化失败:', error);
@@ -414,7 +434,7 @@ function showExpandedChartModal() {
 /**
  * 初始化横向趋势图
  */
-function initHorizontalChart(chartContainer, tooltipElement, legendContainer) {
+function initHorizontalChart(chartContainer, tooltipElement, legendContainer, initialState = {}) {
     // 在函数开始处添加tooltip初始化代码
     if (!tooltipElement) {
         console.warn('未提供工具提示元素，创建新的工具提示元素');
@@ -447,427 +467,244 @@ function initHorizontalChart(chartContainer, tooltipElement, legendContainer) {
         return;
     }
     
-    // 清空容器
-    chartContainer.innerHTML = '';
-    
-    try {
-        // 获取容器尺寸
-        const containerWidth = chartContainer.clientWidth || 1000;
-        const containerHeight = chartContainer.clientHeight || 550;
-        
-        console.log(`横向图表尺寸: ${containerWidth}x${containerHeight}`);
-        
-        // 创建SVG
-        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', '100%');
-        svg.setAttribute('height', '100%');
-        svg.setAttribute('viewBox', `0 0 ${containerWidth} ${containerHeight}`);
-        svg.style.display = 'block';
-        svg.style.fontFamily = 'Noto Sans SC, Arial, sans-serif'; // 添加字体样式，与竖向图表保持一致
-        
-        // 添加滚动轴的高度
-        const scrollbarHeight = 15;
-        const scrollbarMarginTop = 8;
-        
-        // 横向图表边距 - 考虑滚动条
-        const hMargin = { 
-            top: 20, 
-            right: 20, 
-            bottom: 50 + scrollbarHeight + scrollbarMarginTop, 
-            left: 40 
-        };
-        
-        // 创建图表组
-        const chartGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        chartGroup.setAttribute('transform', `translate(${hMargin.left}, ${hMargin.top})`);
-        
-        const width = containerWidth - hMargin.left - hMargin.right;
-        const height = containerHeight - hMargin.top - hMargin.bottom;
-        
-        // 创建滚动轴组
-        const scrollbarGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        scrollbarGroup.setAttribute('transform', `translate(${hMargin.left}, ${hMargin.top + height + scrollbarMarginTop})`);
-        scrollbarGroup.setAttribute('class', 'scrollbar-group');
-        svg.appendChild(scrollbarGroup);
-        
-        // 绘制滚动轴
-        drawTimeScrollbar(scrollbarGroup, width, scrollbarHeight);
-        
-        // 绘制横向趋势图 - 使用完整日期范围
-        const fullMinDate = assetDistributionData[0].compDate;
-        const fullMaxDate = assetDistributionData[assetDistributionData.length - 1].compDate;
-        drawHorizontalTrendChart(chartGroup, width, height, fullMinDate, fullMaxDate);
-        
-        // 将SVG添加到容器
-        svg.appendChild(chartGroup);
-        chartContainer.appendChild(svg);
-        
-        // 添加图表交互功能
-        setupHorizontalChartInteractions(svg, chartGroup, width, height, tooltipElement, scrollbarGroup, scrollbarHeight);
-        
-        // 添加图表交互式图例
-        addHorizontalLegend(legendContainer);
-        
-        console.log('横向资产分布趋势图初始化完成');
-    } catch (error) {
-        console.error('绘制横向图表时发生错误:', error);
-        chartContainer.innerHTML = `<div style="color:red;text-align:center;padding:20px;">图表渲染错误: ${error.message}</div>`;
+    // 清空图表容器
+    while (chartContainer.firstChild) {
+        chartContainer.removeChild(chartContainer.firstChild);
     }
+    
+    // 获取容器的尺寸
+    const containerWidth = chartContainer.clientWidth;
+    const containerHeight = chartContainer.clientHeight;
+    
+    console.log(`横向图表容器尺寸: ${containerWidth} x ${containerHeight}`);
+    
+    if (containerWidth <= 0 || containerHeight <= 0) {
+        console.error('图表容器尺寸无效，无法初始化图表');
+        return;
+    }
+    
+    // 创建SVG元素
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', containerWidth);
+    svg.setAttribute('height', containerHeight);
+    svg.style.display = 'block';
+    chartContainer.appendChild(svg);
+    
+    // 为X轴标签预留更多空间
+    const adjustedMargin = { 
+        top: margin.top, 
+        right: margin.right, 
+        bottom: margin.bottom + 20, // 增加底部边距以容纳时间轴标签
+        left: margin.left 
+    };
+    
+    // 创建图表组 - 主要绘图区域，应用边距
+    const chartGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    chartGroup.setAttribute('transform', `translate(${adjustedMargin.left}, ${adjustedMargin.top})`);
+    svg.appendChild(chartGroup);
+        
+    // 图表尺寸
+    const width = containerWidth - adjustedMargin.left - adjustedMargin.right;
+    const height = containerHeight - adjustedMargin.top - adjustedMargin.bottom - 15; // 减去滚动条高度
+        
+    // 创建滚动条组 - 位于主图表下方
+    const scrollbarGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    scrollbarGroup.setAttribute('transform', `translate(${adjustedMargin.left}, ${height + adjustedMargin.top + 25})`); // 增加偏移以容纳X轴标签
+    svg.appendChild(scrollbarGroup);
+        
+    // 绘制滚动轴背景
+    drawTimeScrollbar(scrollbarGroup, width, 15);
+    
+    // 使用初始时间范围状态或默认值
+    let timeRangeState;
+    if (initialState.timeRangeState) {
+        // 使用传入的状态
+        timeRangeState = initialState.timeRangeState;
+        console.log('使用传入的时间范围状态:', timeRangeState);
+    } else {
+        // 使用默认状态
+        timeRangeState = {
+            originalMinDate: assetDistributionData[0].compDate,
+            originalMaxDate: assetDistributionData[assetDistributionData.length - 1].compDate,
+            minDate: assetDistributionData[0].compDate,
+            maxDate: assetDistributionData[assetDistributionData.length - 1].compDate,
+            zoomLevel: 1,
+            isAnimating: false,
+            isDraggingScrollbar: false,
+            dragStartX: 0,
+            dragType: null
+        };
+    }
+    
+    // 保存到可访问的变量，供绘图函数使用
+    window.horizontalTimeRangeState = timeRangeState;
+    
+    // 绘制网格和坐标轴
+    drawHorizontalGridAndAxes(chartGroup, width, height);
+    
+    // 绘制趋势图
+    drawHorizontalTrendChart(chartGroup, width, height, timeRangeState.minDate, timeRangeState.maxDate);
+    
+    // 更新滚动条以匹配当前状态
+    updateScrollbar(
+        scrollbarGroup, 
+        width, 
+        15, 
+        timeRangeState.minDate, 
+        timeRangeState.maxDate,
+        timeRangeState.originalMinDate, 
+        timeRangeState.originalMaxDate
+    );
+    
+    // 添加交互功能
+    setupHorizontalChartInteractions(svg, chartGroup, width, height, tooltipElement, scrollbarGroup, 15, {
+        timeRangeState: timeRangeState
+    });
+    
+    // 添加图例
+    addHorizontalLegend(legendContainer, initialState.legendState);
+    
+    console.log('横向图表初始化完成');
 }
 
 /**
- * 绘制横向趋势图
+ * 为横向图表添加图例
  */
-function drawHorizontalTrendChart(chartGroup, width, height, minDate, maxDate) {
-    const numPoints = assetDistributionData.length;
-    console.log(`绘制横向趋势图，数据点数量: ${numPoints}`);
+function addHorizontalLegend(legendContainer, initialLegendState = null) {
+    if (!legendContainer) {
+        console.warn('未提供图例容器，无法添加水平图表图例');
+        return;
+    }
     
-    if (numPoints === 0) return;
+    // 清空容器内容
+    legendContainer.innerHTML = '';
     
     // 资产类型列表
     const assetTypes = Object.keys(assetCodeToNameMap);
     
-    // 计算时间比例尺（时间在X轴）- 使用传入的日期范围或默认范围
-    const effectiveMinDate = minDate || assetDistributionData[0].compDate;
-    const effectiveMaxDate = maxDate || assetDistributionData[numPoints - 1].compDate;
+    // 记录图例隐藏状态 - 从初始状态或创建新状态
+    const hiddenAssets = {};
     
-    const xScale = (timestamp) => {
-        return width * (timestamp - effectiveMinDate) / (effectiveMaxDate - effectiveMinDate);
-    };
-    
-    // 计算比例尺，将百分比转换为Y轴位置
-    const yScale = (percent) => height * (1 - percent);
-    
-    // 绘制网格线和坐标轴
-    drawHorizontalGridAndAxes(chartGroup, width, height);
-    
-    // 绘制重叠区域，传递日期范围参数
-    drawHorizontalOverlaidAreas(chartGroup, assetTypes, xScale, yScale, height, effectiveMinDate, effectiveMaxDate);
-    
-    // 绘制时间轴标记 - 传递当前显示的日期范围
-    const currentDateRange = {
-        minDate: effectiveMinDate,
-        maxDate: effectiveMaxDate
-    };
-    drawHorizontalTimeAxisMarkers(chartGroup, xScale, width, height, currentDateRange);
-}
-
-/**
- * 绘制横向图表的网格线和坐标轴
- */
-function drawHorizontalGridAndAxes(chartGroup, width, height) {
-    // X轴（时间轴）- 放在底部
-    const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    xAxis.setAttribute('x1', 0);
-    xAxis.setAttribute('y1', height);
-    xAxis.setAttribute('x2', width);
-    xAxis.setAttribute('y2', height);
-    xAxis.setAttribute('stroke', '#ccc');
-    xAxis.setAttribute('stroke-width', 1);
-    xAxis.setAttribute('pointer-events', 'none');
-    chartGroup.appendChild(xAxis);
-    
-    // Y轴（百分比）- 放在左侧
-    const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    yAxis.setAttribute('x1', 0);
-    yAxis.setAttribute('y1', 0);
-    yAxis.setAttribute('x2', 0);
-    yAxis.setAttribute('y2', height);
-    yAxis.setAttribute('stroke', '#ccc');
-    yAxis.setAttribute('stroke-width', 1);
-    yAxis.setAttribute('pointer-events', 'none');
-    chartGroup.appendChild(yAxis);
-    
-    // Y轴网格线和标签
-    const percentGridLines = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
-    
-    percentGridLines.forEach(percent => {
-        const y = height * (1 - percent);
+    // 为每种资产类型创建图例项
+    Object.entries(assetCodeToNameMap).forEach(([type, name]) => {
+        // 确定初始可见性状态
+        const isInitiallyHidden = initialLegendState ? !initialLegendState[type] : false;
+        hiddenAssets[type] = isInitiallyHidden;
         
-        // 水平网格线
-        const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        gridLine.setAttribute('x1', 0);
-        gridLine.setAttribute('y1', y);
-        gridLine.setAttribute('x2', width);
-        gridLine.setAttribute('y2', y);
-        gridLine.setAttribute('stroke', '#eee');
-        gridLine.setAttribute('stroke-width', 1);
-        gridLine.setAttribute('stroke-dasharray', '3,3');
-        gridLine.setAttribute('pointer-events', 'none');
-        chartGroup.appendChild(gridLine);
+        // 创建图例项
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        legendItem.dataset.assetType = type;
+        if (isInitiallyHidden) {
+            legendItem.classList.add('hidden');
+        }
         
-        // 百分比标签 (放在左侧)
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', -5);
-        label.setAttribute('y', y + 4);
-        label.setAttribute('text-anchor', 'end');
-        label.setAttribute('font-size', '11');
-        label.setAttribute('fill', '#666');
-        label.setAttribute('pointer-events', 'none');
-        label.textContent = `${(percent * 100).toFixed(0)}%`;
-        chartGroup.appendChild(label);
-    });
-}
-
-/**
- * 绘制横向重叠区域 (不是堆叠的)
- */
-function drawHorizontalOverlaidAreas(chartGroup, assetTypes, xScale, yScale, height, minDate, maxDate) {
-    try {
-        console.log('开始绘制横向重叠区域');
+        legendItem.style.cursor = 'pointer';
+        legendItem.style.padding = '5px 8px';
+        legendItem.style.margin = '3px 4px';
+        legendItem.style.borderRadius = '4px';
+        legendItem.style.display = 'flex';
+        legendItem.style.alignItems = 'center';
+        legendItem.style.fontSize = '12px';
+        legendItem.style.border = '1px solid #f0f0f0';
+        legendItem.style.backgroundColor = isInitiallyHidden ? '#f5f5f5' : 'white';
         
-        // 检查参数
-        if (!chartGroup || !assetTypes || !xScale || !yScale) {
-            console.error('绘制横向重叠区域缺少必要参数');
-                    return;
-                }
-    
-    if (!assetDistributionData || assetDistributionData.length === 0) {
-        console.error('没有资产分布数据可用');
-        return;
-    }
-
-        // 日期范围处理，不传则使用全部数据
-    const effectiveMinDate = minDate || assetDistributionData[0].compDate;
-    const effectiveMaxDate = maxDate || assetDistributionData[assetDistributionData.length - 1].compDate;
-    
-        // 过滤出在当前日期范围内的数据点
-        const filteredData = assetDistributionData.filter(point => 
-        point.compDate >= effectiveMinDate && point.compDate <= effectiveMaxDate
-    );
-    
-        // 如果没有数据在当前范围内，使用全部数据
-        const dataToUse = filteredData.length > 0 ? filteredData : assetDistributionData;
-    
-    // 计算所有时间点每种资产的平均占比
-    const avgDistributions = {};
-    assetTypes.forEach(type => {
-        let sum = 0;
-        let count = 0;
+        // 颜色指示器
+        const colorIndicator = document.createElement('span');
+        colorIndicator.style.backgroundColor = colorMapping[type];
+        colorIndicator.style.display = 'inline-block';
+        colorIndicator.style.width = '12px';
+        colorIndicator.style.height = '12px';
+        colorIndicator.style.marginRight = '6px';
+        colorIndicator.style.borderRadius = '2px';
+        colorIndicator.style.opacity = isInitiallyHidden ? '0.3' : '1';
         
-            dataToUse.forEach(dataPoint => {
-                if (dataPoint.distribution && dataPoint.distribution[type] !== undefined) {
-                sum += dataPoint.distribution[type];
-                count++;
-            }
-        });
+        // 资产名称
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = name;
+        nameSpan.style.opacity = isInitiallyHidden ? '0.5' : '1';
         
-        avgDistributions[type] = count > 0 ? sum / count : 0;
-    });
-    
-    // 按平均占比从小到大排序资产类型（先绘制占比大的，后绘制占比小的）
-    const sortedTypes = [...assetTypes].sort((a, b) => {
-        return avgDistributions[b] - avgDistributions[a];
-    });
+        // 添加到图例项
+        legendItem.appendChild(colorIndicator);
+        legendItem.appendChild(nameSpan);
+        
+        // 添加点击事件 - 切换资产可见性
+        legendItem.addEventListener('click', function() {
+            // 切换该图例项的激活状态
+            this.classList.toggle('hidden');
             
-        console.log(`绘制 ${sortedTypes.length} 种资产类型区域`);
-    
-    // 绘制每种资产类型的区域
-    sortedTypes.forEach(assetType => {
-            try {
-        // 创建路径
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        
-        // 构建路径数据点
-        let pathData = '';
-        
-        // 从底部开始
-                dataToUse.forEach((dataPoint, index) => {
-                    if (!dataPoint.compDate) {
-                        console.error('数据点缺少compDate属性:', dataPoint);
-                        return;
-                    }
-                    
-                    const value = dataPoint.distribution ? (dataPoint.distribution[assetType] || 0) : 0;
-                    const x = xScale(dataPoint.compDate);
-                    const y = yScale(value);
+            // 获取资产类型
+            const assetType = this.dataset.assetType;
+            hiddenAssets[assetType] = this.classList.contains('hidden');
             
-            if (index === 0) {
-                pathData = `M${x},${y}`;
+            // 更新样式
+            if (this.classList.contains('hidden')) {
+                colorIndicator.style.opacity = '0.3';
+                nameSpan.style.opacity = '0.5';
+                this.style.backgroundColor = '#f5f5f5';
+                
+                // 隐藏对应的图形元素
+                document.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
+                    path.style.display = 'none';
+                });
             } else {
-                pathData += ` L${x},${y}`;
+                colorIndicator.style.opacity = '1';
+                nameSpan.style.opacity = '1';
+                this.style.backgroundColor = 'white';
+                
+                // 显示对应的图形元素
+                document.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
+                    path.style.display = 'block';
+                });
+            }
+            
+            // 同步更新竖向图表的图例状态
+            syncLegendStateToVerticalChart(assetType, hiddenAssets[assetType]);
+        });
+        
+        // 添加悬停效果
+        legendItem.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('hidden')) {
+                this.style.backgroundColor = 'rgba(0,0,0,0.05)';
             }
         });
         
-                // 关闭路径 - 返回到底部
-                const lastX = xScale(dataToUse[dataToUse.length - 1].compDate);
-                pathData += ` L${lastX},${height}`;
-                pathData += ` L${xScale(dataToUse[0].compDate)},${height}`;
-        pathData += ' Z'; // 闭合路径
-        
-        // 设置路径样式
-        path.setAttribute('d', pathData);
-                path.setAttribute('fill', colorMapping[assetType] || '#ccc');
-        path.setAttribute('fill-opacity', '0.7');
-                path.setAttribute('stroke', colorMapping[assetType] || '#ccc');
-        path.setAttribute('stroke-width', '1');
-        path.setAttribute('data-asset-type', assetType);
-                path.setAttribute('pointer-events', 'all'); // 确保路径可以接收鼠标事件
-                path.setAttribute('class', 'asset-path');
-                
-                // 添加悬停效果
-                path.addEventListener('mouseenter', function() {
-                    this.setAttribute('fill-opacity', '0.9');
-                    this.setAttribute('stroke-width', '2');
-                });
-                
-                path.addEventListener('mouseleave', function() {
-                    this.setAttribute('fill-opacity', '0.7');
-                    this.setAttribute('stroke-width', '1');
-                });
-        
-        // 添加到图表
-        chartGroup.appendChild(path);
-            } catch (error) {
-                console.error(`绘制资产类型 ${assetType} 区域时发生错误:`, error);
+        legendItem.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('hidden')) {
+                this.style.backgroundColor = 'white';
             }
+        });
+        
+        // 添加到图例容器
+        legendContainer.appendChild(legendItem);
+        
+        // 如果初始状态是隐藏的，需要立即应用到图表元素
+        if (isInitiallyHidden) {
+            document.querySelectorAll(`.asset-path[data-asset-type="${type}"]`).forEach(path => {
+                path.style.display = 'none';
+            });
+        }
     });
-    } catch (error) {
-        console.error('绘制横向重叠区域时发生错误:', error);
-    }
+    
+    console.log('水平图表图例添加完成');
 }
 
 /**
- * 绘制横向时间轴标记和垂直网格线
- * @param {SVGGElement} chartGroup - SVG图表组元素
- * @param {Function} xScale - X轴比例尺函数
- * @param {number} width - 图表宽度
- * @param {number} height - 图表高度
- * @param {Object} dateRange - 日期范围对象，包含minDate和maxDate属性
+ * 同步图例状态到竖向图表
  */
-function drawHorizontalTimeAxisMarkers(chartGroup, xScale, width, height, dateRange) {
-    try {
-        console.log('开始绘制水平时间轴标记');
-        
-        // 使用传入的日期范围，而非全局数据范围
-        // 这样在缩放时可以显示对应区域的时间标签
-        const minDate = dateRange && dateRange.minDate ? dateRange.minDate : assetDistributionData[0].compDate;
-        const maxDate = dateRange && dateRange.maxDate ? dateRange.maxDate : assetDistributionData[assetDistributionData.length - 1].compDate;
-        const totalTimespan = maxDate - minDate;
-        
-        console.log(`水平时间轴日期范围: ${formatDate(minDate)} - ${formatDate(maxDate)}`);
-        
-        // 根据时间跨度自动确定时间间隔
-        const determineInterval = () => {
-            // 根据总时间跨度确定合适的间隔
-            const days = totalTimespan / (24 * 60 * 60 * 1000);
-            
-            if (days <= 14) return 'day'; // 小于2周，按天显示
-            if (days <= 60) return 'week'; // 小于2个月，按周显示
-            if (days <= 180) return 'month'; // 小于6个月，按月显示
-            if (days <= 730) return 'quarter'; // 小于2年，按季度显示
-            return 'year'; // 大于2年，按年显示
-        };
-        
-        const interval = determineInterval();
-        console.log(`横向时间轴使用间隔: ${interval}, 总跨度: ${totalTimespan / (24 * 60 * 60 * 1000)}天`);
-        
-        // 根据间隔生成标记点
-        const timeMarkers = [];
-        let currentDate = new Date(minDate);
-        
-        // 调整到合适的时间参考点
-        if (interval === 'day') {
-            currentDate.setHours(0, 0, 0, 0);
-        } else if (interval === 'week') {
-            const dayOfWeek = currentDate.getDay();
-            currentDate.setDate(currentDate.getDate() - dayOfWeek);
-            currentDate.setHours(0, 0, 0, 0);
-        } else if (interval === 'month' || interval === 'quarter') {
-            currentDate.setDate(1);
-            currentDate.setHours(0, 0, 0, 0);
-        } else if (interval === 'year') {
-            currentDate.setMonth(0, 1);
-            currentDate.setHours(0, 0, 0, 0);
-        }
-        
-        // 根据间隔递增日期
-        while (currentDate.getTime() <= maxDate) {
-            const timestamp = currentDate.getTime();
-            
-            if (timestamp >= minDate) {
-                timeMarkers.push({
-                    timestamp: timestamp,
-                    label: formatTimeLabel(timestamp, interval)
-                });
-            }
-            
-            // 递增到下一个时间点
-            if (interval === 'day') {
-                currentDate.setDate(currentDate.getDate() + 1);
-            } else if (interval === 'week') {
-                currentDate.setDate(currentDate.getDate() + 7);
-            } else if (interval === 'month') {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-            } else if (interval === 'quarter') {
-                currentDate.setMonth(currentDate.getMonth() + 3);
-    } else {
-                currentDate.setFullYear(currentDate.getFullYear() + 1);
-            }
-        }
-        
-        // 如果标记点太多，筛选一部分
-        let filteredMarkers = timeMarkers;
-        if (timeMarkers.length > 10) {
-            const skip = Math.ceil(timeMarkers.length / 10);
-            filteredMarkers = timeMarkers.filter((_, index) => index % skip === 0);
-            
-            // 确保包含最后一个标记点
-            if (timeMarkers.length > 0 && 
-                filteredMarkers[filteredMarkers.length - 1] !== timeMarkers[timeMarkers.length - 1]) {
-                filteredMarkers.push(timeMarkers[timeMarkers.length - 1]);
-            }
-        }
-        
-        console.log(`生成了 ${filteredMarkers.length} 个时间轴标记点`);
+function syncLegendStateToVerticalChart(assetType, isHidden) {
+    // 获取竖向图表的对应图例项
+    const verticalLegendItem = document.querySelector(`.chart-legend .legend-item[data-asset-type="${assetType}"]`);
+    if (!verticalLegendItem) return;
     
-    // 绘制标记和标签
-        filteredMarkers.forEach(marker => {
-            try {
-                const x = xScale(marker.timestamp);
-        
-                // 绘制垂直标记线
-        const markerLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                markerLine.setAttribute('x1', x);
-                markerLine.setAttribute('y1', height);
-                markerLine.setAttribute('x2', x);
-                markerLine.setAttribute('y2', height + 5);
-        markerLine.setAttribute('stroke', '#999');
-        markerLine.setAttribute('stroke-width', 1);
-        markerLine.setAttribute('pointer-events', 'none');
-        chartGroup.appendChild(markerLine);
-        
-                // 添加日期标签
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                label.setAttribute('x', x);
-                label.setAttribute('y', height + 16);
-                label.setAttribute('text-anchor', 'middle');
-        label.setAttribute('font-size', '11');
-        label.setAttribute('fill', '#666');
-        label.setAttribute('pointer-events', 'none');
-        label.textContent = marker.label;
-        chartGroup.appendChild(label);
-        
-                // 添加垂直网格线
-        const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                gridLine.setAttribute('x1', x);
-                gridLine.setAttribute('y1', 0);
-                gridLine.setAttribute('x2', x);
-                gridLine.setAttribute('y2', height);
-        gridLine.setAttribute('stroke', '#eee');
-        gridLine.setAttribute('stroke-width', 1);
-        gridLine.setAttribute('stroke-dasharray', '3,3');
-        gridLine.setAttribute('pointer-events', 'none');
-        chartGroup.appendChild(gridLine);
-            } catch (error) {
-                console.error('绘制时间轴标记点时出错:', error);
-            }
-        });
-        
-        console.log('水平时间轴标记绘制完成');
-    } catch (error) {
-        console.error('绘制水平时间轴标记时发生错误:', error);
-    }
+    // 检查当前状态，如果一致则不需要操作
+    const isCurrentlyHidden = verticalLegendItem.classList.contains('hidden');
+    if (isHidden === isCurrentlyHidden) return;
+    
+    // 模拟点击，触发竖向图表图例的点击逻辑
+    verticalLegendItem.click();
+    
+    console.log(`已同步资产类型 ${assetType} 的图例状态到竖向图表`);
 }
 
 /**
@@ -876,7 +713,7 @@ function drawHorizontalTimeAxisMarkers(chartGroup, xScale, width, height, dateRa
 function setupHorizontalChartInteractions(svg, chartGroup, width, height, tooltipElement, scrollbarGroup, scrollbarHeight, options = {}) {
     try {
         // 保存到全局变量，供其他函数使用
-        window.chartGroup = chartGroup;
+        window.horizontalChartGroup = chartGroup;
         
         if (!tooltipElement) {
             console.error('未找到提示框元素 .chart-tooltip，请检查HTML结构');
@@ -903,9 +740,9 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
         zoomInfoText.setAttribute('pointer-events', 'none');
         chartGroup.appendChild(zoomInfoText);
         
-        // 缩放状态变量
+        // 缩放状态变量 - 使用传入的状态或创建新状态
         const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-        const timeRangeState = {
+        const timeRangeState = options.timeRangeState || {
             originalMinDate: assetDistributionData[0].compDate,
             originalMaxDate: assetDistributionData[assetDistributionData.length - 1].compDate,
             minDate: assetDistributionData[0].compDate,
@@ -918,7 +755,7 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
         };
         
         // 保存到全局变量，供其他函数使用
-        window.timeRangeState = timeRangeState;
+        window.horizontalTimeRangeState = timeRangeState;
         
         // 初始化滚动轴状态
         if (scrollbarGroup) {
@@ -962,8 +799,9 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
         // 跟踪上一次找到的最近点，避免频繁更新
         let lastClosestIndex = -1;
         
-        // 鼠标移动处理
+        // 鼠标移动处理 - 重构这部分来直接更新浮窗位置
         interactionArea.addEventListener('mousemove', (event) => {
+            // 获取鼠标相对于SVG的位置和相对于视口的位置
             const svgRect = svg.getBoundingClientRect();
             const mouseY = event.clientY - svgRect.top - margin.top;
             
@@ -1006,11 +844,12 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
             if (closestIndex !== lastClosestIndex) {
                 lastClosestIndex = closestIndex;
                 const closestPoint = assetDistributionData[closestIndex];
-                // 更新工具提示
-                updateTooltip(tooltipElement, closestPoint, event.pageX, event.pageY);
+                
+                // 更新工具提示内容，并直接传递原始浏览器事件
+                updateHorizontalTooltip(tooltipElement, closestPoint, event);
             } else {
-                // 数据点相同但鼠标移动了，只更新位置
-                updateTooltipPosition(tooltipElement, event.pageX, event.pageY);
+                // 数据点相同但鼠标移动了，只更新位置 - 直接传递原始事件
+                updateHorizontalTooltipPosition(tooltipElement, event);
             }
         });
         
@@ -1068,39 +907,33 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
                 // 重绘图表 - 使用水平图表重绘函数
                 redrawHorizontalChart();
                 
-                // 重绘横向图表的时间轴标记
-                redrawHorizontalTimeAxisMarkers();
+                // 同步到竖向图表
+                syncZoomState('horizontal', timeRangeState);
+                
                 return;
             }
             
-            // 计算新的日期范围，保持鼠标位置对应的时间点不变
-            const ratio = (centerTimestamp - timeRangeState.minDate) / currentRange;
-            let newMinDate = centerTimestamp - ratio * newRange;
-            let newMaxDate = centerTimestamp + (1 - ratio) * newRange;
+            // 计算新的日期范围
+            const halfNewRange = newRange / 2;
+            const newMinDate = Math.max(timeRangeState.originalMinDate, centerTimestamp - halfNewRange);
+            let newMaxDate = newMinDate + newRange;
             
-            // 确保不超出数据范围
-            if (newMinDate < timeRangeState.originalMinDate) {
-                newMinDate = timeRangeState.originalMinDate;
-                newMaxDate = newMinDate + newRange;
-            }
-            
+            // 调整以确保不超过原始最大日期
             if (newMaxDate > timeRangeState.originalMaxDate) {
                 newMaxDate = timeRangeState.originalMaxDate;
-                newMinDate = newMaxDate - newRange;
-                
-                // 再次检查最小日期边界
-                if (newMinDate < timeRangeState.originalMinDate) {
-                    newMinDate = timeRangeState.originalMinDate;
-                }
+                // 重新调整最小日期以保持范围
+                const adjustedMinDate = Math.max(timeRangeState.originalMinDate, newMaxDate - newRange);
+                timeRangeState.minDate = adjustedMinDate;
+            } else {
+                timeRangeState.minDate = newMinDate;
             }
             
-            // 更新时间范围状态
-            timeRangeState.minDate = newMinDate;
             timeRangeState.maxDate = newMaxDate;
-            timeRangeState.zoomLevel = (timeRangeState.originalMaxDate - timeRangeState.originalMinDate) / (newMaxDate - newMinDate);
+            timeRangeState.zoomLevel = timeRangeState.originalMaxDate - timeRangeState.originalMinDate / newRange;
             
-            // 显示缩放信息
-            showZoomFeedback(`${formatDate(newMinDate)} 至 ${formatDate(newMaxDate)}`);
+            // 显示缩放级别反馈
+            const daysVisible = Math.round((timeRangeState.maxDate - timeRangeState.minDate) / (24 * 60 * 60 * 1000));
+            showZoomFeedback(`显示 ${daysVisible} 天数据`);
             
             // 更新滚动轴
             if (scrollbarGroup) {
@@ -1115,11 +948,11 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
             );
             }
             
-            // 重绘图表 - 使用水平图表重绘函数
+            // 重绘图表
             redrawHorizontalChart();
             
-            // 重绘横向图表的时间轴标记
-            redrawHorizontalTimeAxisMarkers();
+            // 同步到竖向图表
+            syncZoomState('horizontal', timeRangeState);
         });
         
         // 滚动轴滑块拖动相关功能
@@ -1301,6 +1134,9 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
             redrawHorizontalChart();
             // 重绘横向时间轴标记 (添加)
             redrawHorizontalTimeAxisMarkers();
+            
+            // 同步到竖向图表
+            syncZoomState('horizontal', timeRangeState);
         }
         
         // 全局鼠标抬起事件处理
@@ -1362,6 +1198,11 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
             elementsToKeep.forEach(el => {
                 chartGroup.appendChild(el);
             });
+            
+            // 同步到横向图表（如果存在）
+            if (window.horizontalTimeRangeState && document.getElementById('chartModal').style.display === 'flex') {
+                syncZoomState('vertical', timeRangeState);
+            }
         }
         
         // 添加重绘水平图表函数
@@ -1418,6 +1259,9 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
             
             // 重绘横向图表的时间轴标记
             redrawHorizontalTimeAxisMarkers();
+            
+            // 同步到竖向图表
+            syncZoomState('horizontal', timeRangeState);
         });
     } catch (error) {
         console.error('设置图表交互功能时发生错误:', error);
@@ -1426,9 +1270,10 @@ function setupHorizontalChartInteractions(svg, chartGroup, width, height, toolti
 }
 
 /**
- * 更新工具提示内容
+ * 更新横向图表的工具提示内容
+ * 专门为横向图表设计的工具提示更新函数
  */
-function updateTooltip(tooltipElement, dataPoint, mouseX, mouseY) {
+function updateHorizontalTooltip(tooltipElement, dataPoint, event) {
     try {
         // 更新日期
         const dateElement = tooltipElement.querySelector('.tooltip-date');
@@ -1446,99 +1291,144 @@ function updateTooltip(tooltipElement, dataPoint, mouseX, mouseY) {
         
         // 获取工具提示内容区域
         const tooltipContent = tooltipElement.querySelector('.tooltip-content');
-        if (tooltipContent) {
-            // 清空现有内容
-            tooltipContent.innerHTML = '';
-            
-            // 添加排序后的资产类型
-            let totalValue = 0;
-            
-            sortedAssetTypes.forEach(type => {
-                const value = dataPoint.distribution[type] || 0;
-                totalValue += value;
-                
-                // 只显示数值大于0的资产类型
-                if (value > 0.0001) {  // 使用0.0001作为阈值，避免舍入误差
-                    const percent = (value * 100).toFixed(2);
-                    const assetName = assetCodeToNameMap[type] || type;
-                    const color = colorMapping[type] || '#999';
-                    
-                    const itemElement = document.createElement('div');
-                    itemElement.className = 'tooltip-item';
-                    itemElement.innerHTML = `
-                        <div class="tooltip-label"><span class="tooltip-color" style="background-color: ${color};display:inline-block;width:10px;height:10px;margin-right:5px;"></span>${assetName}</div>
-                        <div class="tooltip-value">${percent}%</div>
-                    `;
-                    itemElement.style.display = 'flex';
-                    itemElement.style.justifyContent = 'space-between';
-                    itemElement.style.margin = '3px 0';
-                    
-                    tooltipContent.appendChild(itemElement);
-                }
-            });
-            
-            // 添加总计，如果总和与100%有明显差异
-            const totalPercent = (totalValue * 100).toFixed(2);
-            
-            if (Math.abs(totalValue - 1) > 0.01) {
-                // 如果总和与100%相差超过1%，显示警告
-                const totalElement = document.createElement('div');
-                totalElement.className = 'tooltip-total';
-                totalElement.style.marginTop = '5px';
-                totalElement.style.paddingTop = '5px';
-                totalElement.style.borderTop = '1px dashed #ccc';
-                totalElement.innerHTML = `
-                    <div class="tooltip-label" style="font-weight: bold;">总计</div>
-                    <div class="tooltip-value" style="color: ${Math.abs(totalValue - 1) > 0.01 ? 'red' : 'inherit'}">${totalPercent}%</div>
-                `;
-                
-                tooltipContent.appendChild(totalElement);
-            }
-        } else {
+        if (!tooltipContent) {
             console.warn('未找到tooltip-content元素');
+            return;
         }
         
-        // 确保tooltipElement已附加到DOM
-        if (!tooltipElement.parentNode) {
-            document.body.appendChild(tooltipElement);
+        // 清空现有内容
+        tooltipContent.innerHTML = '';
+        
+        // 添加排序后的资产类型
+        let totalValue = 0;
+        
+        sortedAssetTypes.forEach(type => {
+            const value = dataPoint.distribution[type] || 0;
+            totalValue += value;
+            
+            // 只显示数值大于0的资产类型
+            if (value > 0.0001) {  // 使用0.0001作为阈值，避免舍入误差
+                const percent = (value * 100).toFixed(2);
+                const assetName = assetCodeToNameMap[type] || type;
+                const color = colorMapping[type] || '#999';
+                
+                const itemElement = document.createElement('div');
+                itemElement.className = 'tooltip-item';
+                itemElement.innerHTML = `
+                    <div class="tooltip-label"><span class="tooltip-color" style="background-color: ${color};display:inline-block;width:10px;height:10px;margin-right:5px;"></span>${assetName}</div>
+                    <div class="tooltip-value">${percent}%</div>
+                `;
+                itemElement.style.display = 'flex';
+                itemElement.style.justifyContent = 'space-between';
+                itemElement.style.margin = '3px 0';
+                
+                tooltipContent.appendChild(itemElement);
+            }
+        });
+        
+        // 添加总计，如果总和与100%有明显差异
+        const totalPercent = (totalValue * 100).toFixed(2);
+        
+        if (Math.abs(totalValue - 1) > 0.01) {
+            // 如果总和与100%相差超过1%，显示警告
+            const totalElement = document.createElement('div');
+            totalElement.className = 'tooltip-total';
+            totalElement.style.marginTop = '5px';
+            totalElement.style.paddingTop = '5px';
+            totalElement.style.borderTop = '1px dashed #ccc';
+            totalElement.innerHTML = `
+                <div class="tooltip-label" style="font-weight: bold;">总计</div>
+                <div class="tooltip-value" style="color: ${Math.abs(totalValue - 1) > 0.01 ? 'red' : 'inherit'}">${totalPercent}%</div>
+            `;
+            
+            tooltipContent.appendChild(totalElement);
         }
         
-        // 定位工具提示
-        const tooltipWidth = tooltipElement.offsetWidth || 180; // 提供默认宽度，避免首次计算问题
-        const tooltipHeight = tooltipElement.offsetHeight || 150; // 提供默认高度
+        // 确保工具提示可见
+        tooltipElement.style.display = 'block';
         
-        // 获取视口大小
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
+        // 直接使用事件对象更新位置
+        updateHorizontalTooltipPosition(tooltipElement, event);
         
-        // 默认位置：鼠标右下方，但避免太靠近鼠标
-        let left = mouseX + 15; // 增加与鼠标的距离
-        let top = mouseY + 15;
+    } catch (error) {
+        console.error('更新横向图表工具提示时发生错误:', error);
+        // 尝试隐藏工具提示以避免更多错误
+        if (tooltipElement) {
+            tooltipElement.style.display = 'none';
+        }
+    }
+}
+
+/**
+ * 更新横向图表工具提示位置
+ * 专为横向图表设计的工具提示位置更新
+ */
+function updateHorizontalTooltipPosition(tooltipElement, event) {
+    try {
+        if (!tooltipElement) return;
         
-        // 检查并调整水平位置，确保不超出视口右边界
-        if (left + tooltipWidth > viewportWidth - 10) {
-            left = mouseX - tooltipWidth - 15; // 切换到鼠标左侧
+        // 获取横向图表容器的边界
+        const chartContainer = document.getElementById('horizontal-trend-chart');
+        if (!chartContainer) return;
+        
+        const chartRect = chartContainer.getBoundingClientRect();
+        
+        // 工具提示尺寸
+        let tooltipWidth = 180; // 默认值
+        let tooltipHeight = 150; // 默认值
+        
+        // 强制显示工具提示以便正确计算尺寸
+        const wasHidden = tooltipElement.style.display === 'none';
+        if (wasHidden) {
+            tooltipElement.style.visibility = 'hidden'; // 隐藏可见性但保留布局
+            tooltipElement.style.display = 'block';
+            tooltipWidth = tooltipElement.offsetWidth;
+            tooltipHeight = tooltipElement.offsetHeight;
+            tooltipElement.style.visibility = 'visible';
+        } else {
+            tooltipWidth = tooltipElement.offsetWidth;
+            tooltipHeight = tooltipElement.offsetHeight;
         }
         
-        // 检查并调整垂直位置，确保不超出视口底部
-        if (top + tooltipHeight > viewportHeight - 10) {
-            top = mouseY - tooltipHeight - 15; // 切换到鼠标上方
+        // 直接使用原始鼠标事件坐标
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+        
+        // 非常小的固定偏移，让工具提示紧贴鼠标
+        const offsetX = 5;
+        
+        // 设置工具提示位置 - 默认显示在鼠标右侧
+        let left = mouseX + offsetX;
+        let top = mouseY - (tooltipHeight / 2); // 垂直居中于鼠标
+        
+        // 首先检查是否会超出图表边界
+        if (left + tooltipWidth > chartRect.right - 5) {
+            // 如果会超出图表右边界，改为显示在鼠标左侧
+            left = mouseX - tooltipWidth - offsetX;
         }
         
-        // 边界保护 - 确保工具提示始终在视口内
-        left = Math.max(10, Math.min(viewportWidth - tooltipWidth - 10, left));
-        top = Math.max(10, Math.min(viewportHeight - tooltipHeight - 10, top));
+        // 确保不超出图表左边界
+        if (left < chartRect.left + 5) {
+            left = chartRect.left + 5;
+        }
         
-        // 设置位置并添加平滑过渡效果
+        // 确保不超出图表上下边界
+        if (top < chartRect.top + 5) {
+            top = chartRect.top + 5;
+        } else if (top + tooltipHeight > chartRect.bottom - 5) {
+            top = chartRect.bottom - tooltipHeight - 5;
+        }
+        
+        // 直接应用位置，没有任何过渡动画
         tooltipElement.style.left = `${left}px`;
         tooltipElement.style.top = `${top}px`;
-        tooltipElement.style.transition = 'left 0.15s ease-out, top 0.15s ease-out';
+        tooltipElement.style.transition = 'none'; // 确保没有过渡动画
         tooltipElement.style.display = 'block';
-        tooltipElement.style.pointerEvents = 'none'; // 防止工具提示阻止鼠标事件
-        tooltipElement.style.zIndex = '1000'; // 确保在其他元素之上
+        tooltipElement.style.zIndex = '1001';
+        tooltipElement.style.pointerEvents = 'none'; // 确保不阻挡鼠标事件
+        
     } catch (error) {
-        console.error('更新工具提示时发生错误:', error);
-        // 尝试隐藏工具提示以避免更多错误
+        console.error('更新横向图表工具提示位置时发生错误:', error);
         if (tooltipElement) {
             tooltipElement.style.display = 'none';
         }
@@ -2343,154 +2233,6 @@ function formatTimeLabel(timestamp, interval) {
 }
 
 /**
- * 更新工具提示位置
- */
-function updateTooltipPosition(tooltipElement, mouseX, mouseY) {
-    try {
-        if (!tooltipElement) return;
-        
-        const tooltipWidth = tooltipElement.offsetWidth || 180;
-        const tooltipHeight = tooltipElement.offsetHeight || 120;
-        
-        // 修改：减小与鼠标的距离，使工具提示更靠近鼠标
-        let left = mouseX + 10; // 从20减少到10
-        let top = mouseY + 5;   // 从10减少到5
-        
-        // 获取视口大小
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        
-        // 检查并调整水平位置
-        if (left + tooltipWidth > viewportWidth - 20) {
-            left = mouseX - tooltipWidth - 10; // 从20减少到10
-        }
-        
-        // 检查并调整垂直位置
-        if (top + tooltipHeight > viewportHeight - 20) {
-            top = mouseY - tooltipHeight - 10; // 从20减少到10
-        }
-        
-        // 边界保护 - 确保工具提示始终在视口内
-        left = Math.max(20, Math.min(viewportWidth - tooltipWidth - 20, left));
-        top = Math.max(20, Math.min(viewportHeight - tooltipHeight - 20, top));
-        
-        // 设置位置，带有平滑过渡
-        tooltipElement.style.transition = 'left 0.15s ease-out, top 0.15s ease-out';
-        tooltipElement.style.left = `${left}px`;
-        tooltipElement.style.top = `${top}px`;
-        
-        // 确保显示
-        tooltipElement.style.display = 'block';
-        tooltipElement.style.pointerEvents = 'none'; // 防止工具提示阻止鼠标事件
-        tooltipElement.style.zIndex = '1001'; // 确保在最上层
-    } catch (error) {
-        console.error('更新工具提示位置时发生错误:', error);
-        // 尝试隐藏工具提示以避免更多错误
-        if (tooltipElement) {
-            tooltipElement.style.display = 'none';
-        }
-    }
-}
-
-/**
- * 添加水平图表交互式图例
- */
-function addHorizontalLegend(legendContainer) {
-    if (!legendContainer) {
-        console.warn('未提供图例容器，无法添加水平图表图例');
-        return;
-    }
-    
-    // 清空容器内容
-    legendContainer.innerHTML = '';
-    
-    // 资产类型列表
-    const assetTypes = Object.keys(assetCodeToNameMap);
-    
-    // 为每种资产类型创建图例项
-    Object.entries(assetCodeToNameMap).forEach(([type, name]) => {
-        // 创建图例项
-        const legendItem = document.createElement('div');
-        legendItem.className = 'legend-item';
-        legendItem.dataset.assetType = type;
-        legendItem.style.cursor = 'pointer';
-        legendItem.style.padding = '5px 8px';
-        legendItem.style.margin = '3px 4px';
-        legendItem.style.borderRadius = '4px';
-        legendItem.style.display = 'flex';
-        legendItem.style.alignItems = 'center';
-        legendItem.style.fontSize = '12px';
-        legendItem.style.border = '1px solid #f0f0f0';
-        legendItem.style.backgroundColor = 'white';
-        
-        // 颜色指示器
-        const colorIndicator = document.createElement('span');
-        colorIndicator.style.backgroundColor = colorMapping[type];
-        colorIndicator.style.display = 'inline-block';
-        colorIndicator.style.width = '12px';
-        colorIndicator.style.height = '12px';
-        colorIndicator.style.marginRight = '6px';
-        colorIndicator.style.borderRadius = '2px';
-        
-        // 资产名称
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = name;
-        
-        // 添加到图例项
-        legendItem.appendChild(colorIndicator);
-        legendItem.appendChild(nameSpan);
-        
-        // 添加点击事件 - 切换资产可见性
-        legendItem.addEventListener('click', function() {
-            // 切换该图例项的激活状态
-            this.classList.toggle('hidden');
-            
-            // 获取资产类型
-            const assetType = this.dataset.assetType;
-            
-            // 更新样式
-            if (this.classList.contains('hidden')) {
-                colorIndicator.style.opacity = '0.3';
-                nameSpan.style.opacity = '0.5';
-                this.style.backgroundColor = '#f5f5f5';
-                
-                // 隐藏对应的图形元素
-                document.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
-                    path.style.display = 'none';
-                });
-            } else {
-                colorIndicator.style.opacity = '1';
-                nameSpan.style.opacity = '1';
-                this.style.backgroundColor = 'white';
-                
-                // 显示对应的图形元素
-                document.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
-                    path.style.display = 'block';
-                });
-            }
-        });
-        
-        // 添加悬停效果
-        legendItem.addEventListener('mouseenter', function() {
-            if (!this.classList.contains('hidden')) {
-                this.style.backgroundColor = 'rgba(0,0,0,0.05)';
-            }
-        });
-        
-        legendItem.addEventListener('mouseleave', function() {
-            if (!this.classList.contains('hidden')) {
-                this.style.backgroundColor = 'white';
-            }
-        });
-        
-        // 添加到图例容器
-        legendContainer.appendChild(legendItem);
-    });
-    
-    console.log('水平图表图例添加完成');
-}
-
-/**
  * 设置竖向图表交互功能
  */
 function setupVerticalChartInteractions(svg, chartGroup, width, height, tooltipElement, scrollbarGroup, scrollbarHeight, options = {}) {
@@ -3014,6 +2756,11 @@ function setupVerticalChartInteractions(svg, chartGroup, width, height, tooltipE
             elementsToKeep.forEach(el => {
                 chartGroup.appendChild(el);
             });
+            
+            // 同步到横向图表（如果存在）
+            if (window.horizontalTimeRangeState && document.getElementById('chartModal').style.display === 'flex') {
+                syncZoomState('vertical', timeRangeState);
+            }
         }
 
         // 初始绘制竖向图表
@@ -3023,3 +2770,585 @@ function setupVerticalChartInteractions(svg, chartGroup, width, height, tooltipE
         showErrorMessage('竖向图表交互功能设置失败: ' + error.message);
     }
 } 
+
+/**
+ * 绘制横向趋势图
+ */
+function drawHorizontalTrendChart(chartGroup, width, height, minDate, maxDate) {
+    if (!assetDistributionData || assetDistributionData.length === 0) {
+        console.error('无可用数据绘制趋势图');
+        return;
+    }
+    
+    console.log(`绘制横向趋势图，数据点数量: ${assetDistributionData.length}`);
+    
+    // 资产类型列表
+    const assetTypes = Object.keys(assetCodeToNameMap);
+    
+    // 计算时间比例尺（时间在X轴）
+    const effectiveMinDate = minDate || assetDistributionData[0].compDate;
+    const effectiveMaxDate = maxDate || assetDistributionData[assetDistributionData.length - 1].compDate;
+    
+    const xScale = (timestamp) => {
+        return width * (timestamp - effectiveMinDate) / (effectiveMaxDate - effectiveMinDate);
+    };
+    
+    // 计算比例尺，将百分比转换为Y轴位置
+    const yScale = (percent) => height * (1 - percent);
+    
+    // 绘制网格线和坐标轴
+    drawHorizontalGridAndAxes(chartGroup, width, height);
+    
+    // 绘制重叠区域
+    drawHorizontalOverlaidAreas(chartGroup, assetTypes, xScale, yScale, height, effectiveMinDate, effectiveMaxDate);
+    
+    // 绘制时间轴标记
+    drawHorizontalTimeAxisMarkers(chartGroup, xScale, width, height, {
+        minDate: effectiveMinDate,
+        maxDate: effectiveMaxDate
+    });
+}
+
+/**
+ * 绘制横向图表的重叠区域
+ */
+function drawHorizontalOverlaidAreas(chartGroup, assetTypes, xScale, yScale, height, minDate, maxDate) {
+    // 过滤可见时间范围内的数据点
+    const visibleData = assetDistributionData.filter(point => 
+        point.compDate >= minDate && point.compDate <= maxDate
+    );
+    
+    if (visibleData.length === 0) {
+        console.warn('指定时间范围内没有数据点');
+        return;
+    }
+    
+    // 计算所有时间点每种资产的平均占比
+    const avgDistributions = {};
+    assetTypes.forEach(type => {
+        let sum = 0;
+        let count = 0;
+        
+        visibleData.forEach(dataPoint => {
+            if (dataPoint.distribution[type] !== undefined) {
+                sum += dataPoint.distribution[type];
+                count++;
+            }
+        });
+        
+        avgDistributions[type] = count > 0 ? sum / count : 0;
+    });
+    
+    // 按平均占比从大到小排序资产类型
+    const sortedTypes = [...assetTypes].sort((a, b) => {
+        return avgDistributions[b] - avgDistributions[a];
+    });
+    
+    // 绘制每种资产类型的区域
+    sortedTypes.forEach(assetType => {
+        // 创建路径
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        
+        // 构建路径数据点
+        let pathData = '';
+        
+        // 从左侧开始
+        visibleData.forEach((dataPoint, index) => {
+            const x = xScale(dataPoint.compDate);
+            const y = yScale(dataPoint.distribution[assetType] || 0);
+            
+            if (index === 0) {
+                pathData = `M${x},${y}`;
+            } else {
+                pathData += ` L${x},${y}`;
+            }
+        });
+        
+        // 关闭路径 - 返回到底部
+        const lastX = xScale(visibleData[visibleData.length - 1].compDate);
+        pathData += ` L${lastX},${height}`;
+        pathData += ` L${xScale(visibleData[0].compDate)},${height}`;
+        pathData += ' Z'; // 闭合路径
+        
+        // 设置路径样式
+        path.setAttribute('d', pathData);
+        path.setAttribute('fill', colorMapping[assetType]);
+        path.setAttribute('fill-opacity', '0.7');
+        path.setAttribute('stroke', colorMapping[assetType]);
+        path.setAttribute('stroke-width', '1');
+        path.setAttribute('data-asset-type', assetType);
+        path.setAttribute('class', 'asset-path');
+        path.setAttribute('pointer-events', 'none'); // 避免截获鼠标事件
+        
+        // 添加到图表
+        chartGroup.appendChild(path);
+    });
+}
+
+/**
+ * 绘制横向图表的网格线和坐标轴
+ */
+function drawHorizontalGridAndAxes(chartGroup, width, height) {
+    // 创建坐标轴
+    const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    xAxis.setAttribute('x1', 0);
+    xAxis.setAttribute('y1', height);
+    xAxis.setAttribute('x2', width);
+    xAxis.setAttribute('y2', height);
+    xAxis.setAttribute('stroke', '#ccc');
+    xAxis.setAttribute('stroke-width', 1);
+    xAxis.setAttribute('pointer-events', 'none');
+    chartGroup.appendChild(xAxis);
+    
+    const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    yAxis.setAttribute('x1', 0);
+    yAxis.setAttribute('y1', 0);
+    yAxis.setAttribute('x2', 0);
+    yAxis.setAttribute('y2', height);
+    yAxis.setAttribute('stroke', '#ccc');
+    yAxis.setAttribute('stroke-width', 1);
+    yAxis.setAttribute('pointer-events', 'none');
+    chartGroup.appendChild(yAxis);
+    
+    // 添加垂直网格线和标签
+    const percentGridLines = [0, 0.2, 0.4, 0.6, 0.8, 1.0];
+        
+    percentGridLines.forEach(percent => {
+        // 绘制垂直网格线
+        const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const y = height * (1 - percent); // 反转Y轴方向，使0%在底部，100%在顶部
+        gridLine.setAttribute('x1', 0);
+        gridLine.setAttribute('y1', y);
+        gridLine.setAttribute('x2', width);
+        gridLine.setAttribute('y2', y);
+        gridLine.setAttribute('stroke', '#eee');
+        gridLine.setAttribute('stroke-width', 1);
+        gridLine.setAttribute('stroke-dasharray', '3,3');
+        gridLine.setAttribute('pointer-events', 'none');
+        chartGroup.appendChild(gridLine);
+        
+        // 添加百分比标签
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', -10);
+        label.setAttribute('y', y + 4); // 微调以垂直居中
+        label.setAttribute('text-anchor', 'end');
+        label.setAttribute('font-size', '11');
+        label.setAttribute('fill', '#666');
+        label.setAttribute('pointer-events', 'none');
+        label.textContent = `${(percent * 100).toFixed(0)}%`;
+        chartGroup.appendChild(label);
+    });
+}
+
+/**
+ * 绘制横向时间轴标记
+ */
+function drawHorizontalTimeAxisMarkers(chartGroup, xScale, width, height, dateRange) {
+    // 计算日期范围
+    const minDate = dateRange.minDate;
+    const maxDate = dateRange.maxDate;
+    const dateSpan = maxDate - minDate;
+    const dayRange = dateSpan / (24 * 60 * 60 * 1000); // 转换为天数
+    
+    // 根据缩放级别确定合适的时间间隔
+    let interval;
+    if (dayRange <= 14) {
+        interval = 'day'; // 小于2周，按天显示
+    } else if (dayRange <= 60) {
+        interval = 'week'; // 小于2个月，按周显示
+    } else if (dayRange <= 180) {
+        interval = 'month'; // 小于6个月，按月显示
+    } else if (dayRange <= 730) {
+        interval = 'quarter'; // 小于2年，按季度显示
+    } else {
+        interval = 'year'; // 大于2年，按年显示
+    }
+    
+    console.log(`横向时间轴使用间隔: ${interval}, 总跨度: ${dayRange}天`);
+    
+    // 生成时间标记点
+    const timeMarkers = [];
+    let currentDate = new Date(minDate);
+    
+    // 调整到合适的时间参考点
+    if (interval === 'day') {
+        currentDate.setHours(0, 0, 0, 0);
+    } else if (interval === 'week') {
+        const dayOfWeek = currentDate.getDay();
+        currentDate.setDate(currentDate.getDate() - dayOfWeek);
+        currentDate.setHours(0, 0, 0, 0);
+    } else if (interval === 'month' || interval === 'quarter') {
+        currentDate.setDate(1);
+        currentDate.setHours(0, 0, 0, 0);
+    } else if (interval === 'year') {
+        currentDate.setMonth(0, 1);
+        currentDate.setHours(0, 0, 0, 0);
+    }
+    
+    // 根据间隔递增日期
+    while (currentDate.getTime() <= maxDate) {
+        const timestamp = currentDate.getTime();
+        
+        if (timestamp >= minDate) {
+            timeMarkers.push({
+                timestamp: timestamp,
+                label: formatTimeLabel(timestamp, interval)
+            });
+        }
+        
+        // 递增到下一个时间点
+        if (interval === 'day') {
+            currentDate.setDate(currentDate.getDate() + 1);
+        } else if (interval === 'week') {
+            currentDate.setDate(currentDate.getDate() + 7);
+        } else if (interval === 'month') {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+        } else if (interval === 'quarter') {
+            currentDate.setMonth(currentDate.getMonth() + 3);
+        } else {
+            currentDate.setFullYear(currentDate.getFullYear() + 1);
+        }
+    }
+    
+    // 如果标记点太多，筛选一部分
+    let filteredMarkers = timeMarkers;
+    if (timeMarkers.length > 10) {
+        const skip = Math.ceil(timeMarkers.length / 10);
+        filteredMarkers = timeMarkers.filter((_, index) => index % skip === 0);
+        
+        // 确保包含最后一个标记点
+        if (timeMarkers.length > 0 && 
+            filteredMarkers[filteredMarkers.length - 1] !== timeMarkers[timeMarkers.length - 1]) {
+            filteredMarkers.push(timeMarkers[timeMarkers.length - 1]);
+        }
+    }
+    
+    // 绘制标记和标签
+    filteredMarkers.forEach(marker => {
+        const x = xScale(marker.timestamp);
+        
+        // 绘制垂直标记线
+        const markerLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        markerLine.setAttribute('x1', x);
+        markerLine.setAttribute('y1', height - 5);
+        markerLine.setAttribute('x2', x);
+        markerLine.setAttribute('y2', height);
+        markerLine.setAttribute('stroke', '#999');
+        markerLine.setAttribute('stroke-width', 1);
+        markerLine.setAttribute('pointer-events', 'none');
+        chartGroup.appendChild(markerLine);
+        
+        // 添加日期标签
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', x);
+        label.setAttribute('y', height + 16); // 增加底部间距使标签更明显
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('font-size', '12'); // 稍微增大字体增加可读性
+        label.setAttribute('fill', '#666');
+        label.setAttribute('pointer-events', 'none');
+        label.textContent = marker.label;
+        chartGroup.appendChild(label);
+        
+        // 添加垂直网格线
+        const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        gridLine.setAttribute('x1', x);
+        gridLine.setAttribute('y1', 0);
+        gridLine.setAttribute('x2', x);
+        gridLine.setAttribute('y2', height);
+        gridLine.setAttribute('stroke', '#eee');
+        gridLine.setAttribute('stroke-width', 1);
+        gridLine.setAttribute('stroke-dasharray', '3,3');
+        gridLine.setAttribute('pointer-events', 'none');
+        chartGroup.appendChild(gridLine);
+    });
+}
+
+/**
+ * 同步图表缩放状态，在一个图表缩放时更新另一个图表
+ */
+function syncZoomState(fromSource, state) {
+    if (fromSource === 'vertical') {
+        // 从竖向图表同步到横向图表
+        if (window.horizontalTimeRangeState) {
+            window.horizontalTimeRangeState.minDate = state.minDate;
+            window.horizontalTimeRangeState.maxDate = state.maxDate;
+            window.horizontalTimeRangeState.zoomLevel = state.zoomLevel;
+            
+            // 重绘横向图表
+            redrawHorizontalChart();
+        }
+    } else if (fromSource === 'horizontal') {
+        // 从横向图表同步到竖向图表
+        if (window.timeRangeState) {
+            window.timeRangeState.minDate = state.minDate;
+            window.timeRangeState.maxDate = state.maxDate;
+            window.timeRangeState.zoomLevel = state.zoomLevel;
+            
+            // 获取垂直图表组并重绘
+            if (window.chartGroup) {
+                // 如果存在redrawVerticalChart函数则调用
+                if (typeof redrawVerticalChart === 'function') {
+                    redrawVerticalChart();
+                } else {
+                    // 手动清空并重绘垂直图表
+                    const elementsToKeep = Array.from(window.chartGroup.children).filter(
+                        el => el.tagName === 'rect' || 
+                              (el.tagName === 'line' && el.style.display === 'none') ||
+                              (el.tagName === 'text' && el.style.display === 'none')
+                    );
+                    
+                    // 清除旧元素
+                    Array.from(window.chartGroup.children).forEach(child => {
+                        if (!elementsToKeep.includes(child)) {
+                            window.chartGroup.removeChild(child);
+                        }
+                    });
+                    
+                    // 重绘图表
+                    const width = parseFloat(window.chartGroup.parentNode.getAttribute('viewBox').split(' ')[2]) - margin.left - margin.right;
+                    const height = parseFloat(window.chartGroup.parentNode.getAttribute('viewBox').split(' ')[3]) - margin.top - margin.bottom;
+                    
+                    drawVerticalTrendChart(window.chartGroup, width, height, state.minDate, state.maxDate);
+                    
+                    // 确保交互元素在顶层
+                    elementsToKeep.forEach(el => {
+                        window.chartGroup.appendChild(el);
+                    });
+                }
+            }
+        }
+    }
+    
+    // 更新滚动条
+    if (fromSource === 'vertical' && window.horizontalTimeRangeState) {
+        const horizontalScrollbarGroup = document.querySelector('.chart-modal-content .scrollbar-group');
+        if (horizontalScrollbarGroup) {
+            const width = parseFloat(horizontalScrollbarGroup.parentNode.getAttribute('width')) - margin.left - margin.right;
+            updateScrollbar(
+                horizontalScrollbarGroup,
+                width,
+                15,
+                state.minDate,
+                state.maxDate,
+                state.originalMinDate,
+                state.originalMaxDate
+            );
+        }
+    } else if (fromSource === 'horizontal' && window.timeRangeState) {
+        const verticalScrollbarGroup = document.querySelector('#vertical-trend-chart .scrollbar-group');
+        if (verticalScrollbarGroup) {
+            const width = parseFloat(verticalScrollbarGroup.parentNode.getAttribute('viewBox').split(' ')[2]) - margin.left - margin.right;
+            updateScrollbar(
+                verticalScrollbarGroup,
+                width,
+                15,
+                state.minDate,
+                state.maxDate,
+                state.originalMinDate,
+                state.originalMaxDate
+            );
+        }
+    }
+    
+    console.log(`已从${fromSource}图表同步缩放状态到其他图表`);
+}
+
+// 重绘横向图表函数
+function redrawHorizontalChart() {
+    // 确保chartGroup存在
+    if (!window.horizontalChartGroup) {
+        console.error('横向图表组不存在，无法重绘');
+        return;
+    }
+    
+    const chartGroup = window.horizontalChartGroup;
+    
+    // 获取当前图表组的尺寸
+    const svgElement = chartGroup.closest('svg');
+    if (!svgElement) {
+        console.error('找不到SVG元素，无法重绘横向图表');
+        return;
+    }
+    
+    // 获取图表组的宽度和高度
+    const width = svgElement.clientWidth - margin.left - margin.right;
+    const height = svgElement.clientHeight - margin.top - margin.bottom;
+    
+    // 获取当前时间范围状态
+    const timeRangeState = window.horizontalTimeRangeState || {
+        minDate: assetDistributionData[0].compDate,
+        maxDate: assetDistributionData[assetDistributionData.length - 1].compDate
+    };
+    
+    // 查找需要保留的交互元素
+    const elementsToKeep = [];
+    chartGroup.querySelectorAll('rect[pointer-events="all"], line[stroke="#999"], text[font-size="12"]').forEach(element => {
+        // 保留交互区域、悬停线和缩放提示文本
+        elementsToKeep.push(element);
+    });
+    
+    // 保存当前的图例可见性状态
+    const legendVisibility = {};
+    // 使用class属性选择器查找所有asset-path元素的可见性状态
+    document.querySelectorAll('.asset-path').forEach(path => {
+        const assetType = path.getAttribute('data-asset-type');
+        if (assetType) {
+            legendVisibility[assetType] = path.style.display !== 'none';
+        }
+    });
+    
+    // 清空图表组内容，但保留特定元素
+    Array.from(chartGroup.children).forEach(child => {
+        if (!elementsToKeep.includes(child)) {
+            chartGroup.removeChild(child);
+        }
+    });
+    
+    // 重新绘制横向图表，传递当前时间范围
+    drawHorizontalTrendChart(
+        chartGroup, 
+        width, 
+        height, 
+        timeRangeState.minDate, 
+        timeRangeState.maxDate
+    );
+    
+    // 恢复图例可见性
+    Object.entries(legendVisibility).forEach(([assetType, isVisible]) => {
+        if (!isVisible) {
+            // 找到并隐藏对应的路径
+            chartGroup.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
+                path.style.display = 'none';
+            });
+        }
+    });
+    
+    // 确保交互元素在顶层
+    elementsToKeep.forEach(el => {
+        chartGroup.appendChild(el);
+    });
+    
+    console.log('横向图表重绘完成');
+}
+
+/**
+ * 添加水平图表交互式图例
+ */
+function addHorizontalLegend(legendContainer, initialLegendState = null) {
+    if (!legendContainer) {
+        console.warn('未提供图例容器，无法添加水平图表图例');
+        return;
+    }
+    
+    // 清空容器内容
+    legendContainer.innerHTML = '';
+    
+    // 资产类型列表
+    const assetTypes = Object.keys(assetCodeToNameMap);
+    
+    // 记录图例隐藏状态 - 从初始状态或创建新状态
+    const hiddenAssets = {};
+    
+    // 为每种资产类型创建图例项
+    Object.entries(assetCodeToNameMap).forEach(([type, name]) => {
+        // 确定初始可见性状态
+        const isInitiallyHidden = initialLegendState ? !initialLegendState[type] : false;
+        hiddenAssets[type] = isInitiallyHidden;
+        
+        // 创建图例项
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        legendItem.dataset.assetType = type;
+        if (isInitiallyHidden) {
+            legendItem.classList.add('hidden');
+        }
+        
+        legendItem.style.cursor = 'pointer';
+        legendItem.style.padding = '5px 8px';
+        legendItem.style.margin = '3px 4px';
+        legendItem.style.borderRadius = '4px';
+        legendItem.style.display = 'flex';
+        legendItem.style.alignItems = 'center';
+        legendItem.style.fontSize = '12px';
+        legendItem.style.border = '1px solid #f0f0f0';
+        legendItem.style.backgroundColor = isInitiallyHidden ? '#f5f5f5' : 'white';
+        
+        // 颜色指示器
+        const colorIndicator = document.createElement('span');
+        colorIndicator.style.backgroundColor = colorMapping[type];
+        colorIndicator.style.display = 'inline-block';
+        colorIndicator.style.width = '12px';
+        colorIndicator.style.height = '12px';
+        colorIndicator.style.marginRight = '6px';
+        colorIndicator.style.borderRadius = '2px';
+        colorIndicator.style.opacity = isInitiallyHidden ? '0.3' : '1';
+        
+        // 资产名称
+        const nameSpan = document.createElement('span');
+        nameSpan.textContent = name;
+        nameSpan.style.opacity = isInitiallyHidden ? '0.5' : '1';
+        
+        // 添加到图例项
+        legendItem.appendChild(colorIndicator);
+        legendItem.appendChild(nameSpan);
+        
+        // 添加点击事件 - 切换资产可见性
+        legendItem.addEventListener('click', function() {
+            // 切换该图例项的激活状态
+            this.classList.toggle('hidden');
+            
+            // 获取资产类型
+            const assetType = this.dataset.assetType;
+            hiddenAssets[assetType] = this.classList.contains('hidden');
+            
+            // 更新样式
+            if (this.classList.contains('hidden')) {
+                colorIndicator.style.opacity = '0.3';
+                nameSpan.style.opacity = '0.5';
+                this.style.backgroundColor = '#f5f5f5';
+                
+                // 隐藏对应的图形元素
+                document.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
+                    path.style.display = 'none';
+                });
+            } else {
+                colorIndicator.style.opacity = '1';
+                nameSpan.style.opacity = '1';
+                this.style.backgroundColor = 'white';
+                
+                // 显示对应的图形元素
+                document.querySelectorAll(`.asset-path[data-asset-type="${assetType}"]`).forEach(path => {
+                    path.style.display = 'block';
+                });
+            }
+            
+            // 同步更新竖向图表的图例状态
+            syncLegendStateToVerticalChart(assetType, hiddenAssets[assetType]);
+        });
+        
+        // 添加悬停效果
+        legendItem.addEventListener('mouseenter', function() {
+            if (!this.classList.contains('hidden')) {
+                this.style.backgroundColor = 'rgba(0,0,0,0.05)';
+            }
+        });
+        
+        legendItem.addEventListener('mouseleave', function() {
+            if (!this.classList.contains('hidden')) {
+                this.style.backgroundColor = 'white';
+            }
+        });
+        
+        // 添加到图例容器
+        legendContainer.appendChild(legendItem);
+        
+        // 如果初始状态是隐藏的，需要立即应用到图表元素
+        if (isInitiallyHidden) {
+            document.querySelectorAll(`.asset-path[data-asset-type="${type}"]`).forEach(path => {
+                path.style.display = 'none';
+            });
+        }
+    });
+    
+    console.log('水平图表图例添加完成');
+}

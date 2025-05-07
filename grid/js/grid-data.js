@@ -1121,7 +1121,7 @@ function renderOverallSummary(summary) {
     try {
         // 更新总体信息
         // 显示运行中ETF/总执行次数
-        const etfCountElement = document.querySelector('.info-nav-bar .info-item:nth-child(1) .value-number');
+        const etfCountElement = document.querySelector('.info-sidebar .info-item:nth-child(1) .value-number');
         if (etfCountElement) {
             etfCountElement.textContent = `${summary.runningEtfCount || 0}/${summary.totalExecutionCount || 0}`;
             // 更新元素样式
@@ -1133,20 +1133,20 @@ function renderOverallSummary(summary) {
         }
         
         // 显示买入/卖出金额
-        const amountElement = document.querySelector('.info-nav-bar .info-item:nth-child(2) .value-number');
+        const amountElement = document.querySelector('.info-sidebar .info-item:nth-child(2) .value-number');
         if (amountElement) {
             amountElement.textContent = `${summary.totalBuyAmount || 0}/${summary.totalSellAmount || 0}`;
         }
         
         // 显示买入/卖出/剩余股数
-        const sharesElement = document.querySelector('.info-nav-bar .info-item:nth-child(3) .value-number');
+        const sharesElement = document.querySelector('.info-sidebar .info-item:nth-child(3) .value-number');
         if (sharesElement) {
             sharesElement.textContent = `${summary.totalBuyShares || 0}/${summary.totalSellShares || 0}/${summary.totalRemainingShares || 0}`;
         }
         
         // 显示收益/收益率
-        const profitValueElement = document.querySelector('.info-nav-bar .info-item:nth-child(4) .value-number');
-        const profitPercentElement = document.querySelector('.info-nav-bar .info-item:nth-child(4) .value-percent');
+        const profitValueElement = document.querySelector('.info-sidebar .info-item:nth-child(4) .value-number');
+        const profitPercentElement = document.querySelector('.info-sidebar .info-item:nth-child(4) .value-percent');
         
         if (profitValueElement) {
             profitValueElement.textContent = summary.totalProfit || '0';
@@ -1157,7 +1157,7 @@ function renderOverallSummary(summary) {
             profitPercentElement.textContent = profitRate.startsWith('+') ? profitRate : (parseFloat(profitRate) >= 0 ? '+' + profitRate : profitRate);
             
             // 更新颜色
-            const profitContainer = document.querySelector('.info-nav-bar .info-item:nth-child(4) .value-inline');
+            const profitContainer = document.querySelector('.info-sidebar .info-item:nth-child(4) .value-inline');
             if (profitContainer) {
                 profitContainer.className = 'value-inline';
                 profitContainer.classList.add(parseFloat(summary.totalProfit || 0) >= 0 ? 'positive' : 'negative');

@@ -210,9 +210,77 @@ function sortAssets(sortType) {
         if (sortType === 'shares') {
             console.log('按份数排序');
             sortedAssets = processedData.assetRankings.byUnit;
+            
+            // 选择份数排序时的处理
+            document.querySelectorAll('.asset-item').forEach(item => {
+                const assetInfo = item.querySelector('.asset-info');
+                const sharesElem = item.querySelector('.asset-shares');
+                const profitElem = item.querySelector('.asset-profit');
+                
+                if (profitElem) {
+                    // 将收益率信息移动到asset-info中，显示在资产名称下方
+                    profitElem.style.display = '';
+                    assetInfo.appendChild(profitElem);
+                    profitElem.style.fontSize = '0.8rem';
+                    profitElem.style.color = '#666'; // 灰色，作为次要信息
+                    profitElem.style.fontWeight = 'normal';
+                    profitElem.style.margin = '0';
+                    profitElem.style.textAlign = 'left';
+                    // 移除可能干扰显示的类
+                    profitElem.classList.remove('positive', 'negative');
+                }
+                
+                if (sharesElem) {
+                    // 将份数信息移动到右侧，并设置红色样式
+                    item.appendChild(sharesElem);
+                    sharesElem.style.fontSize = '0.9rem';
+                    sharesElem.style.fontWeight = '600';
+                    sharesElem.style.color = '#e74c3c'; // 红色，作为主要显示
+                    sharesElem.style.marginLeft = '10px';
+                    sharesElem.style.flexShrink = '0';
+                    sharesElem.style.minWidth = '60px';
+                    sharesElem.style.textAlign = 'right';
+                }
+            });
+            
         } else if (sortType === 'profit') {
             console.log('按收益率排序');
             sortedAssets = processedData.assetRankings.byProfit;
+            
+            // 选择收益率排序时的处理
+            document.querySelectorAll('.asset-item').forEach(item => {
+                const assetInfo = item.querySelector('.asset-info');
+                const sharesElem = item.querySelector('.asset-shares');
+                const profitElem = item.querySelector('.asset-profit');
+                
+                if (sharesElem) {
+                    // 将份数信息移动到asset-info中，显示在资产名称下方
+                    sharesElem.style.display = '';
+                    assetInfo.appendChild(sharesElem);
+                    sharesElem.style.fontSize = '0.8rem';
+                    sharesElem.style.color = '#666'; // 灰色，作为次要信息
+                    sharesElem.style.fontWeight = 'normal';
+                    sharesElem.style.margin = '0';
+                    sharesElem.style.textAlign = 'left';
+                }
+                
+                if (profitElem) {
+                    // 将收益率信息移动到右侧，设置为红色样式（不考虑正负）
+                    item.appendChild(profitElem);
+                    profitElem.style.display = '';
+                    profitElem.style.fontSize = '0.9rem';
+                    profitElem.style.fontWeight = '600';
+                    profitElem.style.color = '#e74c3c'; // 红色，作为主要显示
+                    profitElem.style.marginLeft = '10px';
+                    profitElem.style.flexShrink = '0';
+                    profitElem.style.minWidth = '60px';
+                    profitElem.style.textAlign = 'right';
+                    
+                    // 移除可能会改变颜色的CSS类
+                    profitElem.classList.remove('positive', 'negative');
+                }
+            });
+            
         } else {
             console.warn('未知的排序方式:', sortType);
             return;
@@ -238,7 +306,21 @@ function sortAssets(sortType) {
             if (assetItem) {
                 // 将该项移动到列表末尾，实现排序
                 assetList.appendChild(assetItem);
-                // 数据更新由 loadAssetInfo 负责
+                
+                // 更新显示数据
+                const sharesElem = assetItem.querySelector('.asset-shares');
+                const profitElem = assetItem.querySelector('.asset-profit');
+                
+                // 无论何种排序方式，都更新数据内容
+                if (sharesElem) {
+                    sharesElem.textContent = `${asset.unit}份 (${(asset.percent * 100).toFixed(2)}%)`;
+                }
+                
+                if (profitElem) {
+                    const accProfitRate = asset.accProfitRate * 100;
+                    profitElem.textContent = `${accProfitRate >= 0 ? '+' : ''}${accProfitRate.toFixed(2)}%`;
+                    profitElem.className = `asset-profit ${accProfitRate >= 0 ? 'positive' : 'negative'}`;
+                }
             }
         });
         
@@ -258,6 +340,17 @@ function sortAssets(sortType) {
         
         const assetList = document.querySelector('.asset-list');
         const assetItems = Array.from(assetList.querySelectorAll('.asset-item'));
+        
+        // 设置收益率的显示/隐藏状态
+        if (sortType === 'shares') {
+            document.querySelectorAll('.asset-item .asset-profit').forEach(profit => {
+                profit.style.display = 'none';
+            });
+        } else if (sortType === 'profit') {
+            document.querySelectorAll('.asset-item .asset-profit').forEach(profit => {
+                profit.style.display = '';
+            });
+        }
         
         // 根据排序方式进行排序
         if (sortType === 'shares') {
