@@ -1,0 +1,51 @@
+name: Update Data and Trigger Vercel Deploy
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每日 UTC 时间午夜运行 (可根据需要修改)
+  workflow_dispatch: # 允许从 GitHub Actions 页面手动触发
+
+jobs:
+  update_data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Google Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2 # 此 action 会将 chromedriver 添加到系统 PATH
+
+      - name: Run update_qieman_data.py
+        env:
+          # 如果 update_qieman_data.py 需要其他环境变量，请在此处添加
+          # 例如: SOME_API_KEY: ${{ secrets.YOUR_SECRET_NAME }}
+          TZ: Asia/Shanghai # 设置时区，如果脚本中涉及时间操作并依赖特定时区
+        run: python update_qieman_data.py
+
+      - name: Run fetch_fund_data.py
+        env:
+          TZ: Asia/Shanghai # 设置时区，如果脚本中涉及时间操作并依赖特定时区
+        run: python fetch_fund_data.py
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Automated data update"
+          commit_user_name: "GitHub Actions Bot"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup"
+          # 此 action 默认推送到当前分支 (通常是 main/master)
+          # 如果您的 Vercel 监控其他分支，请相应调整 
