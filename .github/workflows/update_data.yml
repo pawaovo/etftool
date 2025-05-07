@@ -40,12 +40,26 @@ jobs:
           TZ: Asia/Shanghai # 设置时区，如果脚本中涉及时间操作并依赖特定时区
         run: python fetch_fund_data.py
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4 # Updated to v4
+        with:
+          node-version: '18.x' # Using a recent LTS version
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Run build script
+        run: npm run build
+        env:
+          TZ: Asia/Shanghai # If build script also involves time-sensitive operations
+
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Automated data update"
+          commit_message: "Automated data update and build"
           commit_user_name: "GitHub Actions Bot"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup"
+          file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup dist"
+          # The 'dist' at the end will include all changes within the dist directory.
           # 此 action 默认推送到当前分支 (通常是 main/master)
           # 如果您的 Vercel 监控其他分支，请相应调整 
