@@ -98,7 +98,6 @@ jobs:
           commit_message: "Automated data update and build"
           commit_user_name: "GitHub Actions Bot"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup dist"
-          # The 'dist' at the end will include all changes within the dist directory.
-          # 此 action 默认推送到当前分支 (通常是 main/master)
-          # 如果您的 Vercel 监控其他分支，请相应调整 
+          file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup"
+          add_options: '-f'
+          # 移除了dist目录，因为它在.gitignore中被忽略 
