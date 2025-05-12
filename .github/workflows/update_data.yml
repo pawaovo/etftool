@@ -20,18 +20,30 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Install Google Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+        id: setup-chrome
 
-      - name: Set up ChromeDriver
-        uses: nanasess/setup-chromedriver@v2 # 此 action 会将 chromedriver 添加到系统 PATH
+      - name: Setup ChromeDriver
+        uses: nanasess/setup-chromedriver@v2
+        with:
+          # 可选：指定与Chrome匹配的ChromeDriver版本
+          # chromedriver-version: '119.0.6045.105'
+          # 不指定版本则会自动匹配已安装的Chrome版本
+          chromedriver-version: 'latest'
+
+      - name: Print Chrome & ChromeDriver paths
+        run: |
+          echo "Chrome path: $(which chrome)"
+          echo "Chrome version: $(chrome --version)"
+          echo "ChromeDriver path: $(which chromedriver)"
+          echo "ChromeDriver version: $(chromedriver --version)"
+          echo "CHROMEDRIVER_PATH=$(which chromedriver)" >> $GITHUB_ENV
 
       - name: Run update_qieman_data.py
         env:
-          # 如果 update_qieman_data.py 需要其他环境变量，请在此处添加
-          # 例如: SOME_API_KEY: ${{ secrets.YOUR_SECRET_NAME }}
           TZ: Asia/Shanghai # 设置时区，如果脚本中涉及时间操作并依赖特定时区
         run: python update_qieman_data.py
 

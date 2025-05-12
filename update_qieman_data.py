@@ -44,19 +44,27 @@ def updateXsign(chromedriver_path=None):
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") # 指定User-Agent
     chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
-    if chromedriver_path:
-        service = Service(chromedriver_path)
-        browser = webdriver.Chrome(service=service, options=chrome_options)
-    else:
-        # 如果未提供路径，则期望 chromedriver 在系统 PATH 中
-        # 或者在 GitHub Actions 中，通常由 setup-chrome action 配置好
-        try:
-            browser = webdriver.Chrome(options=chrome_options)
-        except Exception as e:
-            print(f"启动 Chrome 失败 (chromedriver是否在PATH中?): {e}")
-            print("提示: 在 GitHub Actions 中，请确保使用了如 'setup-chrome' action 来准备 Chrome 和 chromedriver。")
+    # 在GitHub Actions中，使用由setup-chromedriver提供的chromedriver
+    # 不需要显式提供路径，因为它已经添加到PATH中
+    try:
+        # 直接创建Chrome实例，让Selenium自动找到chromedriver
+        print("使用自动检测的chromedriver")
+        browser = webdriver.Chrome(options=chrome_options)
+    except Exception as e:
+        print(f"使用自动检测失败: {e}")
+        # 如果自动检测失败，尝试使用指定的chromedriver_path
+        if chromedriver_path:
+            try:
+                print(f"尝试使用指定的chromedriver路径: {chromedriver_path}")
+                service = Service(executable_path=chromedriver_path)
+                browser = webdriver.Chrome(service=service, options=chrome_options)
+            except Exception as e:
+                print(f"使用指定路径失败: {e}")
+                print("所有chromedriver初始化方法均失败。")
+                return None
+        else:
+            print("未提供有效的chromedriver路径，且自动检测失败。")
             return None
-
 
     x_sign = None
     try:
@@ -99,13 +107,26 @@ def updateXsign(chromedriver_path=None):
 
 # --- 主逻辑 ---
 def main():
-    # 在 GitHub Actions 中，通常不需要指定 chromedriver_path，
-    # 因为它会由如 `setup-chrome` action 提供或已在环境中。
-    # 如果在本地运行，并且 chromedriver 不在 PATH 中，请提供其路径，例如:
-    # chromedriver_executable_path = 'D:\python\chromedriver.exe'
-    chromedriver_executable_path = os.getenv('CHROMEWEBDRIVER') # 尝试从环境变量获取 (setup-chrome action 可能会设置)
+    # 尝试从几个可能的环境变量获取chromedriver路径
+    chromedriver_executable_path = None
+    for env_var in ['CHROMEDRIVER_PATH', 'CHROMEWEBDRIVER', 'CHROME_DRIVER_PATH']:
+        path = os.environ.get(env_var)
+        if path:
+            chromedriver_executable_path = path
+            print(f"从环境变量 {env_var} 获取到 chromedriver 路径: {path}")
+            break
     
-    print(f"尝试使用的 Chromedriver 路径: {chromedriver_executable_path if chromedriver_executable_path else '系统PATH'}")
+    if not chromedriver_executable_path:
+        # 尝试查找系统上的chromedriver位置
+        from shutil import which
+        chromedriver_path = which('chromedriver')
+        if chromedriver_path:
+            chromedriver_executable_path = chromedriver_path
+            print(f"从系统PATH中找到chromedriver: {chromedriver_path}")
+        else:
+            print("未找到chromedriver路径，将尝试让Selenium自动检测。")
+    
+    print(f"尝试使用的 Chromedriver 路径: {chromedriver_executable_path if chromedriver_executable_path else '自动检测'}")
 
     current_x_sign = updateXsign(chromedriver_path=chromedriver_executable_path)
 
