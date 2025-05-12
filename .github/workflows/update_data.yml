@@ -16,8 +16,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # 使用有写权限的token
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -99,14 +99,21 @@ jobs:
         env:
           TZ: Asia/Shanghai
 
+      # 直接使用Git命令提交和推送更改，而不是使用第三方Action
       - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Automated data update and build"
-          commit_user_name: "GitHub Actions Bot"
-          commit_user_email: "github-actions[bot]@users.noreply.github.com"
-          file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup"
-          add_options: '-f'
-          # 移除了dist目录，因为它在.gitignore中被忽略
-          # 使用GITHUB_TOKEN进行推送
-          github_token: ${{ secrets.GITHUB_TOKEN }} 
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # 添加文件
+          git add src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup
+          
+          # 检查是否有更改需要提交
+          if git diff --staged --quiet; then
+            echo "没有需要提交的更改"
+          else
+            # 提交更改
+            git commit -m "自动更新: 数据更新 $(date +'%Y-%m-%d')"
+            
+            # 推送到远程
+            git push 
