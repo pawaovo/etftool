@@ -5,12 +5,19 @@ on:
     - cron: '0 0 * * *' # 每日 UTC 时间午夜运行 (可根据需要修改)
   workflow_dispatch: # 允许从 GitHub Actions 页面手动触发
 
+# 添加权限配置
+permissions:
+  contents: write
+
 jobs:
   update_data:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # 使用有写权限的token
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -100,4 +107,6 @@ jobs:
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
           file_pattern: "src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup"
           add_options: '-f'
-          # 移除了dist目录，因为它在.gitignore中被忽略 
+          # 移除了dist目录，因为它在.gitignore中被忽略
+          # 使用GITHUB_TOKEN进行推送
+          github_token: ${{ secrets.GITHUB_TOKEN }} 
