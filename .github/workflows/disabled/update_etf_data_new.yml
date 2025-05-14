@@ -21,8 +21,6 @@ jobs:
           fetch-depth: 0
           # 确保获取最新代码
           ref: ${{ github.ref }}
-          # 禁用子模块处理
-          submodules: false
 
       - name: Set up Python
         uses: actions/setup-python@v4
