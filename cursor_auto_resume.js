@@ -31,7 +31,8 @@
                 el.textContent.includes('internet connection or VPN') ||
                 el.textContent.includes('Calling MCP tool') ||
                 el.textContent.includes('File is being') ||
-                el.textContent.includes('Reject Ctrl')) {
+                el.textContent.includes('Reject Ctrl')||
+                el.textContent.includes('a moment')) {
                 
                 // 查找恢复链接和按钮
                 const links = el.querySelectorAll('a, span, button, [role="link"], [role="button"], [data-link]');

@@ -7,6 +7,10 @@ on:
   # 允许手动触发工作流
   workflow_dispatch:
 
+# 添加权限配置
+permissions:
+  contents: write
+
 jobs:
   update-etf-data:
     runs-on: ubuntu-latest
@@ -14,6 +18,10 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
+        with:
+          # 使用PAT而不是GITHUB_TOKEN
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
       
       - name: 设置Python环境
         uses: actions/setup-python@v4
@@ -40,7 +48,7 @@ jobs:
           git diff --staged --quiet || git commit -m "自动更新: ETF基金净值数据 $(date +'%Y-%m-%d')"
           
       - name: 推送变更
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }} 
+        run: |
+          # 使用PAT进行推送
+          git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/pawaovo/etftool.git
+          git push origin HEAD:${{ github.ref_name }} 

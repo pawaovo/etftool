@@ -1,0 +1,121 @@
+name: Update Data and Trigger Vercel Deploy
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # 每日 UTC 时间午夜运行 (可根据需要修改)
+  workflow_dispatch: # 允许从 GitHub Actions 页面手动触发
+
+# 保留权限配置，但我们将主要依赖PAT
+permissions:
+  contents: write
+
+jobs:
+  update_data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 使用PAT而不是GITHUB_TOKEN
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0 # 获取完整历史以确保能够正确合并
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' 
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install selenium webdriver-manager
+
+      # 使用browser-actions/setup-chrome安装Chrome
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@latest
+        with:
+          chrome-version: stable
+
+      # 确保有最新的ChromeDriver
+      - name: Set up ChromeDriver
+        run: |
+          # Chrome版本
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
+          echo "Chrome版本: $CHROME_VERSION"
+          
+          # 设置WebDriver环境
+          pip install webdriver-manager
+          
+          # 创建简单测试脚本
+          cat > test_chrome.py << 'EOL'
+          from selenium import webdriver
+          from webdriver_manager.chrome import ChromeDriverManager
+          from selenium.webdriver.chrome.service import Service
+          from selenium.webdriver.chrome.options import Options
+          
+          options = Options()
+          options.add_argument('--headless')
+          options.add_argument('--no-sandbox')
+          options.add_argument('--disable-dev-shm-usage')
+          
+          # 使用webdriver_manager自动下载和安装匹配的ChromeDriver
+          driver_path = ChromeDriverManager().install()
+          print(f"已安装ChromeDriver到路径: {driver_path}")
+          
+          # 设置Service对象
+          service = Service(executable_path=driver_path)
+          
+          # 初始化浏览器
+          driver = webdriver.Chrome(service=service, options=options)
+          print("成功初始化Chrome WebDriver")
+          driver.quit()
+          EOL
+          
+          # 运行测试脚本
+          python test_chrome.py
+          
+          # 将ChromeDriver路径保存到环境变量
+          echo "CHROMEDRIVER_PATH=$(python -c 'from webdriver_manager.chrome import ChromeDriverManager; print(ChromeDriverManager().install())')" >> $GITHUB_ENV
+
+      - name: Run update_qieman_data.py
+        env:
+          TZ: Asia/Shanghai
+        run: python update_qieman_data.py
+
+      - name: Run fetch_fund_data.py
+        env:
+          TZ: Asia/Shanghai
+        run: python fetch_fund_data.py
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Run build script
+        run: npm run build
+        env:
+          TZ: Asia/Shanghai
+
+      # 直接使用Git命令提交和推送变更，而不是使用action
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions Bot'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 添加文件
+          git add src/data/*.json public/data/grid/latest_netvalues.json public/data/grid/latest_netvalues.json.backup
+          
+          # 如果有变更则提交并推送
+          if git diff --staged --quiet; then
+            echo "没有检测到变更，跳过提交"
+          else
+            git commit -m "Automated data update and build"
+            
+            # 使用PAT进行推送
+            git remote set-url origin https://x-access-token:${{ secrets.PAT }}@github.com/pawaovo/etftool.git
+            git push origin HEAD:main
+          fi 
