@@ -856,7 +856,7 @@
       "classCode": "CHINA_BOND",
       "unit": 8,
       "profitRate": null,
-      "accProfitRate": 0.3621,
+      "accProfitRate": 0.362,
       "percent": 0.0577,
       "isCash": false,
       "compList": [
@@ -1465,7 +1465,7 @@
   "volatility": 0.1168,
   "sharpe": 0.2685,
   "adjustedCount": 216,
-  "joinedCount": 428205,
+  "joinedCount": 428228,
   "investedACR": 0.0545,
   "investedACRDate": 1751558400000,
   "navBenchMarks": [
