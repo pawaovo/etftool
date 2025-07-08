@@ -31627,5 +31627,18 @@
       "OVERSEA_STOCK_EMERGING": 0.1287,
       "CASH": 0.2504
     }
+  },
+  {
+    "compDate": 1751817600000,
+    "distribution": {
+      "GOLD": 0,
+      "CHINA_STOCK": 0.5207,
+      "OIL": 0,
+      "CHINA_BOND": 0.0577,
+      "OVERSEA_STOCK_MATURE": 0.0188,
+      "OVERSEA_BOND": 0.0231,
+      "OVERSEA_STOCK_EMERGING": 0.1286,
+      "CASH": 0.2511
+    }
   }
 ]
