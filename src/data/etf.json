@@ -1517,7 +1517,7 @@
   "volatility": 0.1127,
   "sharpe": 0.3165,
   "adjustedCount": 227,
-  "joinedCount": 443041,
+  "joinedCount": 443060,
   "investedACR": 0.0612,
   "investedACRDate": 1764259200000,
   "navBenchMarks": [
@@ -1538,10 +1538,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50030000_000071_FA010080_20250009_000071_20250530_090000_01.pdf"
     },
     {
-      "id": "SUMMARY003376-V20250624",
+      "id": "SUMMARY003376-V20251201",
       "fundCode": "003376",
       "name": "广发中债7-10年国开债指数A-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50300000_003376_FA010080_20250009_003376_20250624_090000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50300000_003376_FA010080_20250014_003376_20251201_090000_01.pdf"
     },
     {
       "id": "SUMMARY001051-V20250530",
