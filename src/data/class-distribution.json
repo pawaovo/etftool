@@ -33673,13 +33673,26 @@
     "compDate": 1772467200000,
     "distribution": {
       "GOLD": 0,
-      "CHINA_STOCK": 0.456,
+      "CHINA_STOCK": 0.4565,
       "OIL": 0,
       "CHINA_BOND": 0.0672,
-      "OVERSEA_STOCK_MATURE": 0.027,
+      "OVERSEA_STOCK_MATURE": 0.0266,
       "OVERSEA_BOND": 0.036,
       "OVERSEA_STOCK_EMERGING": 0.096,
-      "CASH": 0.3178
+      "CASH": 0.3177
+    }
+  },
+  {
+    "compDate": 1772553600000,
+    "distribution": {
+      "GOLD": 0,
+      "CHINA_STOCK": 0.4542,
+      "OIL": 0,
+      "CHINA_BOND": 0.0675,
+      "OVERSEA_STOCK_MATURE": 0.0268,
+      "OVERSEA_BOND": 0.0362,
+      "OVERSEA_STOCK_EMERGING": 0.0954,
+      "CASH": 0.3199
     }
   }
 ]
