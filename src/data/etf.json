@@ -802,7 +802,7 @@
       "unit": 40,
       "profitRate": null,
       "accProfitRate": null,
-      "percent": 0.3009,
+      "percent": 0.301,
       "isCash": true,
       "compList": [
         {
@@ -810,7 +810,7 @@
           "planUnit": 40,
           "isCash": true,
           "accProfit": 0.3371,
-          "percent": 0.3009
+          "percent": 0.301
         }
       ]
     },
@@ -1399,7 +1399,7 @@
       "unit": 3,
       "profitRate": null,
       "accProfitRate": 0.5794,
-      "percent": 0.0275,
+      "percent": 0.0274,
       "isCash": false,
       "compList": [
         {
@@ -1450,7 +1450,7 @@
           "planUnit": 1,
           "strategyType": "LONG",
           "unitValue": 3.1127,
-          "percent": 0.0124,
+          "percent": 0.0123,
           "isCash": false,
           "accProfit": 0.6315
         },
