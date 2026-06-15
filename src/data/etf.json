@@ -1674,7 +1674,7 @@
   "sharpe": 0.2843,
   "adjustedCount": 252,
   "joinedCount": 444806,
-  "activeCount": 132317,
+  "activeCount": 132258,
   "investedACR": 0.0555,
   "investedACRDate": 1781193600000,
   "navBenchMarks": [
@@ -1797,10 +1797,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50430000_012348_FA010080_20251009_012348_20250929_090000_10.pdf"
     },
     {
-      "id": "SUMMARY519915-V20250530",
+      "id": "SUMMARY519915-V20260615",
       "fundCode": "519915",
       "name": "富国消费主题混合A-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50100000_519915_FA010070_20250009_519915_20250530_090000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50100000_519915_FA010070_20260009_519915_20260615_090000_01.pdf"
     },
     {
       "id": "SUMMARY002708-V20251203",
@@ -1839,10 +1839,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50220000_162412_FA010080_20260077_162412_20260213_161232_03.pdf"
     },
     {
-      "id": "SUMMARY011309-V20250530",
+      "id": "SUMMARY011309-V20260615",
       "fundCode": "011309",
       "name": "富国消费主题混合C-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50100000_519915_FA010070_20250010_011309_20250530_090000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50100000_519915_FA010070_20260010_011309_20260615_090000_01.pdf"
     },
     {
       "id": "SUMMARY000369-V20260522",
