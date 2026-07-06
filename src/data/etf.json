@@ -1324,7 +1324,7 @@
             "onSale": true,
             "nav": "1.0427",
             "navDate": "2026-07-02",
-            "personalHighestBuyAmount": "1000000.00",
+            "personalHighestBuyAmount": "5000000.00",
             "cannotBuyReason": null
           },
           "shareType": "A",
@@ -1700,7 +1700,7 @@
   "sharpe": 0.286,
   "adjustedCount": 258,
   "joinedCount": 444808,
-  "activeCount": 130416,
+  "activeCount": 130376,
   "investedACR": 0.0558,
   "investedACRDate": 1783008000000,
   "navBenchMarks": [
