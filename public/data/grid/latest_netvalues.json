@@ -1,30 +1,30 @@
 {
-  "lastUpdated": "2026-07-07",
+  "lastUpdated": "2026-07-08",
   "159920": {
-    "netValue": 1.4046
+    "netValue": 1.3976
   },
   "159938": {
-    "netValue": 0.6373
+    "netValue": 0.6146
   },
   "512880": {
-    "netValue": 1.1594
+    "netValue": 1.1248
   },
   "512980": {
-    "netValue": 0.8073
+    "netValue": 0.8083
   },
   "513050": {
-    "netValue": 1.0058
+    "netValue": 1.0352
   },
   "513180": {
-    "netValue": 0.5785
+    "netValue": 0.5743
   },
   "513500": {
-    "netValue": 2.4081
+    "netValue": 2.4264
   },
   "513520": {
-    "netValue": 2.2859
+    "netValue": 2.2536
   },
   "515180": {
-    "netValue": 1.3506
+    "netValue": 1.3318
   }
 }
