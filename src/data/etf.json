@@ -1726,7 +1726,7 @@
   "sharpe": 0.2834,
   "adjustedCount": 264,
   "joinedCount": 444808,
-  "activeCount": 127595,
+  "activeCount": 127562,
   "investedACR": 0.0553,
   "investedACRDate": 1789660800000,
   "navBenchMarks": [
@@ -1891,10 +1891,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50300000_000369_FA010080_20260002_000369_20260522_090000_01.pdf"
     },
     {
-      "id": "SUMMARY004419-V20260417",
+      "id": "SUMMARY004419-V20260921",
       "fundCode": "004419",
       "name": "汇添富美元债债券人民币A-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50460000_004419_FA010080_20260545_004419_20260417_000000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50460000_004419_FA010080_20261771_004419_20260921_000000_01.pdf"
     },
     {
       "id": "SUMMARY100050-V20260812",
@@ -1909,10 +1909,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50100000_100050_FA010070_20260017_019518_20260812_090000_01.pdf"
     },
     {
-      "id": "SUMMARY002286-V20260520",
+      "id": "SUMMARY002286-V20260921",
       "fundCode": "002286",
       "name": "中银美元债债券人民币A-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50400000_002286_FA010080_20260001_002286_20260520_090000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50400000_002286_FA010080_20260004_002286_20260921_090000_01.pdf"
     },
     {
       "id": "SUMMARY006484-V20260508",
