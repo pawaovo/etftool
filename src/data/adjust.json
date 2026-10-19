@@ -5928,7 +5928,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "024",
         "tradeUnit": 1,
@@ -6150,7 +6150,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "024",
         "tradeUnit": 1,
@@ -9011,7 +9011,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "022",
         "tradeUnit": 1,
@@ -9114,7 +9114,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "022",
         "tradeUnit": 1,
@@ -9152,7 +9152,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "022",
         "tradeUnit": 1,
@@ -9271,7 +9271,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "022",
         "tradeUnit": 1,
@@ -9479,7 +9479,7 @@
           "onSale": true,
           "nav": "2.1464",
           "navDate": "2026-10-16",
-          "personalHighestBuyAmount": "10000000.00"
+          "personalHighestBuyAmount": null
         },
         "orderCode": "022",
         "tradeUnit": 1,
