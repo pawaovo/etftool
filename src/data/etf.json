@@ -1752,7 +1752,7 @@
   "sharpe": 0.2579,
   "adjustedCount": 270,
   "joinedCount": 444808,
-  "activeCount": 126998,
+  "activeCount": 126982,
   "investedACR": 0.051,
   "investedACRDate": 1793289600000,
   "navBenchMarks": [
@@ -1839,10 +1839,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50480000_164906_FA010080_20260001_164906_20260508_090000_01.pdf"
     },
     {
-      "id": "SUMMARY110027-V20260811",
+      "id": "SUMMARY110027-V20261030",
       "fundCode": "110027",
       "name": "易方达安心债券A-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50110000_110027_FA010080_20260005_110027_20260811_090000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50110000_110027_FA010080_20260007_110027_20261030_090000_01.pdf"
     },
     {
       "id": "SUMMARY050025-V20260626",
@@ -1965,10 +1965,10 @@
       "url": "https://cdn-disclosure.yingmi.cn/CN_50290000_007562_FA010080_20251009_007562_20250828_090000_01.pdf"
     },
     {
-      "id": "SUMMARY020602-V20260811",
+      "id": "SUMMARY020602-V20261030",
       "fundCode": "020602",
       "name": "易方达中证红利低波动联接A-产品概要",
-      "url": "https://cdn-disclosure.yingmi.cn/CN_50110000_020602_FA010080_20260010_020602_20260811_090000_01.pdf"
+      "url": "https://cdn-disclosure.yingmi.cn/CN_50110000_020602_FA010080_20260011_020602_20261030_090000_01.pdf"
     },
     {
       "id": "SUMMARY007169-V20260821",
